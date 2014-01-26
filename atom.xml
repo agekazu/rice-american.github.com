@@ -4,7 +4,7 @@
   <title><![CDATA[こめぶろ]]></title>
   <link href="http://rice-american.github.io/atom.xml" rel="self"/>
   <link href="http://rice-american.github.io/"/>
-  <updated>2014-01-26T15:30:06+09:00</updated>
+  <updated>2014-01-26T18:04:50+09:00</updated>
   <id>http://rice-american.github.io/</id>
   <author>
     <name><![CDATA[rice_american]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[rails+bootstrapなアプリケーションを作る]]></title>
-    <link href="http://rice-american.github.io/blog/2014/01/26/rails%2Bbootstrap/"/>
+    <link href="http://rice-american.github.io/blog/2014/01/26/rails-bootstrap/"/>
     <updated>2014-01-26T00:44:29+09:00</updated>
-    <id>http://rice-american.github.io/blog/2014/01/26/rails+bootstrap</id>
+    <id>http://rice-american.github.io/blog/2014/01/26/rails-bootstrap</id>
     <content type="html"><![CDATA[<ul>
 <li>install及びアプリ作成までは次のページを参考に</li>
 <li><p>参考: <a href="http://www.ohmyenter.com/?p=197">simple_formとTwitter bootstrapで作る俺流鉄板Railsアプリ（その１） / Oh My Enter!</a></p></li>
@@ -67,9 +67,9 @@
   
   <entry>
     <title type="html"><![CDATA[herokuへRuby on Railsアプリケーションをdeployするまで]]></title>
-    <link href="http://rice-american.github.io/blog/2014/01/26/heroku%E3%81%B8RoR%E3%82%A2%E3%83%95%E3%82%9A%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%82%92deploy%E3%81%99%E3%82%8B%E3%81%BE%E3%81%A6%E3%82%99/"/>
+    <link href="http://rice-american.github.io/blog/2014/01/26/heroku-RoR/"/>
     <updated>2014-01-26T00:24:57+09:00</updated>
-    <id>http://rice-american.github.io/blog/2014/01/26/herokuへRoRアプリケーションをdeployするまで</id>
+    <id>http://rice-american.github.io/blog/2014/01/26/heroku-RoR</id>
     <content type="html"><![CDATA[<p><strong>参考</strong>:<a href="http://qiita.com/mah_lab/items/9df8230e709a23b04f7f">Herokuでアプリを公開する直前までのチュートリアル &ndash; Qiita [キータ]</a></p>
 
 <pre><code>$ git clone git://github.com/heroku/ruby-sample.git
@@ -233,9 +233,9 @@ $ heroku open
   
   <entry>
     <title type="html"><![CDATA[Jenkinsについて学ぶ]]></title>
-    <link href="http://rice-american.github.io/blog/2014/01/19/jenkins%E3%82%92%E5%AD%A6%E3%81%B5%E3%82%99/"/>
+    <link href="http://rice-american.github.io/blog/2014/01/19/about_jenkins/"/>
     <updated>2014-01-19T12:51:01+09:00</updated>
-    <id>http://rice-american.github.io/blog/2014/01/19/jenkinsを学ぶ</id>
+    <id>http://rice-american.github.io/blog/2014/01/19/about_jenkins</id>
     <content type="html"><![CDATA[<p>Jenkins本『入門Jenkins』にて学んだことをメモ。
 hogehogeo</p>
 
@@ -521,9 +521,9 @@ database_cleaner</p>
   
   <entry>
     <title type="html"><![CDATA[rails アプリケーション作成の手順]]></title>
-    <link href="http://rice-american.github.io/blog/2014/01/18/rails_%E3%82%A2%E3%83%95%E3%82%9A%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E4%BD%9C%E6%88%90%E3%81%AE%E6%89%8B%E9%A0%86/"/>
+    <link href="http://rice-american.github.io/blog/2014/01/18/rails_app/"/>
     <updated>2014-01-18T00:00:00+09:00</updated>
-    <id>http://rice-american.github.io/blog/2014/01/18/rails_アプリケーション作成の手順</id>
+    <id>http://rice-american.github.io/blog/2014/01/18/rails_app</id>
     <content type="html"><![CDATA[<p>#
 1. DBの設定</p>
 
@@ -1246,10 +1246,10 @@ libssl-devがないといけないらしい。</p>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[github-page+jekyll+jekyll-bootstarpでBlogを始めたかったんだ]]></title>
-    <link href="http://rice-american.github.io/blog/2014/01/12/github-page%2Bjekyll%2Bjekyll-bootstarp%E3%81%A6%E3%82%99blog%E3%82%92%E5%A7%8B%E3%82%81%E3%81%9F%E3%81%84/"/>
+    <title type="html"><![CDATA[github+page+jekyll+jekyll+bootstarpでBlogを始めたかったんだ]]></title>
+    <link href="http://rice-american.github.io/blog/2014/01/12/jekyll/"/>
     <updated>2014-01-12T00:00:00+09:00</updated>
-    <id>http://rice-american.github.io/blog/2014/01/12/github-page+jekyll+jekyll-bootstarpでblogを始めたい</id>
+    <id>http://rice-american.github.io/blog/2014/01/12/jekyll</id>
     <content type="html"><![CDATA[<p>github-pageとjekyllとjekyll-boostrapなページを作ってmarkdownfileをドヤ顔公開してみる</p>
 
 <p>参考: <a href="http://mattn.github.io/2012/03/22/installed-jekyll-bootstrap/">jekyll bootstrapをgithubページにインストールしてみた</a></p>
@@ -1290,9 +1290,9 @@ BlogはOctpressに移行。短い天下だった。</p>
   
   <entry>
     <title type="html"><![CDATA[Jenkins Chef Bundleについて調べた]]></title>
-    <link href="http://rice-american.github.io/blog/2014/01/12/Jenkins_Chef_Bundle%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6%E8%AA%BF%E3%81%B8%E3%82%99%E3%81%A6%E3%81%BF%E3%81%9F/"/>
+    <link href="http://rice-american.github.io/blog/2014/01/12/about_Jenkins_Chef_Bundle/"/>
     <updated>2014-01-12T00:00:00+09:00</updated>
-    <id>http://rice-american.github.io/blog/2014/01/12/Jenkins_Chef_Bundleについて調べてみた</id>
+    <id>http://rice-american.github.io/blog/2014/01/12/about_Jenkins_Chef_Bundle</id>
     <content type="html"><![CDATA[<h2>しらべたもの</h2>
 
 <h4>Vagrantについて</h4>
@@ -1390,78 +1390,6 @@ BlogはOctpressに移行。短い天下だった。</p>
  * * * * * source $HOME/.rvm/scripts/rvm; rvm your-ruby-version; cd /path-to-project/; bundle exec ruby your-script.rb
 </code>
 とするらしい。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Tywin Lannister Quote]]></title>
-    <link href="http://rice-american.github.io/blog/2013/06/15/tywin-lannister-quote/"/>
-    <updated>2013-06-15T09:28:00+09:00</updated>
-    <id>http://rice-american.github.io/blog/2013/06/15/tywin-lannister-quote</id>
-    <content type="html"><![CDATA[<p>A nice quote by Tywin Lannister taken from <em>A Storm of Sword</em> book.</p>
-
-<blockquote><p>The greatest fools are ofttimes more clever then the men who laugh at them.</p><footer><strong>Tywin Lannister</strong> <cite>A Storm of Swords</cite></footer></blockquote>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[The problem with Pingdom]]></title>
-    <link href="http://rice-american.github.io/blog/2012/07/22/the-problem-with-pingdom/"/>
-    <updated>2012-07-22T19:13:00+09:00</updated>
-    <id>http://rice-american.github.io/blog/2012/07/22/the-problem-with-pingdom</id>
-    <content type="html"><![CDATA[
-
-<figure class='code'><figcaption><span>Time to be Awesome - awesome.rb </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="nb">puts</span> <span class="s2">&quot;Awesome!&quot;</span> <span class="k">unless</span> <span class="n">lame</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><a href="http://www.pingdom.com%20Pingdom">The problem with pingdom.</a></p>
-
-<p>My money&rsquo;s in that office, right? If she start giving me some bullshit about it ain&rsquo;t there, and we got to go someplace else and get it, I&rsquo;m gonna shoot you in the head then and there. Then I&rsquo;m gonna shoot that bitch in the kneecaps, find out where my goddamn money is. She gonna tell me too. Hey, look at me when I&rsquo;m talking to you, motherfucker. You listen: we go in there, and that nigga Winston or anybody else is in there, you the first motherfucker to get shot. You understand?</p>
-
-<blockquote><p>Blockquote is what goes
-inside this block here
-would you believe that
-bullshit?</p></blockquote>
-
-<p>Well, the way they make shows is, they make one show. That show&rsquo;s called a pilot. Then they show that show to the people who make shows, and on the strength of that one show they decide if they&rsquo;re going to make more shows. Some pilots get picked and become television programs. Some don&rsquo;t, become nothing. She starred in one of the ones that became nothing.</p>
-
-<p>The path of the righteous man is beset on all sides by the iniquities of the selfish and the tyranny of evil men. Blessed is he who, in the name of charity and good will, shepherds the weak through the valley of darkness, for he is truly his brother&rsquo;s keeper and the finder of lost children. And I will strike down upon thee with great vengeance and furious anger those who would attempt to poison and destroy My brothers. And you will know My name is the Lord when I lay My vengeance upon thee.</p>
-
-<p>Your bones don&rsquo;t break, mine do. That&rsquo;s clear. Your cells react to bacteria and viruses differently than mine. You don&rsquo;t get sick, I do. That&rsquo;s also clear. But for some reason, you and I react the exact same way to water. We swallow it too fast, we choke. We get some in our lungs, we drown. However unreal it may seem, we are connected, you and I. We&rsquo;re on the same curve, just on opposite ends.</p>
-
-<p>Do you see any Teletubbies in here? Do you see a slender plastic tag clipped to my shirt with my name printed on it? Do you see a little Asian child with a blank expression on his face sitting outside on a mechanical helicopter that shakes when you put quarters in it? No? Well, that&rsquo;s what you see at a toy store. And you must think you&rsquo;re in a toy store, because you&rsquo;re here shopping for an infant named Jeb.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Intro]]></title>
-    <link href="http://rice-american.github.io/blog/2012/07/22/intro/"/>
-    <updated>2012-07-22T08:23:00+09:00</updated>
-    <id>http://rice-american.github.io/blog/2012/07/22/intro</id>
-    <content type="html"><![CDATA[<p>Testing!</p>
-
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sollicitudin, massa eu vestibulum laoreet, nibh ante vulputate lorem, ac lobortis ante tellus eu mi. Duis sem nisi, luctus at feugiat eget, fringilla ut tellus. Nam a molestie justo. Sed pulvinar est vitae tellus semper tincidunt. Fusce euismod luctus lacus nec placerat. Mauris rutrum scelerisque nulla ut tempor. Nunc porttitor posuere mi, aliquet vehicula lorem feugiat in. Ut ut fermentum risus. Aliquam tincidunt ultricies ante sit amet bibendum. Cras nec sapien odio. Duis posuere congue sem, at congue massa faucibus at.</p>
-
-<p>Integer ut sapien eget nisl auctor faucibus ut fermentum arcu. Nunc rutrum urna non risus congue et tristique felis eleifend. Maecenas blandit est eu mauris aliquam aliquet. Quisque porttitor enim eget risus blandit in mollis orci eleifend. Nam malesuada nulla sed lacus elementum placerat accumsan arcu rhoncus. Phasellus feugiat cursus turpis nec facilisis. Duis eget metus arcu, eget commodo velit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Integer cursus vulputate enim, vel gravida velit faucibus et. Ut a urna vitae tellus cursus rhoncus. Maecenas at odio eget quam cursus elementum. Aliquam vitae eros quis tellus laoreet accumsan sed id lorem. Suspendisse et rutrum leo. Integer scelerisque vestibulum adipiscing. In posuere, libero ac accumsan suscipit, nulla ligula gravida erat, ut tempor odio erat nec sem. Quisque justo ipsum, adipiscing volutpat varius vitae, blandit eget nisi.</p>
-
-<p>Nullam adipiscing neque ac lacus commodo vitae imperdiet dui sollicitudin. Ut ac nunc augue. Nam at sem ut quam commodo aliquet vitae vitae dui. Vivamus scelerisque felis eget dolor cursus feugiat. Phasellus at dui sed lectus scelerisque pretium. Etiam nec massa ut justo vestibulum fringilla ac vitae urna. Morbi tortor erat, tempus sed consectetur at, elementum nec eros. Vivamus mattis arcu a sapien semper non lacinia eros pretium.</p>
-
-<p>Proin ut hendrerit arcu. Maecenas ullamcorper tristique magna vel mattis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam tincidunt euismod viverra. In sit amet neque turpis. Suspendisse ac sapien mi, id blandit purus. Ut tortor turpis, rutrum ac tempor at, accumsan sit amet erat. Etiam ultricies eleifend dolor, eget tempus justo tristique vitae. In hac habitasse platea dictumst. Aliquam eu enim neque.</p>
-
-<p>Morbi massa lorem, viverra non dictum at, malesuada vel nibh. Nam fermentum lobortis varius. Sed a nulla lacus, quis posuere risus. Nunc id urna libero, quis rutrum mi. In gravida felis urna. Praesent nec dolor ac urna tempor fermentum. Curabitur rutrum arcu et lorem volutpat viverra.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[This is post]]></title>
-    <link href="http://rice-american.github.io/blog/2011/06/01/this-is-a-test/"/>
-    <updated>2011-06-01T14:44:00+09:00</updated>
-    <id>http://rice-american.github.io/blog/2011/06/01/this-is-a-test</id>
-    <content type="html"><![CDATA[<p>Booyah!</p>
 ]]></content>
   </entry>
   

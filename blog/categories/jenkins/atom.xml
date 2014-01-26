@@ -4,7 +4,7 @@
   <title><![CDATA[Category: jenkins | こめぶろ]]></title>
   <link href="http://rice-american.github.io/blog/categories/jenkins/atom.xml" rel="self"/>
   <link href="http://rice-american.github.io/"/>
-  <updated>2014-01-26T15:30:06+09:00</updated>
+  <updated>2014-01-26T18:04:50+09:00</updated>
   <id>http://rice-american.github.io/</id>
   <author>
     <name><![CDATA[rice_american]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Jenkinsについて学ぶ]]></title>
-    <link href="http://rice-american.github.io/blog/2014/01/19/jenkins%E3%82%92%E5%AD%A6%E3%81%B5%E3%82%99/"/>
+    <link href="http://rice-american.github.io/blog/2014/01/19/about_jenkins/"/>
     <updated>2014-01-19T12:51:01+09:00</updated>
-    <id>http://rice-american.github.io/blog/2014/01/19/jenkinsを学ぶ</id>
+    <id>http://rice-american.github.io/blog/2014/01/19/about_jenkins</id>
     <content type="html"><![CDATA[<p>Jenkins本『入門Jenkins』にて学んだことをメモ。
 hogehogeo</p>
 
@@ -261,6 +261,108 @@ FAILED&hellip;gem install capybara-webkit -v &lsquo;1.1.1&rsquo;
 ```</p>
 
 <p>今日(2014/01/19)はここまで</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Jenkins Chef Bundleについて調べた]]></title>
+    <link href="http://rice-american.github.io/blog/2014/01/12/about_Jenkins_Chef_Bundle/"/>
+    <updated>2014-01-12T00:00:00+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/01/12/about_Jenkins_Chef_Bundle</id>
+    <content type="html"><![CDATA[<h2>しらべたもの</h2>
+
+<h4>Vagrantについて</h4>
+
+<p>といってもここを見ただけ</p>
+
+<ul>
+<li><p><a href="http://qiita.com/kidachi_/items/e63c1607705178aa257c">Vagrantの基本 &ndash; Qiita [キータ]</a></p></li>
+<li><p>嬉しいこと</p>
+
+<ul>
+<li>他人への環境配布が容易(boxを配ればいい)</li>
+<li>ゲストOS(CentOSとか)とホストOS(Macとか)で共有フォルダが作成されるので、Macの環境でコードを書いて、ホストOSで実行する、ということができる！</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>Jenkinsについて</h4>
+
+<p>継続的インテグレーション(CI)するやーつ</p>
+
+<pre><code>テストの自動化
+デプロイの自動化
+各種タイミングでの通知
+</code></pre>
+
+<p>をしてくれるすごいやつらしい→
+<a href="http://www.buildinsider.net/enterprise/jenkins/01">Jenkinsを使ってみよう（Mac OS X＆Linux）［Ruby、Rails］ &ndash; Build Insider</a></p>
+
+<p><code>
+ brew install jenkins
+</code>
+で入る。</p>
+
+<h4>Chefについて</h4>
+
+<ul>
+<li>ファイルに記述した設定内容に応じて自動的にユーザーの作成やパッケージのインストール、設定ファイルの編集などを行うツール.</li>
+<li>Recipeを元にserverを立てる。</li>
+<li>Recipeはrubyで書かれている。</li>
+</ul>
+
+
+<h4>Bundelrについて</h4>
+
+<ul>
+<li>Gemパッケージの種類やバージョン管理し、複数のPCで必要なGemパッケージを簡単にinstallすることができるPackageである。</li>
+</ul>
+
+
+<p>tips:<a href="http://blog.mirakui.com/entry/20100703/1278165723">gem管理の新標準ツール"Bundler"のTips &ndash; 昼メシ物語</a></p>
+
+<p><code>
+bundle install [Dir]
+</code>
+とすると、Dir以下にgemが展開されるので、localのgemは汚染されない。</p>
+
+<p>通常は</p>
+
+<p><code>
+bundle install vender/bundle
+</code>
+とする。</p>
+
+<p>こうしてbundle install すると、次回以降はdir指定はしなくて良い。</p>
+
+<p>設定ファイルは<strong>./bundle/config</strong>にあり。</p>
+
+<p>$GEM_HOMEのgemを一切使わないoptionは</p>
+
+<p><code>
+$ bundle install --path=vendor/bundle --binstubs=vendor/bin
+</code></p>
+
+<p>となる。</p>
+
+<p><strong>exec</strong></p>
+
+<ul>
+<li><strong>bundle execをつかうと、BUNDLE_PATH以下のgemが使われる。</strong></li>
+</ul>
+
+
+<p><code>
+$ bundle exec hoge
+</code></p>
+
+<p><strong>cronからbundleを使いたいときは</strong></p>
+
+<p><code>
+ * * * * * source $HOME/.rvm/scripts/rvm; rvm your-ruby-version; cd /path-to-project/; bundle exec ruby your-script.rb
+</code>
+とするらしい。</p>
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: RoR | こめぶろ]]></title>
   <link href="http://rice-american.github.io/blog/categories/ror/atom.xml" rel="self"/>
   <link href="http://rice-american.github.io/"/>
-  <updated>2014-01-26T15:30:06+09:00</updated>
+  <updated>2014-01-26T18:04:50+09:00</updated>
   <id>http://rice-american.github.io/</id>
   <author>
     <name><![CDATA[rice_american]]></name>
@@ -14,10 +14,59 @@
 
   
   <entry>
+    <title type="html"><![CDATA[rails+bootstrapなアプリケーションを作る]]></title>
+    <link href="http://rice-american.github.io/blog/2014/01/26/rails-bootstrap/"/>
+    <updated>2014-01-26T00:44:29+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/01/26/rails-bootstrap</id>
+    <content type="html"><![CDATA[<ul>
+<li>install及びアプリ作成までは次のページを参考に</li>
+<li><p>参考: <a href="http://www.ohmyenter.com/?p=197">simple_formとTwitter bootstrapで作る俺流鉄板Railsアプリ（その１） / Oh My Enter!</a></p></li>
+<li><p>Gemfileに追加</p></li>
+</ul>
+
+
+<p>```
+gem &ldquo;therubyracer&rdquo;</p>
+
+<h1>bootstrap</h1>
+
+<p>gem &ldquo;less-rails&rdquo; #Sprockets (what Rails 3.1 uses for its asset pipeline) s    upports LESS
+gem &ldquo;twitter-bootstrap-rails&rdquo;
+```
+次に
+<em>bundle install</em>実行</p>
+
+<ul>
+<li>bootstrapのinstall</li>
+</ul>
+
+
+<p><code>
+$ rails generate bootstrap:install less
+</code>
+assetsやlocalesにファイル生成</p>
+
+<p>基本となるレイアウトを生成する。</p>
+
+<ul>
+<li>レスポンシブレイアウトをinstall</li>
+</ul>
+
+
+<p><code>
+$ rails g bootstrap:layout application fluid
+</code></p>
+
+<p>application_name/dtabase.ymlを編集して、ユーザをpostgresに。
+そのあと<em>rake db:create RAILS_ENV=development</em>を実行。</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[herokuへRuby on Railsアプリケーションをdeployするまで]]></title>
-    <link href="http://rice-american.github.io/blog/2014/01/26/heroku%E3%81%B8RoR%E3%82%A2%E3%83%95%E3%82%9A%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%82%92deploy%E3%81%99%E3%82%8B%E3%81%BE%E3%81%A6%E3%82%99/"/>
+    <link href="http://rice-american.github.io/blog/2014/01/26/heroku-RoR/"/>
     <updated>2014-01-26T00:24:57+09:00</updated>
-    <id>http://rice-american.github.io/blog/2014/01/26/herokuへRoRアプリケーションをdeployするまで</id>
+    <id>http://rice-american.github.io/blog/2014/01/26/heroku-RoR</id>
     <content type="html"><![CDATA[<p><strong>参考</strong>:<a href="http://qiita.com/mah_lab/items/9df8230e709a23b04f7f">Herokuでアプリを公開する直前までのチュートリアル &ndash; Qiita [キータ]</a></p>
 
 <pre><code>$ git clone git://github.com/heroku/ruby-sample.git
@@ -155,9 +204,9 @@ ok</p>
   
   <entry>
     <title type="html"><![CDATA[Jenkinsについて学ぶ]]></title>
-    <link href="http://rice-american.github.io/blog/2014/01/19/jenkins%E3%82%92%E5%AD%A6%E3%81%B5%E3%82%99/"/>
+    <link href="http://rice-american.github.io/blog/2014/01/19/about_jenkins/"/>
     <updated>2014-01-19T12:51:01+09:00</updated>
-    <id>http://rice-american.github.io/blog/2014/01/19/jenkinsを学ぶ</id>
+    <id>http://rice-american.github.io/blog/2014/01/19/about_jenkins</id>
     <content type="html"><![CDATA[<p>Jenkins本『入門Jenkins』にて学んだことをメモ。
 hogehogeo</p>
 
@@ -401,6 +450,209 @@ FAILED&hellip;gem install capybara-webkit -v &lsquo;1.1.1&rsquo;
 ```</p>
 
 <p>今日(2014/01/19)はここまで</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[rails アプリケーション作成の手順]]></title>
+    <link href="http://rice-american.github.io/blog/2014/01/18/rails_app/"/>
+    <updated>2014-01-18T00:00:00+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/01/18/rails_app</id>
+    <content type="html"><![CDATA[<p>#
+1. DBの設定</p>
+
+<p>databaseの設定は<code>application_name/dtabase.yml</code>を編集して行う。</p>
+
+<p>```</p>
+
+<h2>% vim config/database.yml</h2>
+
+<h1>PostgreSQL. Versions 8.2 and up are supported.</h1>
+
+<p>#</p>
+
+<h1>Install the pg driver:</h1>
+
+<h1>gem install pg</h1>
+
+<h1>On OS X with Homebrew:</h1>
+
+<h1>gem install pg &mdash; &mdash;with-pg-config=/usr/local/bin/pg_config</h1>
+
+<h1>On OS X with MacPorts:</h1>
+
+<h1>gem install pg &mdash; &mdash;with-pg-config=/opt/local/lib/postgresql84/bin/pg_config</h1>
+
+<h1>On Windows:</h1>
+
+<h1>gem install pg</h1>
+
+<h1>Choose the win32 build.</h1>
+
+<h1>Install PostgreSQL and put its /bin directory on your path.</h1>
+
+<p>#</p>
+
+<h1>Configure Using Gemfile</h1>
+
+<h1>gem &lsquo;pg&rsquo;</h1>
+
+<p>#
+development:
+  adapter: postgresql
+  encoding: unicode
+  database: sample_development
+  pool: 5
+  username: vagrant
+  password: vagrant_password</p>
+
+<p>  # Connect on a TCP socket. Omitted by default since the client uses a
+  # domain socket that doesn&rsquo;t need configuration. Windows does not have
+  # domain sockets, so uncomment these lines.
+  #host: localhost</p>
+
+<p>  # The TCP port the server listens on. Defaults to 5432.
+  # If your server runs on a different port number, change accordingly.
+  #port: 5432</p>
+
+<p>  # Schema search path. The server defaults to $user,public
+  #schema_search_path: myapp,sharedapp,public</p>
+
+<p>  # Minimum log levels, in increasing order:
+  #   debug5, debug4, debug3, debug2, debug1,
+  #   log, notice, warning, error, fatal, and panic
+  # Defaults to warning.
+  #min_messages: notice</p>
+
+<h1>Warning: The database defined as &ldquo;test&rdquo; will be erased and</h1>
+
+<h1>re-generated from your development database when you run &ldquo;rake&rdquo;.</h1>
+
+<h1>Do not set this db to the same as development or production.</h1>
+
+<p>test:
+  adapter: postgresql
+  encoding: unicode
+  database: sample_test
+  pool: 5
+  username: vagrant
+  password: vagrant_password</p>
+
+<p>production:
+  adapter: postgresql
+  encoding: unicode
+  database: sample_production
+  pool: 5
+  username: vagrant
+  password: vagrant_password
+```</p>
+
+<p>DBを作成</p>
+
+<p><code>
+% rake db:create RAILS_ENV=development
+</code></p>
+
+<p>2.controllerを作成</p>
+
+<p><code>
+% rails generate controller hoge
+</code>
+Controllerは<code>application_name/app/controllers</code>に<code>hoge_controller.rb</code>として作成される。</p>
+
+<p>ControllerにはActionを設定する。</p>
+
+<p>3.Routingの設定</p>
+
+<p>Routing設定では、利用者から呼び出された時のActionをどのように実行するかを定義する。設定は<code>application_name/config/routes.rb</code>を書き換えて行う。</p>
+
+<p>例えばユーザが<code>http://localhost:3000/hello</code>を呼び出した時、Controllerで設定したaction｢hello｣を呼び出すには、次のようにRoutingを設定する。</p>
+
+<p><code>
+get 'hello' =&gt; 'booklist#hello'
+</code></p>
+
+<p>4.railsサーバの起動</p>
+
+<p><code>
+% rails server
+</code></p>
+
+<p>5.modelの作成</p>
+
+<p><code>
+% rails generate model title
+</code></p>
+
+<p><em>app/models/title.rb</em>が作成される。</p>
+
+<pre><code>また、作成された```db/migrate/20140115163018_create_titles.rb```はmigrationである。migrationは、
+1. テーブルに関して行なった処理を記録し、元に戻したり別の環境で同じ処理を簡単に行なわせることができる
+2. データベースの種類に関係無く同じスクリプトでテーブルを作成できる
+
+という利点がある。
+</code></pre>
+
+<p>6.migration編集</p>
+
+<p>```
+class CreateTitles &lt; ActiveRecord::Migration
+  def change</p>
+
+<pre><code>create_table :titles do |t|
+
+  t.string: name
+  t.data: sales_data
+  t.timestamps
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>migration scriptを起動</p>
+
+<p><code>
+% rake db:migrate
+</code></p>
+
+<p>7.テストデータ作成</p>
+
+<pre><code>```db/seeds.rb```を編集し、テストデータを作成する。
+</code></pre>
+
+<p><code>
+Title.create(:name =&gt; '宇宙に行った日', :sales_date =&gt; '2011-06-28')
+Title.create(:name =&gt; '観察日記', :sales_date =&gt; '2011-11-14')
+</code></p>
+
+<p><code>
+% rake db:seed
+</code>
+7. 確認</p>
+
+<p>```</p>
+
+<pre><code>sample_development=# select * from titles;
+ id |         name          | sales_date |         created_at         |
+  updated_at
+----+-----------------------+------------+----------------------------+-------
+---------------------
+  1 | 宇宙に行った日 | 2011-06-28 | 2014-01-16 04:46:10.565985 | 2014-01-16 04:46:10.565985
+  2 | 観察日記          | 2011-11-14 | 2014-01-16 04:46:10.666546 | 2014-01-16 04:46:1
+0.666546
+(2 rows)
+</code></pre>
+
+<p>```</p>
+
+<pre><code>migrationを利用し、作成されている。
+</code></pre>
+
+<p>8.Databaseの情報を取得し表示する</p>
+
+<p>action methodを書き換える。<code>controller/booklist_controller.rb</code></p>
 ]]></content>
   </entry>
   

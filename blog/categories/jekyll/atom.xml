@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Jekyll | こめぶろ]]></title>
+  <link href="http://rice-american.github.io/blog/categories/jekyll/atom.xml" rel="self"/>
+  <link href="http://rice-american.github.io/"/>
+  <updated>2014-01-26T18:04:50+09:00</updated>
+  <id>http://rice-american.github.io/</id>
+  <author>
+    <name><![CDATA[rice_american]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[github+page+jekyll+jekyll+bootstarpでBlogを始めたかったんだ]]></title>
+    <link href="http://rice-american.github.io/blog/2014/01/12/jekyll/"/>
+    <updated>2014-01-12T00:00:00+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/01/12/jekyll</id>
+    <content type="html"><![CDATA[<p>github-pageとjekyllとjekyll-boostrapなページを作ってmarkdownfileをドヤ顔公開してみる</p>
+
+<p>参考: <a href="http://mattn.github.io/2012/03/22/installed-jekyll-bootstrap/">jekyll bootstrapをgithubページにインストールしてみた</a></p>
+
+<p><code>
+$ git clone https://github.com/plusjade/jekyll-bootstrap.git rice-american.github.io
+$ cd mattn.github.io
+$ git remote set-url origin git@github.com:rice-american/rice-american.github.io.git
+$ git push origin master
+</code></p>
+
+<p>Jekyll bootstarpのテーマ: <a href="http://themes.jekyllbootstrap.com/preview/the-minimum/">Hello World!</a>を見ながらテーマを変える。→hooliganにした。</p>
+
+<p><code>
+$ rake theme:install git="https://github.com/dhulihan/hooligan.git"
+</code></p>
+
+<p>markdown記法に何があったのでレンダリングエンジン、redcarpetを指定する。
+_config.ymlに</p>
+
+<p><code>
+markdown: redcarpet
+redcarpet:
+  extensions: [tables,autolink,strikethrough]
+</code>
+を追記</p>
+
+<p>2014/01/18追記
+BlogはOctpressに移行。短い天下だった。</p>
+]]></content>
+  </entry>
+  
+</feed>

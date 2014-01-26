@@ -5,11 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: RoR - こめぶろ</title>
+  <title>Jenkins Chef Bundleについて調べた - こめぶろ</title>
   <meta name="author" content="rice_american">
 
   
-  <meta name="description" content="Category: RoR">
+  <meta name="description" content="bundle, chef, jenkins Jenkins Chef Bundleについて調べた しらべたもの Vagrantについて といってもここを見ただけ Vagrantの基本 &ndash; Qiita [キータ]
+嬉しいこと 他人への環境配布が容易(boxを配ればいい)
+ゲストOS( &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +20,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://rice-american.github.ioblog/categories/ror">
+  <link rel="canonical" href="http://rice-american.github.io/blog/2014/01/12/about_Jenkins_Chef_Bundle">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/styles.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="こめぶろ" type="application/atom+xml">
@@ -151,142 +153,147 @@
 		</aside>
 		
       <div>
-<article role="article">
-  
-  <header>
-    <h1 class="entry-title">Category: RoR</h1>
-  </header>
-  
-  <div id="blog-archives" class="category">
-
-
-
-  
-  <h2>2014</h2>
-
 <article>
-  
-
-
-<article>
-	<h2 class="title"><a href="/blog/2014/01/26/rails-bootstrap/">rails+bootstrapなアプリケーションを作る</a></h2>
-	<div class="meta">
-		<div class="date">Jan 26</div>
-		
+	<header>
+  <div class="article-tags">
+      
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/ror/'>RoR</a>, <a class='category' href='/blog/categories/bootstrap/'>bootstrap</a>
+    <a class='category' href='/blog/categories/bundle/'>bundle</a>, <a class='category' href='/blog/categories/chef/'>chef</a>, <a class='category' href='/blog/categories/jenkins/'>jenkins</a>
   
 </span>
 
 
-	    
-	</div>
+  </div>
+  
+    <h1>
+      Jenkins Chef Bundleについて調べた
+    </h1>
+  
+</header>
+<section>
+  <h2>しらべたもの</h2>
+
+<h4>Vagrantについて</h4>
+
+<p>といってもここを見ただけ</p>
+
+<ul>
+<li><p><a href="http://qiita.com/kidachi_/items/e63c1607705178aa257c">Vagrantの基本 &ndash; Qiita [キータ]</a></p></li>
+<li><p>嬉しいこと</p>
+
+<ul>
+<li>他人への環境配布が容易(boxを配ればいい)</li>
+<li>ゲストOS(CentOSとか)とホストOS(Macとか)で共有フォルダが作成されるので、Macの環境でコードを書いて、ホストOSで実行する、ということができる！</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>Jenkinsについて</h4>
+
+<p>継続的インテグレーション(CI)するやーつ</p>
+
+<pre><code>テストの自動化
+デプロイの自動化
+各種タイミングでの通知
+</code></pre>
+
+<p>をしてくれるすごいやつらしい→
+<a href="http://www.buildinsider.net/enterprise/jenkins/01">Jenkinsを使ってみよう（Mac OS X＆Linux）［Ruby、Rails］ &ndash; Build Insider</a></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'> brew install jenkins</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で入る。</p>
+
+<h4>Chefについて</h4>
+
+<ul>
+<li>ファイルに記述した設定内容に応じて自動的にユーザーの作成やパッケージのインストール、設定ファイルの編集などを行うツール.</li>
+<li>Recipeを元にserverを立てる。</li>
+<li>Recipeはrubyで書かれている。</li>
+</ul>
+
+
+<h4>Bundelrについて</h4>
+
+<ul>
+<li>Gemパッケージの種類やバージョン管理し、複数のPCで必要なGemパッケージを簡単にinstallすることができるPackageである。</li>
+</ul>
+
+
+<p>tips:<a href="http://blog.mirakui.com/entry/20100703/1278165723">gem管理の新標準ツール&#8221;Bundler&#8221;のTips &ndash; 昼メシ物語</a></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>bundle install [Dir]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とすると、Dir以下にgemが展開されるので、localのgemは汚染されない。</p>
+
+<p>通常は</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>bundle install vender/bundle</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とする。</p>
+
+<p>こうしてbundle install すると、次回以降はdir指定はしなくて良い。</p>
+
+<p>設定ファイルは<strong>./bundle/config</strong>にあり。</p>
+
+<p>$GEM_HOMEのgemを一切使わないoptionは</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ bundle install --path=vendor/bundle --binstubs=vendor/bin</span></code></pre></td></tr></table></div></figure>
+
+
+<p>となる。</p>
+
+<p><strong>exec</strong></p>
+
+<ul>
+<li><strong>bundle execをつかうと、BUNDLE_PATH以下のgemが使われる。</strong></li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ bundle exec hoge</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>cronからbundleを使いたいときは</strong></p>
+
+<p><code>
+ * * * * * source $HOME/.rvm/scripts/rvm; rvm your-ruby-version; cd /path-to-project/; bundle exec ruby your-script.rb
+</code>
+とするらしい。</p>
+
+</section>
+<footer>
+  <div class="article-date">
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-12T00:00:00+09:00" pubdate data-updated="true">Jan 12<span>th</span>, 2014</time>
+  </div>
+</footer>
+
+	
 </article>
-</article>
-
-
-
-<article>
-  
-
-
-<article>
-	<h2 class="title"><a href="/blog/2014/01/26/heroku-RoR/">herokuへRuby on Railsアプリケーションをdeployするまで</a></h2>
-	<div class="meta">
-		<div class="date">Jan 26</div>
-		
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/ror/'>RoR</a>, <a class='category' href='/blog/categories/heroku/'>heroku</a>
-  
-</span>
-
-
-	    
-	</div>
-</article>
-</article>
-
-
-
-<article>
-  
-
-
-<article>
-	<h2 class="title"><a href="/blog/2014/01/19/about_jenkins/">Jenkinsについて学ぶ</a></h2>
-	<div class="meta">
-		<div class="date">Jan 19</div>
-		
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/ror/'>RoR</a>, <a class='category' href='/blog/categories/jenkins/'>jenkins</a>
-  
-</span>
-
-
-	    
-	</div>
-</article>
-</article>
-
-
-
-<article>
-  
-
-
-<article>
-	<h2 class="title"><a href="/blog/2014/01/18/rails_app/">rails アプリケーション作成の手順</a></h2>
-	<div class="meta">
-		<div class="date">Jan 18</div>
-		
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/ror/'>RoR</a>, <a class='category' href='/blog/categories/postgresql/'>postgresql</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
-  
-</span>
-
-
-	    
-	</div>
-</article>
-</article>
-
-
-
-<article>
-  
-
-
-<article>
-	<h2 class="title"><a href="/blog/2014/01/12/vagrant/">VagrantでCentOSを入れてRails環境構築</a></h2>
-	<div class="meta">
-		<div class="date">Jan 12</div>
-		
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/ror/'>RoR</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/vagrant/'>vagrant</a>, <a class='category' href='/blog/categories/virtualbox/'>virtualbox</a>
-  
-</span>
-
-
-	    
-	</div>
-</article>
-</article>
-
 </div>
 
-  
-</article>
-</div>
     </div>
   </div>
   <footer class="main-footer">

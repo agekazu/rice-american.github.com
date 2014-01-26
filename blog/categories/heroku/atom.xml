@@ -4,7 +4,7 @@
   <title><![CDATA[Category: heroku | こめぶろ]]></title>
   <link href="http://rice-american.github.io/blog/categories/heroku/atom.xml" rel="self"/>
   <link href="http://rice-american.github.io/"/>
-  <updated>2014-01-26T15:30:06+09:00</updated>
+  <updated>2014-01-26T18:04:50+09:00</updated>
   <id>http://rice-american.github.io/</id>
   <author>
     <name><![CDATA[rice_american]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[herokuへRuby on Railsアプリケーションをdeployするまで]]></title>
-    <link href="http://rice-american.github.io/blog/2014/01/26/heroku%E3%81%B8RoR%E3%82%A2%E3%83%95%E3%82%9A%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%82%92deploy%E3%81%99%E3%82%8B%E3%81%BE%E3%81%A6%E3%82%99/"/>
+    <link href="http://rice-american.github.io/blog/2014/01/26/heroku-RoR/"/>
     <updated>2014-01-26T00:24:57+09:00</updated>
-    <id>http://rice-american.github.io/blog/2014/01/26/herokuへRoRアプリケーションをdeployするまで</id>
+    <id>http://rice-american.github.io/blog/2014/01/26/heroku-RoR</id>
     <content type="html"><![CDATA[<p><strong>参考</strong>:<a href="http://qiita.com/mah_lab/items/9df8230e709a23b04f7f">Herokuでアプリを公開する直前までのチュートリアル &ndash; Qiita [キータ]</a></p>
 
 <pre><code>$ git clone git://github.com/heroku/ruby-sample.git

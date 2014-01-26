@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: bootstrap | こめぶろ]]></title>
+  <link href="http://rice-american.github.io/blog/categories/bootstrap/atom.xml" rel="self"/>
+  <link href="http://rice-american.github.io/"/>
+  <updated>2014-01-26T18:04:50+09:00</updated>
+  <id>http://rice-american.github.io/</id>
+  <author>
+    <name><![CDATA[rice_american]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[rails+bootstrapなアプリケーションを作る]]></title>
+    <link href="http://rice-american.github.io/blog/2014/01/26/rails-bootstrap/"/>
+    <updated>2014-01-26T00:44:29+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/01/26/rails-bootstrap</id>
+    <content type="html"><![CDATA[<ul>
+<li>install及びアプリ作成までは次のページを参考に</li>
+<li><p>参考: <a href="http://www.ohmyenter.com/?p=197">simple_formとTwitter bootstrapで作る俺流鉄板Railsアプリ（その１） / Oh My Enter!</a></p></li>
+<li><p>Gemfileに追加</p></li>
+</ul>
+
+
+<p>```
+gem &ldquo;therubyracer&rdquo;</p>
+
+<h1>bootstrap</h1>
+
+<p>gem &ldquo;less-rails&rdquo; #Sprockets (what Rails 3.1 uses for its asset pipeline) s    upports LESS
+gem &ldquo;twitter-bootstrap-rails&rdquo;
+```
+次に
+<em>bundle install</em>実行</p>
+
+<ul>
+<li>bootstrapのinstall</li>
+</ul>
+
+
+<p><code>
+$ rails generate bootstrap:install less
+</code>
+assetsやlocalesにファイル生成</p>
+
+<p>基本となるレイアウトを生成する。</p>
+
+<ul>
+<li>レスポンシブレイアウトをinstall</li>
+</ul>
+
+
+<p><code>
+$ rails g bootstrap:layout application fluid
+</code></p>
+
+<p>application_name/dtabase.ymlを編集して、ユーザをpostgresに。
+そのあと<em>rake db:create RAILS_ENV=development</em>を実行。</p>
+]]></content>
+  </entry>
+  
+</feed>
