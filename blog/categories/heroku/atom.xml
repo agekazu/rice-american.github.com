@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: heroku | こめぶろ]]></title>
+  <link href="http://rice-american.github.io/blog/categories/heroku/atom.xml" rel="self"/>
+  <link href="http://rice-american.github.io/"/>
+  <updated>2014-01-26T15:30:06+09:00</updated>
+  <id>http://rice-american.github.io/</id>
+  <author>
+    <name><![CDATA[rice_american]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[herokuへRuby on Railsアプリケーションをdeployするまで]]></title>
+    <link href="http://rice-american.github.io/blog/2014/01/26/heroku%E3%81%B8RoR%E3%82%A2%E3%83%95%E3%82%9A%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%82%92deploy%E3%81%99%E3%82%8B%E3%81%BE%E3%81%A6%E3%82%99/"/>
+    <updated>2014-01-26T00:24:57+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/01/26/herokuへRoRアプリケーションをdeployするまで</id>
+    <content type="html"><![CDATA[<p><strong>参考</strong>:<a href="http://qiita.com/mah_lab/items/9df8230e709a23b04f7f">Herokuでアプリを公開する直前までのチュートリアル &ndash; Qiita [キータ]</a></p>
+
+<pre><code>$ git clone git://github.com/heroku/ruby-sample.git
+$ cd ruby-sample
+$ heroku create
+$ git push heroku master
+$ heroku open
+</code></pre>
+
+<p><em>heroku open</em>を実行すると先ほどpushしたrailsアプリが表示される。</p>
+
+<p>applicationの名前を変更するときは<em>$ heroku rename hogehoge</em>とする。</p>
+
+<p>次のようにした。</p>
+
+<p><code>
+$ heroku rename rice-rails-test                         [~/trial/ruby-sample]
+Renaming warm-castle-8443 to rice-rails-test... done
+http://rice-rails-test.herokuapp.com/ | git@heroku.com:rice-rails-test.git
+Git remote heroku updated
+</code></p>
+
+<h2>前に作ったbootstrap+railsなアプリをdeployする。</h2>
+
+<p>作ったアプリケーションに移動して</p>
+
+<p><code>
+$ git init
+$ heroku create rice-rails-bootstrap-test
+$ git push heroku master
+$ heroku open
+</code></p>
+
+<p>表示されたページにerrorがでた</p>
+
+<p><code>
+The page you were looking for doesn't exist.
+</code></p>
+
+<p>検索すると･･･:<a href="http://qiita.com/seltzer/items/d52a31c558a30c857a3f">herokuで「The page you were looking for doesn’t exist.」エラーが出るときの対処法 &ndash; Qiita [キータ]</a></p>
+
+<p><em>『Rails 3.2以降で発生する現象で、アセット周りのプリコンパイルが影響しているのだとか。これを回避するには、オフィシャルドキュメントの手順に加えて次の手順をしなければならないようです。』</em>
+とのこと。</p>
+
+<p><code>
+$ rake assets:precompile
+</code></p>
+
+<p>だがだめ、</p>
+
+<p><code>
+$ vim config/environments/production.rb
+config.assets.compile = true
+</code>
+としてdeployするもだめ、</p>
+
+<p><a href="http://d.hatena.ne.jp/piggery/20120807">HerokuでRailsアプリを動かす &ndash; かいはつにっき</a></p>
+
+<p>ここを見ると、</p>
+
+<p><code>
+$ rails server -e production
+</code>
+として動かすと,dbがないと言われた。</p>
+
+<p><code>
+The page you were looking for doesn't exist.
+</code></p>
+
+<p>検索すると･･･:<a href="http://qiita.com/seltzer/items/d52a31c558a30c857a3f">herokuで「The page you were looking for doesn’t exist.」エラーが出るときの対処法 &ndash; Qiita [キータ]</a></p>
+
+<p><em>『Rails 3.2以降で発生する現象で、アセット周りのプリコンパイルが影響しているのだとか。これを回避するには、オフィシャルドキュメントの手順に加えて次の手順をしなければならないようです。』</em>
+とのこと。</p>
+
+<p><code>
+$ vim config/environments/production.rb
+config.assets.compile = true
+</code>
+としてdeployするもだめ、</p>
+
+<p><a href="http://d.hatena.ne.jp/piggery/20120807">HerokuでRailsアプリを動かす &ndash; かいはつにっき</a></p>
+
+<p>ここを見ると、</p>
+
+<p><code>
+$ rails server -e production
+</code>
+として動かすとdbがないと言われた。</p>
+
+<p><code>
+$ rake db:migrate
+$ rake db:create
+</code></p>
+
+<p>なんやかんや最終的にはurlが間違ってたっぽい･･･url+=/books</p>
+
+<p><a href="http://rice-rails-bootstrap-test.herokuapp.com/books">http://rice-rails-bootstrap-test.herokuapp.com/books</a></p>
+
+<p>アホや･･･</p>
+
+<h2>CentOSにherokuを</h2>
+
+<p>参考:<a href="http://succi.jp/blog/?p=1137">「CentOSにheroku toolbeltをインストール」が失敗する場合の対処</a></p>
+
+<p>```</p>
+
+<h1>いきなりshに送る事は避けて、install.shをダウンロード</h1>
+
+<p>$ wget &mdash;no-check-certificate <a href="https://toolbelt.heroku.com/install.sh">https://toolbelt.heroku.com/install.sh</a></p>
+
+<h1>install.shの内容を確認してから、改めて実行</h1>
+
+<p>$ sh ./install.sh
+This script requires superuser access to install software.
+You will be prompted for your password by sudo.
+Installation complete</p>
+
+<h1>install.shを削除</h1>
+
+<p>$ rm install.sh</p>
+
+<h1>パスを追加</h1>
+
+<p>$ echo &lsquo;PATH=&ldquo;/usr/local/heroku/bin:$PATH&rdquo;&rsquo; >> .bashrc
+$ source .bashrc</p>
+
+<h1>実行</h1>
+
+<p>$ heroku &mdash;version
+heroku-toolbelt/3.1.0 (x86_64-linux) ruby/2.0.0
+```
+ok</p>
+]]></content>
+  </entry>
+  
+</feed>

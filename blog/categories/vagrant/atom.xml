@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: vagrant | こめぶろ]]></title>
+  <link href="http://rice-american.github.io/blog/categories/vagrant/atom.xml" rel="self"/>
+  <link href="http://rice-american.github.io/"/>
+  <updated>2014-01-26T15:30:06+09:00</updated>
+  <id>http://rice-american.github.io/</id>
+  <author>
+    <name><![CDATA[rice_american]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[VagrantでCentOSを入れてRails環境構築]]></title>
+    <link href="http://rice-american.github.io/blog/2014/01/12/vagrant/"/>
+    <updated>2014-01-12T11:53:18+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/01/12/vagrant</id>
+    <content type="html"><![CDATA[<h2>目標</h2>
+
+<p>VagnrantでCentOS立てて、Railsの開発環境を整えてBox化する。</p>
+
+<h2>vagrantの環境構築</h2>
+
+<p>参考サイト
+<a href="http://qiita.com/hamichamp/items/e27a0ecacc33482936c8">Mac OS XでVagrantとChefを使った環境構築のまとめ &ndash; Qiita [キータ]</a></p>
+
+<h3>boxをつくるまでのながれ</h3>
+
+<ol>
+<li>virtual boxいれます</li>
+<li>vagrantいれます</li>
+<li>osのboxいれます</li>
+<li>環境を構築します</li>
+<li>box化します</li>
+</ol>
+
+
+<h3>実際にやってみる</h3>
+
+<h4>1. virtual box入れます</h4>
+
+<ul>
+<li><a href="https://www.virtualbox.org/wiki/Downloads">Downloads – Oracle VM VirtualBox</a>
+Virtual Box 4.3.6が最新(2014/01/12)</li>
+</ul>
+
+
+<h4>2. vagrant入れます</h4>
+
+<ul>
+<li><a href="http://www.vagrantup.com/">Vagrant公式サイト</a>
+Vagrant 1.4.3が最新(2014/01/12)</li>
+</ul>
+
+
+<h4>3. osのbox入れます</h4>
+
+<ul>
+<li><a href="http://www.vagrantbox.es/">A list of base boxes for Vagrant &ndash; Vagrantbox.es</a></li>
+</ul>
+
+
+<p>installしたいOSとversionを捜す。今回はCentOSの最新ver 6.5.1を入れます。
+vagrant addでlocalにOSをDLします。</p>
+
+<p><code>
+% vagrant --version                                                        [~/trial/DataCollection/test]
+Vagrant 1.4.3
+% which vagrant                                                            [~/trial/DataCollection/test]
+/usr/bin/vagrant
+% vagrant box add centos65-x86_64-20131205 https://github.com/2creatives/vagrant-centos/releases/download/v6.5.1/centos65-x86_64-20131205.box
+Downloading box from URL: https://github.com/2creatives/vagrant-centos/releases/download/v6.5.1/centos65-x86_64-20131205.box
+Extracting box...te: 309k/s, Estimated time remaining: --:--:--)
+Successfully added box 'centos65-x86_64-20131205' with provider 'virtualbox'!
+</code></p>
+
+<p>18分くらいかかった。</p>
+
+<p>確認してみる。(localにあるosのbox一覧)</p>
+
+<p><code>
+% vagrant box list                                                     
+centos                   (virtualbox)
+centos65-x86_64-20131205 (virtualbox)
+</code></p>
+
+<p>centos65-x86_64-20131205が入ってる。
+(centosは前に作ったやつ。)</p>
+
+<p>てきとうなディレクトリを作って</p>
+
+<p><code>
+% vagrant init
+% vagrant up
+% vagrant ssh
+</code>
+とするのだが、<code>vagrant up</code>でエラーが出た。</p>
+
+<p>```
+Bringing machine &lsquo;default&rsquo; up with &lsquo;virtualbox&rsquo; provider&hellip;
+There are errors in the configuration of this machine. Please fix
+the following errors and try again:</p>
+
+<p>vm:
+* The box &lsquo;base&rsquo; could not be found.
+```</p>
+
+<p><a href="http://www.trapon.jp/log/201307/mac_vagrant_centos.html">Macで Vagrant を導入してCentOSを入れる | trapon : experience</a>
+より、先ほど作成したbox名(centos65-x86_64-20131205)を指定しなければならないらしい。</p>
+
+<p>vagnratfileを書き換えて再度<code>vagrant up</code>を実行。</p>
+
+<p>```
+% vagrant up                                  [~/vagrant/kita]
+WARN: Unresolved specs during Gem::Specification.reset:</p>
+
+<pre><code>  ffi (&gt;= 1.0.11, ~&gt; 1.0)
+  net-ssh (&lt; 2.8.0, &gt;= 2.6.5, &gt;= 2.6.6)
+</code></pre>
+
+<p>WARN: Clearing out unresolved specs.
+Please report a bug if this causes problems.
+Bringing machine &lsquo;default&rsquo; up with &lsquo;virtualbox&rsquo; provider&hellip;
+[default] Importing base box &lsquo;centos65-x86_64-20131205&rsquo;&hellip;
+[default] Matching MAC address for NAT networking&hellip;
+[default] Setting the name of the VM&hellip;
+[default] Clearing any previously set forwarded ports&hellip;
+[default] Clearing any previously set network interfaces&hellip;
+[default] Preparing network interfaces based on configuration&hellip;
+[default] Forwarding ports&hellip;
+[default] &mdash; 22 => 2222 (adapter 1)
+[default] Booting VM&hellip;
+[default] Waiting for machine to boot. This may take a few minutes&hellip;
+[default] Machine booted and ready!
+[default] Mounting shared folders&hellip;
+[default] &mdash; /vagrant
+```</p>
+
+<p>ok.次は環境構築。</p>
+
+<h4>4. 環境を構築します</h4>
+
+<p><strong>最低限必要な環境を構築</strong></p>
+
+<p>zsh, vim, emacs, wget, rubyをyum install
+<code>
+% sudo yum install -y zsh vim emacs wget ruby
+</code>
+rubyをinstallするためにrubyが必要なので、rubyを入れる。</p>
+
+<p>あと、</p>
+
+<p><code>
+% sudo chsh -s /bin/zsh vagrant
+</code>
+でvagrantのlogin shellを指定しておく。</p>
+
+<p><strong>rbenvを導入</strong></p>
+
+<p>次にrubyのversion管理を行ってくれるrbenvを入れる。
+gitは入っていたのでrbenvをgit cloneする</p>
+
+<p><code>
+[vagrant@vagrant-centos65 ~]$ git clone git://github.com/sstephenson/rbenv.git .rbenv
+Initialized empty Git repository in /home/vagrant/.rbenv/.git/
+remote: Reusing existing pack: 1857, done.
+remote: Total 1857 (delta 0), reused 0 (delta 0)
+Receiving objects: 100% (1857/1857), 290.89 KiB | 118 KiB/s, done.
+Resolving deltas: 100% (1162/1162), done.
+</code>
+無事install完了</p>
+
+<p><code>
+% echo 'export PATH="$HOME/.rbenv/bin:$PATH"' &gt;&gt; ~/.zprofile
+% echo 'eval "$(rbenv init - zsh)"' &gt;&gt; ~/.zprofile
+% source .zprofile
+</code>
+rbenvで確認</p>
+
+<p><code>
+% rbenv
+rbenv 0.4.0-89-g14bc162
+(ry
+</code>
+おk</p>
+
+<p>次にruby-buildを入れる。ruby-buildはrbenvでrubyをinstallする際に必要となる、rbenvのplugin。.rbenv/pluginsに入れる。</p>
+
+<p><code>
+git clone git://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
+</code></p>
+
+<p>そしたら</p>
+
+<p><code>
+[vagrant@vagrant-centos65 ~]$ rbenv install
+Usage: rbenv install [-f] [-kvp] &lt;version&gt;
+</code>
+rbenv installが使える。これで<code>rbenv install 2.0.0-dev</code>で2.0.0-devを入れられる。。。</p>
+
+<p>と思ったらエラー</p>
+
+<p><code>
+/tmp/ruby-build.20140112065649.9158 ~
+Initialized empty Git repository in /tmp/ruby-build.20140112065649.9158/ruby-2.2.0-dev/.git/
+/tmp/ruby-build.20140112065649.9158/ruby-2.2.0-dev /tmp/ruby-build.20140112065649.9158 ~
+configure.in:6: error: Autoconf version 2.67 or higher is required←これ
+configure.in:6: the top level
+autom4te: /usr/bin/m4 failed with exit status: 63
+</code></p>
+
+<p>autoconf version2.67以上が必要。
+一応、確認してみる。</p>
+
+<p>```
+[vagrant@vagrant-centos65 ~]$ autoconf &mdash;version
+autoconf (GNU Autoconf) 2.63
+Copyright &copy; 2008 Free Software Foundation, Inc.
+License GPLv2+: GNU GPL version 2 or later
+<a href="http://gnu.org/licenses/old-licenses/gpl-2.0.html">http://gnu.org/licenses/old-licenses/gpl-2.0.html</a>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.</p>
+
+<p>Written by David J. MacKenzie and Akim Demaille.
+```
+version 2.63だった。
+wgetで最新のautoconfを入れる。</p>
+
+<p><code>
+% wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz
+% tar zxfv autoconf-2.69.tar.gz
+</code>
+あとはcdしてconfigureしてmakeしてmake install.あと/usr/local/binにpathを通す。(忘れてた)</p>
+
+<p>コレでよしと思ったらまたエラーが出た。</p>
+
+<p><code>
+The Ruby openssl extension was not compiled. Missing the OpenSSL lib?
+</code></p>
+
+<p>opensslがないって言われた。が、opensslはある･･･
+しらべてみると同じようなエラーが出た人がいた。
+<a href="http://futurismo.biz/archives/1389">CentOSに rbenv 経路で Ruby 2.0.0-p195を入れようとしたら、エラー | Futurismo</a>
+libssl-devがないといけないらしい。</p>
+
+<p><code>
+% sudo yum -y install openssl-devel
+</code>
+を実行</p>
+
+<p><code>
+$ rbenv install 2.2.0-dev
+ry
+$ rbenv versions
+* system (set by /home/vagrant/.rbenv/version)
+  2.2.0-dev
+</code>
+出来た。</p>
+
+<p><code>
+$ rbenv global 2.2.0-dev
+$ ruby --version
+ruby 2.2.0dev (2014-01-12 trunk 44569) [x86_64-linux]
+</code></p>
+
+<p>railsをgem install</p>
+
+<p><code>
+$ gem install rails
+</code>
+30分くらいかかった。</p>
+
+<p><strong>rails環境を整える</strong></p>
+
+<p>DBMSはpostgresqlを使用するので、2014/01/15現在最新のver9.3 を入れる。</p>
+
+<p>参考:<a href="http://www.ideaxidea.com/archives/2013/12/centos6_postgresql_yum.html">PostgreSQL9.3をCentOS6にyumで入れて設定するまでの手順まとめ | IDEA*IDEA</a></p>
+
+<p>postgresql93のinstallと自動起動の設定</p>
+
+<p><code>
+$ sudo rpm -i http://yum.postgresql.org/9.3/redhat/rhel-6-x86_64/pgdg-redhat93-9.3-1.noarch.rpm
+$ sudo yum -y install postgresql93-server postgresql93-contrib  postgresql93-devel
+$ sudo service postgresql-9.3 initdb
+$ sudo chkconfig postgresql-9.3 on
+$ sudo service postgresql-9.3 status
+$ sudo service postgresql-9.3 start
+</code></p>
+
+<p>Timezoneの設定</p>
+
+<p><code>
+sudo vim /var/lib/pgsql/9.3/data/postgresql.conf
+timezone = 'Asia/Tokyo'
+</code></p>
+
+<p>install時にposstgresというユーザが作られる。</p>
+
+<p><code>
+$ id postgres
+uid=26(postgres) gid=26(postgres) groups=26(postgres)
+$ su - postgres
+Password:
+</code></p>
+
+<p>installされたpsqlコマンドは、<code>/usr/pgsql-9.3/bin</code>以下に保存されるので、そこにPATHを通しておく。</p>
+
+<p>次にuser vagrant に権限を追加する
+参考:<a href="http://www.postgresql.jp/document/8.1/html/app-createuser.html">createuser</a></p>
+
+<p>```
+$ su &ndash; postgres
+$ createuser &mdash;createdb &mdash;createrole &mdash;superuser vagrant
+$ psql
+psql (9.3.2)
+Type &ldquo;help&rdquo; for help.</p>
+
+<p>postgres=# \du</p>
+
+<pre><code>                         List of roles
+</code></pre>
+
+<p> Role name |                   Attributes                   | Member of
+&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;+&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;
+ postgres  | Superuser, Create role, Create DB, Replication | {}
+ vagrant   | Superuser, Create role, Create DB              | {}
+```</p>
+
+<p>次にrails環境の構築を行う。
+作業は/vagrant/work以下で行う。この/vagrantディレクトリはhostOSでのVagrantfileの入ったディレクトリとの共有ディレクトリである。</p>
+
+<p>つぎにpgのinstallは、<code>% gem install pg -- --with-pg-config=/usr/pgsql-9.3/bin/ --with-pg-lib=/usr/pgsql-9.3/lib</code>
+のように指定してinstallする必要がある。</p>
+
+<p>その後、<code>rails new sample -d postgresql</code>を実行する。</p>
+
+<p><code>
+% rails new sample -d postgresql
+(ry
+</code>
+bundle installに割りと時間がかる。</p>
+
+<p>その後、作成したsampleディレクトリに移動し、<a href="http://www.rubylife.jp/rails/ini/">アプリケーション作成から実行までの手順 &ndash; Ruby on Rails入門</a> を元に<code>rails server(rails s)</code>を実行しrailsアプリが動くか確認。</p>
+
+<p>エラーが発生した。</p>
+
+<p><code>
+autodetect': Could not find a JavaScript runtime.
+</code></p>
+
+<p>sample/Gemfileでコメントアウトされている<code>gem 'therubyracer', :platforms =&gt; :ruby</code>をコメントアウト外して<code>bundle install</code>を行う。</p>
+
+<p>ここまで来たらrailsアプリが作成できる。その前に、一度vagrantを閉じ、vagrantfileに記述を追加する。</p>
+
+<p><code>
+config.vm.network :forwarded_port, guest: 3000, host: 3000
+</code>
+これは、gestOSのport3000番を、hostOSの3000番に接続する記述である。この記述により、guestOSで立ち上げたRailsApplicationがhostOSのブラウザで確認できるようになる。</p>
+
+<p>なお、railsアプリケーションの作成法については <a href="http://www.rubylife.jp/rails/ini/index6.html">モデルの作成とデータベースの利用 &ndash; Ruby on Rails入門</a>を参考にし、作成できることを確認した。</p>
+
+<h4>5. box化します</h4>
+
+<ol>
+<li><code>VBoxManage list vms</code>でbox化したいVM imageの名前をコピー</li>
+<li><code>vagrant package --base コピーしたVMimageの名前 --output path/to/任意のbox名.box</code>で&mdash;outputで指定したpathにboxファイルが作成される。</li>
+<li>作成されたboxを<code>vagrant box add</code>して、きちんと使用できるか確認する。</li>
+<li>出来た。</li>
+</ol>
+
+
+<p>vagrantでCentOSを入れる、rails環境を整える、box作成までの流れはこんなかんじ。</p>
+
+<p>やっとJenkinsに移れる･･･</p>
+]]></content>
+  </entry>
+  
+</feed>

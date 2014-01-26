@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: octperss | こめぶろ]]></title>
+  <link href="http://rice-american.github.io/blog/categories/octperss/atom.xml" rel="self"/>
+  <link href="http://rice-american.github.io/"/>
+  <updated>2014-01-26T15:30:06+09:00</updated>
+  <id>http://rice-american.github.io/</id>
+  <author>
+    <name><![CDATA[rice_american]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Octpressを導入してイカすBlogを作る]]></title>
+    <link href="http://rice-american.github.io/blog/2014/01/18/octpress/"/>
+    <updated>2014-01-18T10:57:20+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/01/18/octpress</id>
+    <content type="html"><![CDATA[<p>Jekyllをそのまま使うより<a href="http://octopress.org/">Octopress</a>を使うのが、Blogの運用には最適らしい。
+<code>rake new_post["title"]</code>で記事作成できるのが楽。</p>
+
+<h2>導入方法</h2>
+
+<p>Octpress導入までは<a href="http://tantant.jp/blog/Octopress/installing-octopress/">Markdownで書いてGitで管理するブログ「Octopress」の始め方 &ndash; tantant</a>を参考にした。</p>
+
+<h2>theme</h2>
+
+<p><a href="http://opthemes.com/">Opthemes · Octopress Themes</a>を見ながら、Octpressのthemeを決める。今回入れたのは<a href="https://github.com/shashankmehta/greyshade">shashankmehta/greyshade</a>. READMEにinstall方法が載っているのでそのまま導入。</p>
+
+<h2>icon</h2>
+
+<p><a href="http://ja.gravatar.com/">Gravatar</a>を使用している際は、_config.ymlのemail: にGravatarに登録しているemail addressを指定すると、反映される。この場合、メールのリンクがトップ画面に追加される。
+また、email addressを載せるのに抵抗がある人はemail_md5: にmd5でhash化したemail addressを指定してあげると良い。</p>
+]]></content>
+  </entry>
+  
+</feed>

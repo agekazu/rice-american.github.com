@@ -1,0 +1,376 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>herokuへRuby on Railsアプリケーションをdeployするまで - こめぶろ</title>
+  <meta name="author" content="rice_american">
+
+  
+  <meta name="description" content="RoR, heroku herokuへRuby on Railsアプリケーションをdeployするまで 参考:Herokuでアプリを公開する直前までのチュートリアル &ndash; Qiita [キータ] $ git clone git://github.com/heroku/ruby- &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://rice-american.github.io/blog/2014/01/26/heroku%E3%81%B8RoR%E3%82%A2%E3%83%95%E3%82%9A%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%82%92deploy%E3%81%99%E3%82%8B%E3%81%BE%E3%81%A6%E3%82%99">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/styles.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="こめぶろ" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <script src="/javascripts/jquery.sidr.min.js"></script>
+  <script src="/javascripts/ah-blue.js"></script>
+  
+  
+
+</head> 
+
+<body   >
+  <div class="aux-container">
+
+   <a id="nav-toggle" href="#sidr"></a>
+    <a id="search-toggle"></a>
+</div>
+
+<header class="header-container clearfix">
+        <a href="/"><img src="/images/ah-frame.svg" onerror="this.onerror=null; this.src='ah-frame.png'"></a>
+</header>
+
+
+  <div class="main-container">
+    <div class="main wrapper clearfix">
+    	
+    	<aside>
+			
+			  	<div class="search-container">
+					<form action="http://google.com/search" method="get">
+						<fieldset role="search">
+							<input type="hidden" name="q" value="site:blog.alexharr.is" />
+							<input class="search-field" type="text" name="q" results="0" placeholder=""/>
+							<input class="submit" type="submit" value=""/>
+						</fieldset>
+					</form>
+				</div>
+			
+		  <div id="main-nav">
+    <nav>
+        <ul>
+        	<li>
+        		
+					<h3>Recent Posts</h3>
+<ul>
+	
+    <li>
+    	<a href="/blog/2014/01/26/rails%2Bbootstrap/">Rails+bootstrapなアプリケーションを作る</a>
+    </li>
+    
+    <li>
+    	<a href="/blog/2014/01/26/heroku%E3%81%B8RoR%E3%82%A2%E3%83%95%E3%82%9A%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%82%92deploy%E3%81%99%E3%82%8B%E3%81%BE%E3%81%A6%E3%82%99/">herokuへRuby on Railsアプリケーションをdeployするまで</a>
+    </li>
+    
+    <li>
+    	<a href="/blog/2014/01/19/jenkins%E3%82%92%E5%AD%A6%E3%81%B5%E3%82%99/">Jenkinsについて学ぶ</a>
+    </li>
+    
+    <li>
+    	<a href="/blog/2014/01/18/octpress/">Octpressを導入してイカすBlogを作る</a>
+    </li>
+    
+    <li>
+    	<a href="/blog/2014/01/18/rails_%E3%82%A2%E3%83%95%E3%82%9A%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E4%BD%9C%E6%88%90%E3%81%AE%E6%89%8B%E9%A0%86/">Rails アプリケーション作成の手順</a>
+    </li>
+    
+</ul>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/rice-american">@rice-american</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'rice-american',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+				
+        	</li>
+        	<li>
+        		<ul>
+                    <li>Projects - <a href="http://www.alexharr.is" target="_blank">alexharr.is</a>
+        			<li>Github - <a href="http://www.github.com/alexharris" target="_blank">github.com/alexharris</a></li>
+                    <li>Twitter - <a href="http://www.twitter.com/alexharris6" target="_blank">@alexharris6</a></li>
+                    <li>Email - <a href="mailto:alexharris6@gmail.com" target="_blank">alexharris6 at gmail</a></li>
+        		</ul>
+        	</li>
+        </ul>
+    </nav>
+</div>
+		</aside>
+		
+      <div>
+<article>
+	<header>
+  <div class="article-tags">
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ror/'>RoR</a>, <a class='category' href='/blog/categories/heroku/'>heroku</a>
+  
+</span>
+
+
+  </div>
+  
+    <h1>
+      herokuへRuby on Railsアプリケーションをdeployするまで
+    </h1>
+  
+</header>
+<section>
+  <p><strong>参考</strong>:<a href="http://qiita.com/mah_lab/items/9df8230e709a23b04f7f">Herokuでアプリを公開する直前までのチュートリアル &ndash; Qiita [キータ]</a></p>
+
+<pre><code>$ git clone git://github.com/heroku/ruby-sample.git
+$ cd ruby-sample
+$ heroku create
+$ git push heroku master
+$ heroku open
+</code></pre>
+
+<p><em>heroku open</em>を実行すると先ほどpushしたrailsアプリが表示される。</p>
+
+<p>applicationの名前を変更するときは<em>$ heroku rename hogehoge</em>とする。</p>
+
+<p>次のようにした。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ heroku rename rice-rails-test                         [~/trial/ruby-sample]
+</span><span class='line'>Renaming warm-castle-8443 to rice-rails-test... done
+</span><span class='line'>http://rice-rails-test.herokuapp.com/ | git@heroku.com:rice-rails-test.git
+</span><span class='line'>Git remote heroku updated</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>前に作ったbootstrap+railsなアプリをdeployする。</h2>
+
+<p>作ったアプリケーションに移動して</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git init
+</span><span class='line'>$ heroku create rice-rails-bootstrap-test
+</span><span class='line'>$ git push heroku master
+</span><span class='line'>$ heroku open</span></code></pre></td></tr></table></div></figure>
+
+
+<p>表示されたページにerrorがでた</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>The page you were looking for doesn't exist.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>検索すると･･･:<a href="http://qiita.com/seltzer/items/d52a31c558a30c857a3f">herokuで「The page you were looking for doesn’t exist.」エラーが出るときの対処法 &ndash; Qiita [キータ]</a></p>
+
+<p><em>『Rails 3.2以降で発生する現象で、アセット周りのプリコンパイルが影響しているのだとか。これを回避するには、オフィシャルドキュメントの手順に加えて次の手順をしなければならないようです。』</em>
+とのこと。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ rake assets:precompile</span></code></pre></td></tr></table></div></figure>
+
+
+<p>だがだめ、</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ vim config/environments/production.rb
+</span><span class='line'>config.assets.compile = true</span></code></pre></td></tr></table></div></figure>
+
+
+<p>としてdeployするもだめ、</p>
+
+<p><a href="http://d.hatena.ne.jp/piggery/20120807">HerokuでRailsアプリを動かす &ndash; かいはつにっき</a></p>
+
+<p>ここを見ると、</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ rails server -e production</span></code></pre></td></tr></table></div></figure>
+
+
+<p>として動かすと,dbがないと言われた。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>The page you were looking for doesn't exist.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>検索すると･･･:<a href="http://qiita.com/seltzer/items/d52a31c558a30c857a3f">herokuで「The page you were looking for doesn’t exist.」エラーが出るときの対処法 &ndash; Qiita [キータ]</a></p>
+
+<p><em>『Rails 3.2以降で発生する現象で、アセット周りのプリコンパイルが影響しているのだとか。これを回避するには、オフィシャルドキュメントの手順に加えて次の手順をしなければならないようです。』</em>
+とのこと。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ vim config/environments/production.rb
+</span><span class='line'>config.assets.compile = true</span></code></pre></td></tr></table></div></figure>
+
+
+<p>としてdeployするもだめ、</p>
+
+<p><a href="http://d.hatena.ne.jp/piggery/20120807">HerokuでRailsアプリを動かす &ndash; かいはつにっき</a></p>
+
+<p>ここを見ると、</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ rails server -e production</span></code></pre></td></tr></table></div></figure>
+
+
+<p>として動かすとdbがないと言われた。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ rake db:migrate
+</span><span class='line'>$ rake db:create</span></code></pre></td></tr></table></div></figure>
+
+
+<p>なんやかんや最終的にはurlが間違ってたっぽい･･･url+=/books</p>
+
+<p><a href="http://rice-rails-bootstrap-test.herokuapp.com/books">http://rice-rails-bootstrap-test.herokuapp.com/books</a></p>
+
+<p>アホや･･･</p>
+
+<h2>CentOSにherokuを</h2>
+
+<p>参考:<a href="http://succi.jp/blog/?p=1137">「CentOSにheroku toolbeltをインストール」が失敗する場合の対処</a></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># いきなりshに送る事は避けて、install.shをダウンロード
+</span><span class='line'>$ wget --no-check-certificate https://toolbelt.heroku.com/install.sh
+</span><span class='line'>
+</span><span class='line'># install.shの内容を確認してから、改めて実行
+</span><span class='line'>$ sh ./install.sh
+</span><span class='line'>This script requires superuser access to install software.
+</span><span class='line'>You will be prompted for your password by sudo.
+</span><span class='line'>Installation complete
+</span><span class='line'>
+</span><span class='line'># install.shを削除
+</span><span class='line'>$ rm install.sh
+</span><span class='line'>
+</span><span class='line'># パスを追加
+</span><span class='line'>$ echo 'PATH="/usr/local/heroku/bin:$PATH"' &gt;&gt; .bashrc
+</span><span class='line'>$ source .bashrc
+</span><span class='line'>
+</span><span class='line'># 実行
+</span><span class='line'>$ heroku --version
+</span><span class='line'>heroku-toolbelt/3.1.0 (x86_64-linux) ruby/2.0.0</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ok</p>
+
+</section>
+<footer>
+  <div class="article-date">
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-26T00:24:57+09:00" pubdate data-updated="true">Jan 26<span>th</span>, 2014</time>
+  </div>
+</footer>
+
+	
+</article>
+</div>
+
+    </div>
+  </div>
+  <footer class="main-footer">
+	<section class="interior-footer">
+		<span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+	</section>
+</footer>
+
+
+  
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+</body>
+</html>
