@@ -5,13 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Jenkins Chef Bundleについて調べた - おこめぶろぐ</title>
+  <title>さくらVPSにjenkinsとNginxでJenkinsサーバを構築する。 - おこめぶろぐ</title>
   <meta name="author" content="rice_american">
 
   
-  <meta name="description" content="bundle, chef, jenkins Jenkins Chef Bundleについて調べた しらべたもの Vagrantについて といってもここを見ただけ Vagrantの基本 &ndash; Qiita [キータ]
-嬉しいこと 他人への環境配布が容易(boxを配ればいい)
-ゲストOS( &hellip;">
+  <meta name="description" content="jenkins, nginx さくらVPSにjenkinsとNginxでJenkinsサーバを構築する。 前回はHerokuにdeployできたので、次はJenkinsの方をば。
+参考: さくらのVPSにJenkins/Nginxをインストールする &ndash; 愉快な神様とヘタレな下僕 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://rice-american.github.io/blog/2014/01/12/about_Jenkins_Chef_Bundle">
+  <link rel="canonical" href="http://rice-american.github.io/blog/2014/01/27/nginx-jenkins">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/styles.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="おこめぶろぐ" type="application/atom+xml">
@@ -164,7 +163,7 @@
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/bundle/'>bundle</a>, <a class='category' href='/blog/categories/chef/'>chef</a>, <a class='category' href='/blog/categories/jenkins/'>jenkins</a>
+    <a class='category' href='/blog/categories/jenkins/'>jenkins</a>, <a class='category' href='/blog/categories/nginx/'>nginx</a>
   
 </span>
 
@@ -172,108 +171,119 @@
   </div>
   
     <h1>
-      Jenkins Chef Bundleについて調べた
+      さくらVPSにjenkinsとNginxでJenkinsサーバを構築する。
     </h1>
   
 </header>
 <section>
-  <h2>しらべたもの</h2>
+  <p>前回はHerokuにdeployできたので、次はJenkinsの方をば。
+参考: <a href="http://d.hatena.ne.jp/FGtatsuro/20120603/1338653541">さくらのVPSにJenkins/Nginxをインストールする &ndash; 愉快な神様とヘタレな下僕</a></p>
 
-<h4>Vagrantについて</h4>
+<p>今現在の状況ではJenkinsとNginx</p>
 
-<p>といってもここを見ただけ</p>
-
-<ul>
-<li><p><a href="http://qiita.com/kidachi_/items/e63c1607705178aa257c">Vagrantの基本 &ndash; Qiita [キータ]</a></p></li>
-<li><p>嬉しいこと</p>
-
-<ul>
-<li>他人への環境配布が容易(boxを配ればいい)</li>
-<li>ゲストOS(CentOSとか)とホストOS(Macとか)で共有フォルダが作成されるので、Macの環境でコードを書いて、ホストOSで実行する、ということができる！</li>
-</ul>
-</li>
-</ul>
-
-
-<h4>Jenkinsについて</h4>
-
-<p>継続的インテグレーション(CI)するやーつ</p>
-
-<pre><code>テストの自動化
-デプロイの自動化
-各種タイミングでの通知
-</code></pre>
-
-<p>をしてくれるすごいやつらしい→
-<a href="http://www.buildinsider.net/enterprise/jenkins/01">Jenkinsを使ってみよう（Mac OS X＆Linux）［Ruby、Rails］ &ndash; Build Insider</a></p>
+<p>JenkinsさんはJavaがないと動いてくれないので入れておきます。</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'> brew install jenkins</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo yum install -y java-1.6.0-openjdk java-1.6.0-openjdk-devel</span></code></pre></td></tr></table></div></figure>
 
 
-<p>で入る。</p>
-
-<h4>Chefについて</h4>
-
-<ul>
-<li>ファイルに記述した設定内容に応じて自動的にユーザーの作成やパッケージのインストール、設定ファイルの編集などを行うツール.</li>
-<li>Recipeを元にserverを立てる。</li>
-<li>Recipeはrubyで書かれている。</li>
-</ul>
-
-
-<h4>Bundelrについて</h4>
-
-<ul>
-<li>Gemパッケージの種類やバージョン管理し、複数のPCで必要なGemパッケージを簡単にinstallすることができるPackageである。</li>
-</ul>
-
-
-<p>tips:<a href="http://blog.mirakui.com/entry/20100703/1278165723">gem管理の新標準ツール&#8221;Bundler&#8221;のTips &ndash; 昼メシ物語</a></p>
+<p>Jenkinsさんをお招きします</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>bundle install [Dir]</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
+</span><span class='line'>$ sudo rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
+</span><span class='line'>$ sudo yum install jenkins</span></code></pre></td></tr></table></div></figure>
 
 
-<p>とすると、Dir以下にgemが展開されるので、localのgemは汚染されない。</p>
-
-<p>通常は</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>bundle install vender/bundle</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とする。</p>
-
-<p>こうしてbundle install すると、次回以降はdir指定はしなくて良い。</p>
-
-<p>設定ファイルは<strong>./bundle/config</strong>にあり。</p>
-
-<p>$GEM_HOMEのgemを一切使わないoptionは</p>
+<p>Jenkinsさんを動かします</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ bundle install --path=vendor/bundle --binstubs=vendor/bin</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo service jenkins start</span></code></pre></td></tr></table></div></figure>
 
 
-<p>となる。</p>
+<p>ok.</p>
 
-<p><strong>exec</strong></p>
+<p>続いてnginx.</p>
 
-<ul>
-<li><strong>bundle execをつかうと、BUNDLE_PATH以下のgemが使われる。</strong></li>
-</ul>
-
+<p>nginxは</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ bundle exec hoge</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo yum install nginx</span></code></pre></td></tr></table></div></figure>
 
 
-<p><strong>cronからbundleを使いたいときは</strong></p>
+<p>で入ります。</p>
 
-<p><code>
- * * * * * source $HOME/.rvm/scripts/rvm; rvm your-ruby-version; cd /path-to-project/; bundle exec ruby your-script.rb
-</code>
-とするらしい。</p>
+<p>続いて/etc/nginx/nginx.confを書き換えます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ vi /etc/nginx/nginx.conf
+</span><span class='line'>http {
+</span><span class='line'>
+</span><span class='line'>===
+</span><span class='line'>ry)
+</span><span class='line'>===
+</span><span class='line'>
+</span><span class='line'>  server {
+</span><span class='line'>    listen 80;
+</span><span class='line'>    server_name &lt;ホスト名&gt;;
+</span><span class='line'>    location {
+</span><span class='line'>      proxy_pass http://localhost:80; 
+</span><span class='line'>    }  
+</span><span class='line'>  }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ホスト名は、サーバのホスト名を入れます。</p>
+
+<p>jenkinsの設定は/etc/nginx/conf.d/jenkins.confを変更します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>server {
+</span><span class='line'>    location /jenkins {
+</span><span class='line'>         proxy_pass http://localhost:8080;
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>そしてrestart!</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>% sudo service nginx restart
+</span><span class='line'>nginx を停止中:                                            [  OK  ]
+</span><span class='line'>nginx を起動中:                                            [  OK  ]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ok.</p>
+
+<p>で、<a href="http://">http://</a>[ホスト名]/jenkinsへアクセスすると･･･Jenkinsさんが表示されました！</p>
+
+<p>後はJenkinsさんの認証を何とかしますー。</p>
+
+<p><a href="http://www.yaunix.com/2013/02/04/%E3%81%95%E3%81%8F%E3%82%89vps%E3%81%A7jenkins%E3%82%92%E3%82%BB%E3%83%83%E3%83%88%E3%82%A2%E3%83%83%E3%83%97%E3%81%97%E3%80%81%E8%AA%8D%E8%A8%BC%E3%82%92%E8%A1%8C%E3%81%86%E3%81%BE%E3%81%A7/">さくらVPSでJenkinsをセットアップし、認証を行うまで | ひたすらメモするだけのブログ</a>を見ると見た感じGUIで設定できるっぽい･･･？</p>
+
+<p>[とりあえず今日はここまで]</p>
 
 </section>
 <footer>
@@ -290,7 +300,7 @@
   
 
 
-<time datetime="2014-01-12T00:00:00+09:00" pubdate data-updated="true">Jan 12<span>th</span>, 2014</time>
+<time datetime="2014-01-27T16:36:06+09:00" pubdate data-updated="true">Jan 27<span>th</span>, 2014</time>
   </div>
 </footer>
 

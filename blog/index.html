@@ -9,8 +9,8 @@
   <meta name="author" content="rice_american">
 
   
-  <meta name="description" content="RoR, bootstrap Rails+bootstrapなアプリケーションを作る install及びアプリ作成までは次のページを参考に
-参考: simple_formとTwitter bootstrapで作る俺流鉄板Railsアプリ（その１） / Oh My Enter! &hellip;">
+  <meta name="description" content="jenkins, nginx さくらVPSにjenkinsとNginxでJenkinsサーバを構築する。 前回はHerokuにdeployできたので、次はJenkinsの方をば。
+参考: さくらのVPSにJenkins/Nginxをインストールする &ndash; 愉快な神様とヘタレな下僕 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +69,10 @@
       <h3>Recent Posts</h3>
 <ul>
 	
+    <li>
+    	<a href="/blog/2014/01/27/nginx-jenkins/">さくらVPSにjenkinsとNginxでJenkinsサーバを構築する。</a>
+    </li>
+    
     <li>
     	<a href="/blog/2014/01/26/rails-bootstrap/">Rails+bootstrapなアプリケーションを作る</a>
     </li>
@@ -152,6 +156,155 @@
 		</aside>
 		
       
+
+
+    <article class="post"><header>
+  <div class="article-tags">
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/jenkins/'>jenkins</a>, <a class='category' href='/blog/categories/nginx/'>nginx</a>
+  
+</span>
+
+
+  </div>
+  
+    <h1><a href="/blog/2014/01/27/nginx-jenkins/">
+      さくらVPSにjenkinsとNginxでJenkinsサーバを構築する。
+    </a></h1>
+  
+</header>
+<section>
+  <p>前回はHerokuにdeployできたので、次はJenkinsの方をば。
+参考: <a href="http://d.hatena.ne.jp/FGtatsuro/20120603/1338653541">さくらのVPSにJenkins/Nginxをインストールする &ndash; 愉快な神様とヘタレな下僕</a></p>
+
+<p>今現在の状況ではJenkinsとNginx</p>
+
+<p>JenkinsさんはJavaがないと動いてくれないので入れておきます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo yum install -y java-1.6.0-openjdk java-1.6.0-openjdk-devel</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Jenkinsさんをお招きします</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
+</span><span class='line'>$ sudo rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
+</span><span class='line'>$ sudo yum install jenkins</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Jenkinsさんを動かします</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo service jenkins start</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ok.</p>
+
+<p>続いてnginx.</p>
+
+<p>nginxは</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo yum install nginx</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で入ります。</p>
+
+<p>続いて/etc/nginx/nginx.confを書き換えます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ vi /etc/nginx/nginx.conf
+</span><span class='line'>http {
+</span><span class='line'>
+</span><span class='line'>===
+</span><span class='line'>ry)
+</span><span class='line'>===
+</span><span class='line'>
+</span><span class='line'>  server {
+</span><span class='line'>    listen 80;
+</span><span class='line'>    server_name &lt;ホスト名&gt;;
+</span><span class='line'>    location {
+</span><span class='line'>      proxy_pass http://localhost:80; 
+</span><span class='line'>    }  
+</span><span class='line'>  }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ホスト名は、サーバのホスト名を入れます。</p>
+
+<p>jenkinsの設定は/etc/nginx/conf.d/jenkins.confを変更します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>server {
+</span><span class='line'>    location /jenkins {
+</span><span class='line'>         proxy_pass http://localhost:8080;
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>そしてrestart!</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>% sudo service nginx restart
+</span><span class='line'>nginx を停止中:                                            [  OK  ]
+</span><span class='line'>nginx を起動中:                                            [  OK  ]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ok.</p>
+
+<p>で、<a href="http://">http://</a>[ホスト名]/jenkinsへアクセスすると･･･Jenkinsさんが表示されました！</p>
+
+<p>後はJenkinsさんの認証を何とかしますー。</p>
+
+<p><a href="http://www.yaunix.com/2013/02/04/%E3%81%95%E3%81%8F%E3%82%89vps%E3%81%A7jenkins%E3%82%92%E3%82%BB%E3%83%83%E3%83%88%E3%82%A2%E3%83%83%E3%83%97%E3%81%97%E3%80%81%E8%AA%8D%E8%A8%BC%E3%82%92%E8%A1%8C%E3%81%86%E3%81%BE%E3%81%A7/">さくらVPSでJenkinsをセットアップし、認証を行うまで | ひたすらメモするだけのブログ</a>を見ると見た感じGUIで設定できるっぽい･･･？</p>
+
+<p>[とりあえず今日はここまで]</p>
+
+</section>
+<footer>
+  <div class="article-date">
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-27T16:36:06+09:00" pubdate data-updated="true">Jan 27<span>th</span>, 2014</time>
+  </div>
+</footer>
+</article>
 
 
     <article class="post"><header>
