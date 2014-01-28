@@ -4,7 +4,7 @@
   <title><![CDATA[Category: heroku | おこめぶろぐ]]></title>
   <link href="http://rice-american.github.io/blog/categories/heroku/atom.xml" rel="self"/>
   <link href="http://rice-american.github.io/"/>
-  <updated>2014-01-27T20:52:19+09:00</updated>
+  <updated>2014-01-28T15:53:48+09:00</updated>
   <id>http://rice-american.github.io/</id>
   <author>
     <name><![CDATA[rice_american]]></name>
@@ -34,9 +34,9 @@ $ heroku open
 <p>次のようにした。</p>
 
 <p><code>
-$ heroku rename rice-rails-test                         [~/trial/ruby-sample]
+$ heroku rename rice-rails-bootstrap-test                         
 Renaming warm-castle-8443 to rice-rails-test... done
-http://rice-rails-test.herokuapp.com/ | git@heroku.com:rice-rails-test.git
+http://rice-rails-bootstrap-test.com/ | git@heroku.com:rice-rails-bootstrap-test.git
 Git remote heroku updated
 </code></p>
 
