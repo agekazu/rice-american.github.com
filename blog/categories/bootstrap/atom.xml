@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: bootstrap | おこめぶろぐ]]></title>
+  <title><![CDATA[Category: Bootstrap | おこめぶろぐ]]></title>
   <link href="http://rice-american.github.io/blog/categories/bootstrap/atom.xml" rel="self"/>
   <link href="http://rice-american.github.io/"/>
-  <updated>2014-01-28T15:53:48+09:00</updated>
+  <updated>2014-01-29T17:09:47+09:00</updated>
   <id>http://rice-american.github.io/</id>
   <author>
     <name><![CDATA[rice_american]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[rails_iconfont]]></title>
+    <title type="html"><![CDATA[Rails_iconfont]]></title>
     <link href="http://rice-american.github.io/blog/2014/01/27/rails-iconfont/"/>
     <updated>2014-01-27T20:53:22+09:00</updated>
     <id>http://rice-american.github.io/blog/2014/01/27/rails-iconfont</id>
@@ -30,11 +30,7 @@
 
 <p>より詳細な使い方は<a href="http://www.webcreatorbox.com/tech/iconfonts/">アイコンフォントでリンクタイプ別にアイコンつける方法 | Webクリエイターボックス</a>を参考にしました。</p>
 
-<p>最終的に次の2つのアイコンを選択してDL</p>
-
-<p><img src="./img/2014-01-27-1.png" alt="image" /></p>
-
-<p>[t]や[p]はtag.</p>
+<p>最終的に次の2つのアイコンを選択してDL.</p>
 
 <p>DLしたディレクトリの中の/fontに選択したfonticonが入っているので、それを<em>任意の場所に移動･･･。</em></p>
 
@@ -82,7 +78,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[rails+bootstrapなアプリケーションを作る]]></title>
+    <title type="html"><![CDATA[Rails+bootstrapなアプリケーションを作る]]></title>
     <link href="http://rice-american.github.io/blog/2014/01/26/rails-bootstrap/"/>
     <updated>2014-01-26T00:44:29+09:00</updated>
     <id>http://rice-american.github.io/blog/2014/01/26/rails-bootstrap</id>

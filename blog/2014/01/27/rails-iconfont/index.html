@@ -5,13 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Jenkins Chef Bundleについて調べた - おこめぶろぐ</title>
+  <title>Rails_iconfont - おこめぶろぐ</title>
   <meta name="author" content="rice_american">
 
   
-  <meta name="description" content="しらべたもの Vagrantについて といってもここを見ただけ Vagrantの基本 &ndash; Qiita [キータ]
-嬉しいこと 他人への環境配布が容易(boxを配ればいい)
-ゲストOS(CentOSとか)とホストOS(Macとか)で共有フォルダが作成されるので、 &hellip;">
+  <meta name="description" content="前にherokuへのテストとしてあげてたRoRアプリケーションにiconfontを入れてみました。 Fontelloを利用する iconfontは数百あるが、そのうちサイトで使うのはせいぜい10個とか。そうなると、使わないiconfontが無駄･･･ そこで、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://rice-american.github.io/blog/2014/01/12/about_Jenkins_Chef_Bundle">
+  <link rel="canonical" href="http://rice-american.github.io/blog/2014/01/27/rails-iconfont">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="おこめぶろぐ" type="application/atom+xml">
@@ -70,7 +68,7 @@
   
   <header>
     
-      <h1 class="entry-title">Jenkins Chef Bundleについて調べた</h1>
+      <h1 class="entry-title">Rails_iconfont</h1>
     
     
       <p class="meta">
@@ -86,110 +84,76 @@
   
 
 
-<time datetime="2014-01-12T00:00:00+09:00" pubdate data-updated="true">Jan 12<span>th</span>, 2014</time>
+<time datetime="2014-01-27T20:53:22+09:00" pubdate data-updated="true">Jan 27<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><h2>しらべたもの</h2>
+<div class="entry-content"><p>前にherokuへのテストとしてあげてたRoRアプリケーションにiconfontを入れてみました。</p>
 
-<h4>Vagrantについて</h4>
+<h2>Fontelloを利用する</h2>
 
-<p>といってもここを見ただけ</p>
+<p>iconfontは数百あるが、そのうちサイトで使うのはせいぜい10個とか。そうなると、使わないiconfontが無駄･･･</p>
 
-<ul>
-<li><p><a href="http://qiita.com/kidachi_/items/e63c1607705178aa257c">Vagrantの基本 &ndash; Qiita [キータ]</a></p></li>
-<li><p>嬉しいこと</p>
+<p>そこで、自分の使うiconfontだけを選択してDLできる、Fontelloを使ってみました。</p>
 
-<ul>
-<li>他人への環境配布が容易(boxを配ればいい)</li>
-<li>ゲストOS(CentOSとか)とホストOS(Macとか)で共有フォルダが作成されるので、Macの環境でコードを書いて、ホストOSで実行する、ということができる！</li>
-</ul>
-</li>
-</ul>
+<p><a href="http://fontello.com/">Fontello &ndash; icon fonts generator</a></p>
 
+<p>より詳細な使い方は<a href="http://www.webcreatorbox.com/tech/iconfonts/">アイコンフォントでリンクタイプ別にアイコンつける方法 | Webクリエイターボックス</a>を参考にしました。</p>
 
-<h4>Jenkinsについて</h4>
+<p>最終的に次の2つのアイコンを選択してDL.</p>
 
-<p>継続的インテグレーション(CI)するやーつ</p>
+<p>DLしたディレクトリの中の/fontに選択したfonticonが入っているので、それを<em>任意の場所に移動･･･。</em></p>
 
-<pre><code>テストの自動化
-デプロイの自動化
-各種タイミングでの通知
-</code></pre>
+<p>RoRにおけるiconfontの置き場所ってどこなんだろ･･･</p>
 
-<p>をしてくれるすごいやつらしい→
-<a href="http://www.buildinsider.net/enterprise/jenkins/01">Jenkinsを使ってみよう（Mac OS X＆Linux）［Ruby、Rails］ &ndash; Build Insider</a></p>
+<p>参考:<a href="http://strix01.blogspot.jp/2012/06/rails-rails3web.html">strix01: [rails] Rails3でWebフォントを使う。</a></p>
+
+<p>ほかのサイトも見て鑑みて、今回は<code>{Rails.root}/app/assets/fonts</code>においてみました。</p>
+
+<p>scssファイルに記入</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'> brew install jenkins</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>@font-face {
+</span><span class='line'>  font-family: 'fontello';
+</span><span class='line'>  src: url("../font/fontello.eot");
+</span><span class='line'>  src: url("../font/fontello.eot?#iefix") format('embedded-opentype'),
+</span><span class='line'>       url("../font/fontello.woff") format('woff'),
+</span><span class='line'>       url("../font/fontello.ttf") format('truetype'),
+</span><span class='line'>       url("../font/fontello.svg#fontello") format('svg');
+</span><span class='line'>  font-weight: normal; 
+</span><span class='line'>  font-style: normal;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
 
 
-<p>で入る。</p>
-
-<h4>Chefについて</h4>
-
-<ul>
-<li>ファイルに記述した設定内容に応じて自動的にユーザーの作成やパッケージのインストール、設定ファイルの編集などを行うツール.</li>
-<li>Recipeを元にserverを立てる。</li>
-<li>Recipeはrubyで書かれている。</li>
-</ul>
-
-
-<h4>Bundelrについて</h4>
-
-<ul>
-<li>Gemパッケージの種類やバージョン管理し、複数のPCで必要なGemパッケージを簡単にinstallすることができるPackageである。</li>
-</ul>
-
-
-<p>tips:<a href="http://blog.mirakui.com/entry/20100703/1278165723">gem管理の新標準ツール&#8221;Bundler&#8221;のTips &ndash; 昼メシ物語</a></p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>bundle install [Dir]</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とすると、Dir以下にgemが展開されるので、localのgemは汚染されない。</p>
-
-<p>通常は</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>bundle install vender/bundle</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とする。</p>
-
-<p>こうしてbundle install すると、次回以降はdir指定はしなくて良い。</p>
-
-<p>設定ファイルは<strong>./bundle/config</strong>にあり。</p>
-
-<p>$GEM_HOMEのgemを一切使わないoptionは</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ bundle install --path=vendor/bundle --binstubs=vendor/bin</span></code></pre></td></tr></table></div></figure>
-
-
-<p>となる。</p>
-
-<p><strong>exec</strong></p>
-
-<ul>
-<li><strong>bundle execをつかうと、BUNDLE_PATH以下のgemが使われる。</strong></li>
-</ul>
 
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ bundle exec hoge</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;%= link_to t('.new', :default =&gt; t("helpers.links.new")),
+</span><span class='line'>            new_book_path,
+</span><span class='line'>            :class =&gt; 'new-button' %&gt;</span></code></pre></td></tr></table></div></figure>
 
 
-<p><strong>cronからbundleを使いたいときは</strong></p>
+<ul>
+<li><a href="http://liginc.co.jp/web/design/font/15639">WEBフォントサイトまとめ9選！とりあえず一度使ってみませんか？ | 株式会社LIG</a></li>
+<li><a href="http://strix01.blogspot.jp/2012/06/rails-rails3web.html">strix01: [rails] Rails3でWebフォントを使う。</a></li>
+<li><a href="http://hilott.hateblo.jp/entry/2013/06/03/152522">Ruby on RailsのAsset Pipelineを使って、Webfontを利用する &ndash; hilott@memo</a></li>
+<li></li>
+</ul>
 
-<p><code>
- * * * * * source $HOME/.rvm/scripts/rvm; rvm your-ruby-version; cd /path-to-project/; bundle exec ruby your-script.rb
-</code>
-とするらしい。</p>
 </div>
 
 
@@ -212,12 +176,12 @@
   
 
 
-<time datetime="2014-01-12T00:00:00+09:00" pubdate data-updated="true">Jan 12<span>th</span>, 2014</time>
+<time datetime="2014-01-27T20:53:22+09:00" pubdate data-updated="true">Jan 27<span>th</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/bundle/'>bundle</a>, <a class='category' href='/blog/categories/chef/'>chef</a>, <a class='category' href='/blog/categories/jenkins/'>jenkins</a>
+    <a class='category' href='/blog/categories/ror/'>RoR</a>, <a class='category' href='/blog/categories/bootstrap/'>bootstrap</a>
   
 </span>
 
@@ -226,7 +190,7 @@
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://rice-american.github.io/blog/2014/01/12/about_Jenkins_Chef_Bundle/" data-via="rice_american" data-counturl="http://rice-american.github.io/blog/2014/01/12/about_Jenkins_Chef_Bundle/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://rice-american.github.io/blog/2014/01/27/rails-iconfont/" data-via="rice_american" data-counturl="http://rice-american.github.io/blog/2014/01/27/rails-iconfont/" >Tweet</a>
   
   
   
@@ -235,8 +199,8 @@
     
     <p class="meta">
       
+        <a class="basic-alignment left" href="/blog/2014/01/27/nginx-jenkins/" title="Previous Post: さくらVPSにjenkinsとNginxでJenkinsサーバを構築する。">&laquo; さくらVPSにjenkinsとNginxでJenkinsサーバを構築する。</a>
       
-        <a class="basic-alignment right" href="/blog/2014/01/12/jekyll/" title="Next Post: github+page+jekyll+jekyll+bootstarpでBlogを始めたかったんだ">github+page+jekyll+jekyll+bootstarpでBlogを始めたかったんだ &raquo;</a>
       
     </p>
   </footer>

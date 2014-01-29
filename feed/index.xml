@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[おこめぶろぐ]]></title>
-  <link href="http://rice-american.github.io/atom.xml" rel="self"/>
+  <link href="http://rice-american.github.io/feed" rel="self"/>
   <link href="http://rice-american.github.io/"/>
   <updated>2014-01-29T17:09:47+09:00</updated>
   <id>http://rice-american.github.io/</id>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Rails_iconfont]]></title>
+    <title type="html"><![CDATA[rails_iconfont]]></title>
     <link href="http://rice-american.github.io/blog/2014/01/27/rails-iconfont/"/>
     <updated>2014-01-27T20:53:22+09:00</updated>
     <id>http://rice-american.github.io/blog/2014/01/27/rails-iconfont</id>
@@ -204,7 +204,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Rails+bootstrapなアプリケーションを作る]]></title>
+    <title type="html"><![CDATA[rails+bootstrapなアプリケーションを作る]]></title>
     <link href="http://rice-american.github.io/blog/2014/01/26/rails-bootstrap/"/>
     <updated>2014-01-26T00:44:29+09:00</updated>
     <id>http://rice-american.github.io/blog/2014/01/26/rails-bootstrap</id>
@@ -710,7 +710,7 @@ database_cleaner</p>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Rails アプリケーション作成の手順]]></title>
+    <title type="html"><![CDATA[rails アプリケーション作成の手順]]></title>
     <link href="http://rice-american.github.io/blog/2014/01/18/rails_app/"/>
     <updated>2014-01-18T00:00:00+09:00</updated>
     <id>http://rice-american.github.io/blog/2014/01/18/rails_app</id>

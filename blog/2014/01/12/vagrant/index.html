@@ -9,8 +9,8 @@
   <meta name="author" content="rice_american">
 
   
-  <meta name="description" content="RoR, ruby, vagrant, virtualbox VagrantでCentOSを入れてRails環境構築 目標 VagnrantでCentOS立てて、Railsの開発環境を整えてBox化する。 vagrantの環境構築 参考サイト
-Mac OS &hellip;">
+  <meta name="description" content="目標 VagnrantでCentOS立てて、Railsの開発環境を整えてBox化する。 vagrantの環境構築 参考サイト
+Mac OS XでVagrantとChefを使った環境構築のまとめ &ndash; Qiita [キータ] boxをつくるまでのながれ virtual boxいれます &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,162 +21,78 @@ Mac OS &hellip;">
   
   <link rel="canonical" href="http://rice-american.github.io/blog/2014/01/12/vagrant">
   <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/styles.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="おこめぶろぐ" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <script src="/javascripts/jquery.sidr.min.js"></script>
-  <script src="/javascripts/ah-blue.js"></script>
-  
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
   
 
-</head> 
+</head>
 
 <body   >
-  <div class="aux-container">
+  <header role="banner"><hgroup>
+  <h1><a href="/">おこめぶろぐ</a></h1>
+  
+    <h2>rice_american's blog</h2>
+  
+</hgroup>
 
-   <a id="nav-toggle" href="#sidr"></a>
-    <a id="search-toggle"></a>
-</div>
-
-<header class="header-container clearfix">
-        <a href="/"><img src="/images/ah-frame.svg" onerror="this.onerror=null; this.src='ah-frame.png'"></a>
 </header>
-
-
-  <div class="main-container">
-    <div class="main wrapper clearfix">
-    	
-    	<aside>
-			
-			  	<div class="search-container">
-					<form action="http://google.com/search" method="get">
-						<fieldset role="search">
-							<input type="hidden" name="q" value="site:blog.alexharr.is" />
-							<input class="search-field" type="text" name="q" results="0" placeholder=""/>
-							<input class="submit" type="submit" value=""/>
-						</fieldset>
-					</form>
-				</div>
-			
-		  <div id="main-nav">
-  <nav>
-    <ul>
-      <li>
-      
-      <h3>Recent Posts</h3>
-<ul>
-	
-    <li>
-    	<a href="/blog/2014/01/27/nginx-jenkins/">さくらVPSにjenkinsとNginxでJenkinsサーバを構築する。</a>
-    </li>
-    
-    <li>
-    	<a href="/blog/2014/01/26/rails-bootstrap/">Rails+bootstrapなアプリケーションを作る</a>
-    </li>
-    
-    <li>
-    	<a href="/blog/2014/01/26/heroku-RoR/">herokuへRuby on Railsアプリケーションをdeployするまで</a>
-    </li>
-    
-    <li>
-    	<a href="/blog/2014/01/19/about_jenkins/">Jenkinsについて学ぶ</a>
-    </li>
-    
-    <li>
-    	<a href="/blog/2014/01/18/octpress/">Octpressを導入してイカすBlogを作る</a>
-    </li>
-    
-    <li>
-    	<a href="/blog/2014/01/18/rails_app/">Rails アプリケーション作成の手順</a>
-    </li>
-    
-    <li>
-    	<a href="/blog/2014/01/12/vagrant/">VagrantでCentOSを入れてRails環境構築</a>
-    </li>
-    
-    <li>
-    	<a href="/blog/2014/01/12/jekyll/">github+page+jekyll+jekyll+bootstarpでBlogを始めたかったんだ</a>
-    </li>
-    
-    <li>
-    	<a href="/blog/2014/01/12/about_Jenkins_Chef_Bundle/">Jenkins Chef Bundleについて調べた</a>
-    </li>
-    
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:rice-american.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
 </ul>
 
-<section>
-<!--  <h1>GitHub Repos</h1>
-  <ul id="gh_repos">
-    <li class="loading">Status updating...</li>
-  </ul> 
-  
-  <a href="https://github.com/rice-american">@rice-american</a> on GitHub
-  
--->
-  <script type="text/javascript">
-//    $(document).ready(function(){
-//        if (!window.jXHR){
-//            var jxhr = document.createElement('script');
-//            jxhr.type = 'text/javascript';
-//            jxhr.src = '/javascripts/libs/jXHR.js';
-//            var s = document.getElementsByTagName('script')[0];
-//            s.parentNode.insertBefore(jxhr, s);
-//        }
-//
-//        github.showRepos({
-//            user: 'rice-american',
-//            count: 3,
-//            skip_forks: true,
-//            target: '#gh_repos'
-//        });
-    });
-  </script>
-  <script src="/javascripts/github.js" type="text/javascript"> </script>
-</section>
-
-
-
-
-
-      
-      </li>
-      <li>
-      <ul>
-        <li>Twitter - <a href="http://www.twitter.com/rice_american" target="_blank">@rice_american</a></li>
-        <li>GitHub - <a href="https://github.com/rice-american" target="_blank">@rice-american</a></li>
-      </ul>
-      </li>
-    </ul>
-  </nav>
-</div>
-
-		</aside>
-		
+</nav>
+  <div id="main">
+    <div id="content">
       <div>
-<article>
-	<header>
-  <div class="article-tags">
-      
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">VagrantでCentOSを入れてRails環境構築</h1>
+    
+    
+      <p class="meta">
+        
 
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/ror/'>RoR</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/vagrant/'>vagrant</a>, <a class='category' href='/blog/categories/virtualbox/'>virtualbox</a>
-  
-</span>
 
 
-  </div>
+
+
+
+
+
   
-    <h1>
-      VagrantでCentOSを入れてRails環境構築
-    </h1>
-  
-</header>
-<section>
-  <h2>目標</h2>
+
+
+<time datetime="2014-01-12T11:53:18+09:00" pubdate data-updated="true">Jan 12<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>目標</h2>
 
 <p>VagnrantでCentOS立てて、Railsの開発環境を整えてBox化する。</p>
 
@@ -628,10 +544,16 @@ libssl-devがないといけないらしい。</p>
 <p>vagrantでCentOSを入れる、rails環境を整える、box作成までの流れはこんなかんじ。</p>
 
 <p>やっとJenkinsに移れる･･･</p>
+</div>
 
-</section>
-<footer>
-  <div class="article-date">
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">rice_american</span></span>
+
       
 
 
@@ -645,24 +567,134 @@ libssl-devがないといけないらしい。</p>
 
 
 <time datetime="2014-01-12T11:53:18+09:00" pubdate data-updated="true">Jan 12<span>th</span>, 2014</time>
-  </div>
-</footer>
+      
 
-	
-</article>
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ror/'>RoR</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/vagrant/'>vagrant</a>, <a class='category' href='/blog/categories/virtualbox/'>virtualbox</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://rice-american.github.io/blog/2014/01/12/vagrant/" data-via="rice_american" data-counturl="http://rice-american.github.io/blog/2014/01/12/vagrant/" >Tweet</a>
+  
+  
+  
 </div>
 
-    </div>
-  </div>
-  <footer class="main-footer">
-	<section class="interior-footer">
-		<span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-	</section>
-</footer>
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/01/12/jekyll/" title="Previous Post: github+page+jekyll+jekyll+bootstarpでBlogを始めたかったんだ">&laquo; github+page+jekyll+jekyll+bootstarpでBlogを始めたかったんだ</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/01/18/rails_app/" title="Next Post: rails アプリケーション作成の手順">rails アプリケーション作成の手順 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/01/27/rails-iconfont/">Rails_iconfont</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/27/nginx-jenkins/">さくらVPSにjenkinsとNginxでJenkinsサーバを構築する。</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/26/rails-bootstrap/">Rails+bootstrapなアプリケーションを作る</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/26/heroku-RoR/">herokuへRuby on Railsアプリケーションをdeployするまで</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/19/about_jenkins/">Jenkinsについて学ぶ</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/18/octpress/">Octpressを導入してイカすBlogを作る</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/18/rails_app/">Rails アプリケーション作成の手順</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/12/vagrant/">VagrantでCentOSを入れてRails環境構築</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/12/jekyll/">github+page+jekyll+jekyll+bootstarpでBlogを始めたかったんだ</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/12/about_Jenkins_Chef_Bundle/">Jenkins Chef Bundleについて調べた</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/rice-american">@rice-american</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'rice-american',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
 
 
   
+</aside>
 
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - rice_american -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
 
 
 
@@ -679,6 +711,7 @@ libssl-devがないといけないらしい。</p>
       document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
     })();
   </script>
+
 
 
 
