@@ -4,7 +4,7 @@
   <title><![CDATA[Category: RoR | こめぶろぐ]]></title>
   <link href="http://rice-american.github.io/blog/categories/ror/atom.xml" rel="self"/>
   <link href="http://rice-american.github.io/"/>
-  <updated>2014-01-30T12:45:52+09:00</updated>
+  <updated>2014-02-02T18:16:37+09:00</updated>
   <id>http://rice-american.github.io/</id>
   <author>
     <name><![CDATA[rice_american]]></name>
@@ -14,66 +14,91 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Rails_iconfont]]></title>
+    <title type="html"><![CDATA[Rails_fonticon]]></title>
     <link href="http://rice-american.github.io/blog/2014/01/27/rails-iconfont/"/>
     <updated>2014-01-27T20:53:22+09:00</updated>
     <id>http://rice-american.github.io/blog/2014/01/27/rails-iconfont</id>
-    <content type="html"><![CDATA[<p>前にherokuへのテストとしてあげてたRoRアプリケーションにiconfontを入れてみました。</p>
+    <content type="html"><![CDATA[<p>前にherokuへのテストとしてあげてたRoRアプリケーションにfonticonを入れてみました。</p>
 
 <h2>Fontelloを利用する</h2>
 
-<p>iconfontは数百あるが、そのうちサイトで使うのはせいぜい10個とか。そうなると、使わないiconfontが無駄･･･</p>
+<p>fonticonは数百あるが、そのうちサイトで使うのはせいぜい10個とか。そうなると、使わないfonticonが無駄･･･</p>
 
-<p>そこで、自分の使うiconfontだけを選択してDLできる、Fontelloを使ってみました。</p>
+<p>そこで、自分の使うfonticonだけを選択してDLできる、Fontelloを使ってみました。</p>
 
 <p><a href="http://fontello.com/">Fontello &ndash; icon fonts generator</a></p>
 
-<p>より詳細な使い方は<a href="http://www.webcreatorbox.com/tech/iconfonts/">アイコンフォントでリンクタイプ別にアイコンつける方法 | Webクリエイターボックス</a>を参考にしました。</p>
+<p>より詳細な使い方は<a href="http://www.webcreatorbox.com/tech/fonticons/">アイコンフォントでリンクタイプ別にアイコンつける方法 | Webクリエイターボックス</a>を参考にしました。</p>
 
 <p>最終的に次の2つのアイコンを選択してDL.</p>
 
 <p>DLしたディレクトリの中の/fontに選択したfonticonが入っているので、それを<em>任意の場所に移動･･･。</em></p>
 
-<p>RoRにおけるiconfontの置き場所ってどこなんだろ･･･</p>
-
-<p>参考:<a href="http://strix01.blogspot.jp/2012/06/rails-rails3web.html">strix01: [rails] Rails3でWebフォントを使う。</a></p>
-
 <p>ほかのサイトも見て鑑みて、今回は<code>{Rails.root}/app/assets/fonts</code>においてみました。</p>
+
+<p>css,scssの設定</p>
+
+<p><a href="http://www.webcreatorbox.com/tech/fonticons/">アイコンフォントでリンクタイプ別にアイコンつける方法 | Webクリエイターボックス</a></p>
 
 <p>scssファイルに記入</p>
 
-<p>```
-@font-face {
-  font-family: &lsquo;fontello&rsquo;;
-  src: url(&ldquo;../font/fontello.eot&rdquo;);
-  src: url(&ldquo;../font/fontello.eot?#iefix&rdquo;) format(&lsquo;embedded-opentype&rsquo;),</p>
+<p><em>app/assets/stylesheets/font-awesome.css</em></p>
 
-<pre><code>   url("../font/fontello.woff") format('woff'),
-   url("../font/fontello.ttf") format('truetype'),
-   url("../font/fontello.svg#fontello") format('svg');
+<p>```
+@font-face {</p>
+
+<pre><code>font-family: 'fonticon';
+src: url('../font/fonticon.eot?61827649');
+src: url('../font/fonticon.eot?61827649#iefix') format('embedded-opentype'),
+url('../font/fonticon.woff?61827649') format('woff'),
+url('../font/fonticon.ttf?61827649') format('truetype'),
+url('../font/fonticon.svg?61827649#fonticon') format('svg');
+font-weight: normal;
+font-style: normal;
 </code></pre>
 
-<p>  font-weight: normal;
-  font-style: normal;
-}
+<p>}
 ```</p>
 
-<p>```
-&lt;%= link_to t(&lsquo;.new&rsquo;, :default => t(&ldquo;helpers.links.new&rdquo;)),</p>
+<p><em>app/assets/stylesheets/fonticon.css.scss</em></p>
 
-<pre><code>        new_book_path,
-        :class =&gt; 'new-button' %&gt;
+<p>```
+@import &ldquo;font-awesome&rdquo;;</p>
+
+<p>.icon-twitter:before { content: &lsquo;\74&rsquo;; } /<em> &rsquo;t' </em>/
+.icon-plus:before { content: &lsquo;\70&rsquo;; } /<em> &lsquo;p&rsquo; </em>/</p>
+
+<p>.btn:before {</p>
+
+<pre><code>font-family: 'fonticon';
+padding: 5px;
+content: '\70'; 
 </code></pre>
 
-<p>```</p>
+<p>}</p>
 
-<ul>
-<li><a href="http://liginc.co.jp/web/design/font/15639">WEBフォントサイトまとめ9選！とりあえず一度使ってみませんか？ | 株式会社LIG</a></li>
-<li><a href="http://strix01.blogspot.jp/2012/06/rails-rails3web.html">strix01: [rails] Rails3でWebフォントを使う。</a></li>
-<li><a href="http://hilott.hateblo.jp/entry/2013/06/03/152522">Ruby on RailsのAsset Pipelineを使って、Webfontを利用する &ndash; hilott@memo</a></li>
-<li></li>
-</ul>
+<p>.btn-primary:before{</p>
 
+<pre><code>font-family: 'fonticon';
+content: '\74';
+padding: 5px;
+</code></pre>
+
+<p>}</p>
+
+<p>h1{</p>
+
+<pre><code>&amp;:before {
+    font-family: 'fonticon';
+    content: '\74';
+    padding: 10px;
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>これでfonticonが表示されました。</p>
 ]]></content>
   </entry>
   

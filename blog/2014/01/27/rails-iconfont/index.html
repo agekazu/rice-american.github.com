@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Rails_iconfont - こめぶろぐ</title>
+  <title>Rails_fonticon - こめぶろぐ</title>
   <meta name="author" content="rice_american">
 
   
-  <meta name="description" content="前にherokuへのテストとしてあげてたRoRアプリケーションにiconfontを入れてみました。 Fontelloを利用する iconfontは数百あるが、そのうちサイトで使うのはせいぜい10個とか。そうなると、使わないiconfontが無駄･･･ そこで、 &hellip;">
+  <meta name="description" content="前にherokuへのテストとしてあげてたRoRアプリケーションにfonticonを入れてみました。 Fontelloを利用する fonticonは数百あるが、そのうちサイトで使うのはせいぜい10個とか。そうなると、使わないfonticonが無駄･･･ そこで、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -68,7 +68,7 @@
   
   <header>
     
-      <h1 class="entry-title">Rails_iconfont</h1>
+      <h1 class="entry-title">Rails_fonticon</h1>
     
     
       <p class="meta">
@@ -91,29 +91,31 @@
   </header>
 
 
-<div class="entry-content"><p>前にherokuへのテストとしてあげてたRoRアプリケーションにiconfontを入れてみました。</p>
+<div class="entry-content"><p>前にherokuへのテストとしてあげてたRoRアプリケーションにfonticonを入れてみました。</p>
 
 <h2>Fontelloを利用する</h2>
 
-<p>iconfontは数百あるが、そのうちサイトで使うのはせいぜい10個とか。そうなると、使わないiconfontが無駄･･･</p>
+<p>fonticonは数百あるが、そのうちサイトで使うのはせいぜい10個とか。そうなると、使わないfonticonが無駄･･･</p>
 
-<p>そこで、自分の使うiconfontだけを選択してDLできる、Fontelloを使ってみました。</p>
+<p>そこで、自分の使うfonticonだけを選択してDLできる、Fontelloを使ってみました。</p>
 
 <p><a href="http://fontello.com/">Fontello &ndash; icon fonts generator</a></p>
 
-<p>より詳細な使い方は<a href="http://www.webcreatorbox.com/tech/iconfonts/">アイコンフォントでリンクタイプ別にアイコンつける方法 | Webクリエイターボックス</a>を参考にしました。</p>
+<p>より詳細な使い方は<a href="http://www.webcreatorbox.com/tech/fonticons/">アイコンフォントでリンクタイプ別にアイコンつける方法 | Webクリエイターボックス</a>を参考にしました。</p>
 
 <p>最終的に次の2つのアイコンを選択してDL.</p>
 
 <p>DLしたディレクトリの中の/fontに選択したfonticonが入っているので、それを<em>任意の場所に移動･･･。</em></p>
 
-<p>RoRにおけるiconfontの置き場所ってどこなんだろ･･･</p>
-
-<p>参考:<a href="http://strix01.blogspot.jp/2012/06/rails-rails3web.html">strix01: [rails] Rails3でWebフォントを使う。</a></p>
-
 <p>ほかのサイトも見て鑑みて、今回は<code>{Rails.root}/app/assets/fonts</code>においてみました。</p>
 
+<p>css,scssの設定</p>
+
+<p><a href="http://www.webcreatorbox.com/tech/fonticons/">アイコンフォントでリンクタイプ別にアイコンつける方法 | Webクリエイターボックス</a></p>
+
 <p>scssファイルに記入</p>
+
+<p><em>app/assets/stylesheets/font-awesome.css</em></p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -126,34 +128,70 @@
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>@font-face {
-</span><span class='line'>  font-family: 'fontello';
-</span><span class='line'>  src: url("../font/fontello.eot");
-</span><span class='line'>  src: url("../font/fontello.eot?#iefix") format('embedded-opentype'),
-</span><span class='line'>       url("../font/fontello.woff") format('woff'),
-</span><span class='line'>       url("../font/fontello.ttf") format('truetype'),
-</span><span class='line'>       url("../font/fontello.svg#fontello") format('svg');
-</span><span class='line'>  font-weight: normal; 
-</span><span class='line'>  font-style: normal;
+</span><span class='line'>    font-family: 'fonticon';
+</span><span class='line'>    src: url('../font/fonticon.eot?61827649');
+</span><span class='line'>    src: url('../font/fonticon.eot?61827649#iefix') format('embedded-opentype'),
+</span><span class='line'>    url('../font/fonticon.woff?61827649') format('woff'),
+</span><span class='line'>    url('../font/fonticon.ttf?61827649') format('truetype'),
+</span><span class='line'>    url('../font/fonticon.svg?61827649#fonticon') format('svg');
+</span><span class='line'>    font-weight: normal;
+</span><span class='line'>    font-style: normal;
 </span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
 
 
-
+<p><em>app/assets/stylesheets/fonticon.css.scss</em></p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;%= link_to t('.new', :default =&gt; t("helpers.links.new")),
-</span><span class='line'>            new_book_path,
-</span><span class='line'>            :class =&gt; 'new-button' %&gt;</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>@import "font-awesome";
+</span><span class='line'>
+</span><span class='line'>.icon-twitter:before { content: '\74'; } /* 't' */
+</span><span class='line'>.icon-plus:before { content: '\70'; } /* 'p' */
+</span><span class='line'>
+</span><span class='line'>.btn:before {
+</span><span class='line'>    font-family: 'fonticon';
+</span><span class='line'>    padding: 5px;
+</span><span class='line'>    content: '\70'; 
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>.btn-primary:before{
+</span><span class='line'>    font-family: 'fonticon';
+</span><span class='line'>    content: '\74';
+</span><span class='line'>    padding: 5px;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>h1{
+</span><span class='line'>    &:before {
+</span><span class='line'>        font-family: 'fonticon';
+</span><span class='line'>        content: '\74';
+</span><span class='line'>        padding: 10px;
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
 
 
-<ul>
-<li><a href="http://liginc.co.jp/web/design/font/15639">WEBフォントサイトまとめ9選！とりあえず一度使ってみませんか？ | 株式会社LIG</a></li>
-<li><a href="http://strix01.blogspot.jp/2012/06/rails-rails3web.html">strix01: [rails] Rails3でWebフォントを使う。</a></li>
-<li><a href="http://hilott.hateblo.jp/entry/2013/06/03/152522">Ruby on RailsのAsset Pipelineを使って、Webfontを利用する &ndash; hilott@memo</a></li>
-<li></li>
-</ul>
-
+<p>これでfonticonが表示されました。</p>
 </div>
 
 
@@ -202,6 +240,8 @@
         <a class="basic-alignment left" href="/blog/2014/01/27/nginx-jenkins/" title="Previous Post: さくらVPSにjenkinsとNginxでJenkinsサーバを構築する。">&laquo; さくらVPSにjenkinsとNginxでJenkinsサーバを構築する。</a>
       
       
+        <a class="basic-alignment right" href="/blog/2014/01/31/word-press-test/" title="Next Post: dotinstallでwordpressをお勉強。">dotinstallでwordpressをお勉強。 &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -215,7 +255,11 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2014/01/27/rails-iconfont/">Rails_iconfont</a>
+        <a href="/blog/2014/01/31/word-press-test/">Dotinstallでwordpressをお勉強。</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/27/rails-iconfont/">Rails_fonticon</a>
       </li>
     
       <li class="post">

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Dotinstall | こめぶろぐ]]></title>
+  <link href="http://rice-american.github.io/blog/categories/dotinstall/atom.xml" rel="self"/>
+  <link href="http://rice-american.github.io/"/>
+  <updated>2014-02-02T18:16:37+09:00</updated>
+  <id>http://rice-american.github.io/</id>
+  <author>
+    <name><![CDATA[rice_american]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Dotinstallでwordpressをお勉強。]]></title>
+    <link href="http://rice-american.github.io/blog/2014/01/31/word-press-test/"/>
+    <updated>2014-01-31T09:01:49+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/01/31/word-press-test</id>
+    <content type="html"><![CDATA[<h2>Wordpressとは</h2>
+
+<ul>
+<li>ブログシステム。</li>
+<li>大手でも使われます。</li>
+<li><a href="http://ja.wordpress.org/">WordPress › 日本語</a></li>
+<li>現在(2014/01/31)の最新バージョンは3.8.1</li>
+<li>範囲
+
+<ul>
+<li>セットアップ</li>
+<li>管理画面の使いかた</li>
+<li>基本的な使い方</li>
+<li>シンプルなテーマの作り方</li>
+</ul>
+</li>
+</ul>
+
+
+<h2>WordPressのinstall</h2>
+
+<p>環境はVagrant上のCentOS63で行いました。</p>
+
+<h4>mysql install と mysqldの起動,起動時自動起動の設定</h4>
+
+<p><code>
+$ yum -y install mysql-server
+$ sudo chkconfig mysqld on
+$ sudo service mysqld start                                                         
+</code></p>
+
+<p>```
+mysql> create database dotinstall_wordpress;
+Query OK, 1 row affected (0.00 sec)</p>
+
+<p>mysql> grant all on dotinstall_wordpress.<em> to vagrant@localhost identified by &lsquo;iIElsi45eE&rsquo;;
+mysql> grant all on dotinstall_wordpress.</em> to vagrant@localhost identified by &lsquo;iIElsi45eE&rsquo;;
+Query OK, 0 rows affected (0.00 sec)
+```</p>
+
+<h4>wordpressのinstall</h4>
+
+<p><code>
+$ wget http://ja.wordpress.org/wordpress-3.8.1-ja.zip
+$ unzip wordpress-3.8.1-ja.zip
+$ cd wordpress
+$ cp wp-config-sample.php _wp-config-sample.php
+$ mv wp-config-sample.php wp-config.php
+</code></p>
+
+<p><code>
+$ vim wp-config.php
+ 24 define('DB_NAME', 'dotinstall_wordpress');
+ 25
+ 26 /** MySQL データベースのユーザー名 */
+ 27 define('DB_USER', 'vagrant');
+ 28
+ 29 /** MySQL データベースのパスワード */
+ 30 define('DB_PASSWORD', 'iIElsi45eE');
+ 31
+ 32 /** MySQL のホスト名 */
+ 33 define('DB_HOST', 'localhost');
+ 34
+ 35 /** データベースのテーブルを作成する際のデータベースの文字セット */
+ 36 define('DB_CHARSET', 'utf8');
+ 37
+ 38 /** データベースの照合順序 (ほとんどの場合変更する必要はありません) */
+ 39 define('DB_COLLATE', '');
+ 40
+</code></p>
+
+<p><a href="https://api.wordpress.org/secret-key/1.1/salt/">https://api.wordpress.org/secret-key/1.1/salt/</a>
+にてキーを生成し、コピー&amp;ペーストする。</p>
+
+<p>設定はこれだけ。localhostにアクセス。</p>
+]]></content>
+  </entry>
+  
+</feed>
