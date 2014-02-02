@@ -4,7 +4,7 @@
   <title><![CDATA[こめぶろぐ]]></title>
   <link href="http://rice-american.github.io/feed" rel="self"/>
   <link href="http://rice-american.github.io/"/>
-  <updated>2014-02-02T18:16:37+09:00</updated>
+  <updated>2014-02-02T18:20:36+09:00</updated>
   <id>http://rice-american.github.io/</id>
   <author>
     <name><![CDATA[rice_american]]></name>
@@ -233,7 +233,9 @@
 </span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
 
 
-<p>これでfonticonが表示されました。</p>
+<p>safari,chromeではこれでiconが表示されたが、firefoxでは表示されず(´・ω・`)</p>
+
+<p>というところで今日はここまで･･･</p>
 ]]></content>
   </entry>
   
