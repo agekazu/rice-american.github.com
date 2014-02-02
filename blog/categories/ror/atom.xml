@@ -4,7 +4,7 @@
   <title><![CDATA[Category: RoR | こめぶろぐ]]></title>
   <link href="http://rice-american.github.io/blog/categories/ror/atom.xml" rel="self"/>
   <link href="http://rice-american.github.io/"/>
-  <updated>2014-02-02T18:23:30+09:00</updated>
+  <updated>2014-02-02T18:27:58+09:00</updated>
   <id>http://rice-american.github.io/</id>
   <author>
     <name><![CDATA[rice_american]]></name>
@@ -34,7 +34,7 @@
 
 <p>DLしたディレクトリの中の/fontに選択したfonticonが入っているので、それを<em>任意の場所に移動･･･。</em></p>
 
-<p>ほかのサイトも見て鑑みて、今回は<code>{Rails.root}/app/assets/fonts</code>においてみました。</p>
+<p>ほかのサイトも見て鑑みて、今回は<em>{Rails.root}/app/assets/fonts</em>においてみました。</p>
 
 <p>css,scssの設定</p>
 
@@ -42,7 +42,7 @@
 
 <p>scssファイルに記入</p>
 
-<p><em>app/assets/stylesheets/font-awesome.css</em></p>
+<p><em>{Rails.root}/app/assets/stylesheets/font-awesome.css</em></p>
 
 <p>```
 @font-face {</p>
@@ -60,7 +60,7 @@ font-style: normal;
 <p>}
 ```</p>
 
-<p><em>app/assets/stylesheets/fonticon.css.scss</em></p>
+<p><em>{Rails.root}/app/assets/stylesheets/fonticon.css.scss</em></p>
 
 <p>```
 @import &ldquo;font-awesome&rdquo;;</p>

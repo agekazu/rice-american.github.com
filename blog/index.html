@@ -9,14 +9,7 @@
   <meta name="author" content="rice_american">
 
   
-  <meta name="description" content="Wordpressとは ブログシステム。
-大手でも使われます。
-WordPress › 日本語
-現在(2014/01/31)の最新バージョンは3.8.1
-範囲 セットアップ
-管理画面の使いかた
-基本的な使い方
-シンプルなテーマの作り方 WordPressのinstall &hellip;">
+  <meta name="description" content="前にherokuへのテストとしてあげてたRoRアプリケーションにfonticonを入れてみました。 Fontelloを利用する fonticonは数百あるが、そのうちサイトで使うのはせいぜい10個とか。そうなると、使わないfonticonが無駄･･･ そこで、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,146 +69,6 @@ WordPress › 日本語
     <article class="post">
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/01/31/word-press-test/">Dotinstallでwordpressをお勉強。</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-31T09:01:49+09:00" pubdate data-updated="true">Jan 31<span>st</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>Wordpressとは</h2>
-
-<ul>
-<li>ブログシステム。</li>
-<li>大手でも使われます。</li>
-<li><a href="http://ja.wordpress.org/">WordPress › 日本語</a></li>
-<li>現在(2014/01/31)の最新バージョンは3.8.1</li>
-<li>範囲
-
-<ul>
-<li>セットアップ</li>
-<li>管理画面の使いかた</li>
-<li>基本的な使い方</li>
-<li>シンプルなテーマの作り方</li>
-</ul>
-</li>
-</ul>
-
-
-<h2>WordPressのinstall</h2>
-
-<p>環境はVagrant上のCentOS63で行いました。</p>
-
-<h4>mysql install と mysqldの起動,起動時自動起動の設定</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ yum -y install mysql-server
-</span><span class='line'>$ sudo chkconfig mysqld on
-</span><span class='line'>$ sudo service mysqld start                                                         </span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>mysql&gt; create database dotinstall_wordpress;
-</span><span class='line'>Query OK, 1 row affected (0.00 sec)
-</span><span class='line'>
-</span><span class='line'>mysql&gt; grant all on dotinstall_wordpress.* to vagrant@localhost identified by 'iIElsi45eE';
-</span><span class='line'>mysql&gt; grant all on dotinstall_wordpress.* to vagrant@localhost identified by 'iIElsi45eE';
-</span><span class='line'>Query OK, 0 rows affected (0.00 sec)</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>wordpressのinstall</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ wget http://ja.wordpress.org/wordpress-3.8.1-ja.zip
-</span><span class='line'>$ unzip wordpress-3.8.1-ja.zip
-</span><span class='line'>$ cd wordpress
-</span><span class='line'>$ cp wp-config-sample.php _wp-config-sample.php
-</span><span class='line'>$ mv wp-config-sample.php wp-config.php</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ vim wp-config.php
-</span><span class='line'> 24 define('DB_NAME', 'dotinstall_wordpress');
-</span><span class='line'> 25
-</span><span class='line'> 26 /** MySQL データベースのユーザー名 */
-</span><span class='line'> 27 define('DB_USER', 'vagrant');
-</span><span class='line'> 28
-</span><span class='line'> 29 /** MySQL データベースのパスワード */
-</span><span class='line'> 30 define('DB_PASSWORD', 'iIElsi45eE');
-</span><span class='line'> 31
-</span><span class='line'> 32 /** MySQL のホスト名 */
-</span><span class='line'> 33 define('DB_HOST', 'localhost');
-</span><span class='line'> 34
-</span><span class='line'> 35 /** データベースのテーブルを作成する際のデータベースの文字セット */
-</span><span class='line'> 36 define('DB_CHARSET', 'utf8');
-</span><span class='line'> 37
-</span><span class='line'> 38 /** データベースの照合順序 (ほとんどの場合変更する必要はありません) */
-</span><span class='line'> 39 define('DB_COLLATE', '');
-</span><span class='line'> 40</span></code></pre></td></tr></table></div></figure>
-
-
-<p><a href="https://api.wordpress.org/secret-key/1.1/salt/">https://api.wordpress.org/secret-key/1.1/salt/</a>
-にてキーを生成し、コピー&amp;ペーストする。</p>
-
-<p>設定はこれだけ。localhostにアクセス。</p>
-</div>
-  
-  
-
-</article>
-
-
-    <article class="post">
-  <header>
-    
       <h1 class="entry-title"><a href="/blog/2014/01/27/rails-iconfont/">Rails_fonticon</a></h1>
     
     
@@ -255,7 +108,7 @@ WordPress › 日本語
 
 <p>DLしたディレクトリの中の/fontに選択したfonticonが入っているので、それを<em>任意の場所に移動･･･。</em></p>
 
-<p>ほかのサイトも見て鑑みて、今回は<code>{Rails.root}/app/assets/fonts</code>においてみました。</p>
+<p>ほかのサイトも見て鑑みて、今回は<em>{Rails.root}/app/assets/fonts</em>においてみました。</p>
 
 <p>css,scssの設定</p>
 
@@ -263,7 +116,7 @@ WordPress › 日本語
 
 <p>scssファイルに記入</p>
 
-<p><em>app/assets/stylesheets/font-awesome.css</em></p>
+<p><em>{Rails.root}/app/assets/stylesheets/font-awesome.css</em></p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -287,7 +140,7 @@ WordPress › 日本語
 </span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
 
 
-<p><em>app/assets/stylesheets/fonticon.css.scss</em></p>
+<p><em>{Rails.root}/app/assets/stylesheets/fonticon.css.scss</em></p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1944,10 +1797,138 @@ BlogはOctpressに移行。短い天下だった。</p>
 
 </article>
 
+
+    <article class="post">
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/12/about_Jenkins_Chef_Bundle/">Jenkins Chef Bundleについて調べた</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-12T00:00:00+09:00" pubdate data-updated="true">Jan 12<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>しらべたもの</h2>
+
+<h4>Vagrantについて</h4>
+
+<p>といってもここを見ただけ</p>
+
+<ul>
+<li><p><a href="http://qiita.com/kidachi_/items/e63c1607705178aa257c">Vagrantの基本 &ndash; Qiita [キータ]</a></p></li>
+<li><p>嬉しいこと</p>
+
+<ul>
+<li>他人への環境配布が容易(boxを配ればいい)</li>
+<li>ゲストOS(CentOSとか)とホストOS(Macとか)で共有フォルダが作成されるので、Macの環境でコードを書いて、ホストOSで実行する、ということができる！</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>Jenkinsについて</h4>
+
+<p>継続的インテグレーション(CI)するやーつ</p>
+
+<pre><code>テストの自動化
+デプロイの自動化
+各種タイミングでの通知
+</code></pre>
+
+<p>をしてくれるすごいやつらしい→
+<a href="http://www.buildinsider.net/enterprise/jenkins/01">Jenkinsを使ってみよう（Mac OS X＆Linux）［Ruby、Rails］ &ndash; Build Insider</a></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'> brew install jenkins</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で入る。</p>
+
+<h4>Chefについて</h4>
+
+<ul>
+<li>ファイルに記述した設定内容に応じて自動的にユーザーの作成やパッケージのインストール、設定ファイルの編集などを行うツール.</li>
+<li>Recipeを元にserverを立てる。</li>
+<li>Recipeはrubyで書かれている。</li>
+</ul>
+
+
+<h4>Bundelrについて</h4>
+
+<ul>
+<li>Gemパッケージの種類やバージョン管理し、複数のPCで必要なGemパッケージを簡単にinstallすることができるPackageである。</li>
+</ul>
+
+
+<p>tips:<a href="http://blog.mirakui.com/entry/20100703/1278165723">gem管理の新標準ツール&#8221;Bundler&#8221;のTips &ndash; 昼メシ物語</a></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>bundle install [Dir]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とすると、Dir以下にgemが展開されるので、localのgemは汚染されない。</p>
+
+<p>通常は</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>bundle install vender/bundle</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とする。</p>
+
+<p>こうしてbundle install すると、次回以降はdir指定はしなくて良い。</p>
+
+<p>設定ファイルは<strong>./bundle/config</strong>にあり。</p>
+
+<p>$GEM_HOMEのgemを一切使わないoptionは</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ bundle install --path=vendor/bundle --binstubs=vendor/bin</span></code></pre></td></tr></table></div></figure>
+
+
+<p>となる。</p>
+
+<p><strong>exec</strong></p>
+
+<ul>
+<li><strong>bundle execをつかうと、BUNDLE_PATH以下のgemが使われる。</strong></li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ bundle exec hoge</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>cronからbundleを使いたいときは</strong></p>
+
+<p><code>
+ * * * * * source $HOME/.rvm/scripts/rvm; rvm your-ruby-version; cd /path-to-project/; bundle exec ruby your-script.rb
+</code>
+とするらしい。</p>
+</div>
+  
+  
+
+</article>
+
 <nav id="pagenavi">
     
-    
-        <a href="/blog/page/2/" class="next">Next</a>
     
     <div class="center"><a href="/blog/archives">Blog Archives</a></div>
 </nav>
