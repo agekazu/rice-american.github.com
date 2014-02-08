@@ -1,0 +1,44 @@
+<p>ローカル環境で</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>bundle install --path vendor/bundle
+</span><span class='line'>bundle exec rake db:migrate
+</span><span class='line'>bundle exec rake db:test:clone
+</span><span class='line'>bundle exec rspec spec/*/*.feature</span></code></pre></td></tr></table></div></figure>
+
+
+<p>を実行すると、
+<em>bundle exec rspec spec/*/*.feature</em>
+で</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>% bundle exec rspec spec/*/*.feature          
+</span><span class='line'>syntax error, unexpected ':', expecting end-of-input (SyntaxError)
+</span><span class='line'>機能: ユーザー管理
+</span><span class='line'>       ^</span></code></pre></td></tr></table></div></figure>
+
+
+<p>エラーが出た(´・ω・`)</p>
+
+<ul>
+<li>参考:<a href="http://www.buildinsider.net/enterprise/jenkins/02">Jenkinsで小さなテストを実行してみよう（Mac OS X＆Linux）［Ruby、Rails］ &ndash; Build Insider</a></li>
+</ul>
+
+
+<p>rspecでGherkin記法で記述したfeatureファイルが実行できないよ> &lt; ってことらしい。</p>
+
+<p>.rspecファイルに次のような記述をする。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>-r turnip/rspec --color --format documentation</span></code></pre></td></tr></table></div></figure>
+
+
+<p>出力に色つけてturnip(RSpecからGherkin記法で記述したテストを実行できるフレームワーク)のrspec使って実行しなさいよーということ･･･かな。</p>
+
+<p>ここまで出来たのでJenkinsサーバの.rspecも直して実行すると･･･成功しました!</p>
