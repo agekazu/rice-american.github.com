@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Jenkins | こめぶろぐ]]></title>
   <link href="http://rice-american.github.io/blog/categories/jenkins/atom.xml" rel="self"/>
   <link href="http://rice-american.github.io/"/>
-  <updated>2014-02-08T15:57:38+09:00</updated>
+  <updated>2014-02-08T16:15:46+09:00</updated>
   <id>http://rice-american.github.io/</id>
   <author>
     <name><![CDATA[rice_american]]></name>
@@ -12,6 +12,52 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Bundle Exec Rspec spec/*/*.featureが失敗する件]]></title>
+    <link href="http://rice-american.github.io/blog/2014/02/08/jenkins-rspec/"/>
+    <updated>2014-02-08T13:56:16+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/02/08/jenkins-rspec</id>
+    <content type="html"><![CDATA[<p>ローカル環境で</p>
+
+<p><code>
+bundle install --path vendor/bundle
+bundle exec rake db:migrate
+bundle exec rake db:test:clone
+bundle exec rspec spec/*/*.feature
+</code>
+を実行すると、
+<em>bundle exec rspec spec/*/*.feature</em>
+で</p>
+
+<p>```
+% bundle exec rspec spec/<em>/</em>.feature        <br/>
+syntax error, unexpected &lsquo;:&rsquo;, expecting end-of-input (SyntaxError)
+機能: ユーザー管理</p>
+
+<pre><code>   ^
+</code></pre>
+
+<p><code>``
+エラーが出た(´・ω・</code>)</p>
+
+<ul>
+<li>参考:<a href="http://www.buildinsider.net/enterprise/jenkins/02">Jenkinsで小さなテストを実行してみよう（Mac OS X＆Linux）［Ruby、Rails］ &ndash; Build Insider</a></li>
+</ul>
+
+
+<p>rspecでGherkin記法で記述したfeatureファイルが実行できないよ> &lt; ってことらしい。</p>
+
+<p>.rspecファイルに次のような記述をする。</p>
+
+<p><code>
+-r turnip/rspec --color --format documentation
+</code>
+出力に色つけてturnip(RSpecからGherkin記法で記述したテストを実行できるフレームワーク)のrspec使って実行しなさいよーということ･･･かな。</p>
+
+<p>ここまで出来たのでJenkinsサーバの.rspecも直して実行すると･･･成功しました!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[さくらVPSにjenkinsとNginxでJenkinsサーバを構築する。]]></title>
