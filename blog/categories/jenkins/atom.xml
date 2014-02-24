@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Jenkins | こめぶろぐ]]></title>
   <link href="http://rice-american.github.io/blog/categories/jenkins/atom.xml" rel="self"/>
   <link href="http://rice-american.github.io/"/>
-  <updated>2014-02-08T16:15:46+09:00</updated>
+  <updated>2014-02-24T12:21:06+09:00</updated>
   <id>http://rice-american.github.io/</id>
   <author>
     <name><![CDATA[rice_american]]></name>
@@ -12,6 +12,27 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Jenkinsでherokuにdeploy!]]></title>
+    <link href="http://rice-american.github.io/blog/2014/02/09/jenkins-heroku-deploy/"/>
+    <updated>2014-02-09T13:57:13+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/02/09/jenkins-heroku-deploy</id>
+    <content type="html"><![CDATA[<p>試しにJenkinsを使ってみよう！ということで、JenkinsからHerokuへ前に作ったbootstrapのsampleappをdeployしてみました。</p>
+
+<ul>
+<li>参考:<a href="http://www.buildinsider.net/enterprise/jenkins/03">Jenkins： アプリケーションをデプロイしてみよう（Mac OS X＆Linux）［Ruby、Rails］ &ndash; Build Insider</a></li>
+</ul>
+
+
+<p>こちらでほとんど出来ました。</p>
+
+<ul>
+<li><a href="http://journal.sooey.com/162">herokuコマンドで複数アカウントを使いわける &ndash; Sooey</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Bundle Exec Rspec spec/*/*.featureが失敗する件]]></title>

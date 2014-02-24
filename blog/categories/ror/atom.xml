@@ -4,7 +4,7 @@
   <title><![CDATA[Category: RoR | こめぶろぐ]]></title>
   <link href="http://rice-american.github.io/blog/categories/ror/atom.xml" rel="self"/>
   <link href="http://rice-american.github.io/"/>
-  <updated>2014-02-08T16:15:46+09:00</updated>
+  <updated>2014-02-24T12:21:06+09:00</updated>
   <id>http://rice-american.github.io/</id>
   <author>
     <name><![CDATA[rice_american]]></name>
@@ -86,7 +86,7 @@ syntax error, unexpected &lsquo;:&rsquo;, expecting end-of-input (SyntaxError)
 
 <p>参考:<a href="http://www.webcreatorbox.com/tech/fonticons/">アイコンフォントでリンクタイプ別にアイコンつける方法 | Webクリエイターボックス</a></p>
 
-<p>scssファイルに記入</p>
+<p>css,scssファイルに記入</p>
 
 <p><em>{Rails.root}/app/assets/stylesheets/font-awesome.css</em></p>
 
@@ -196,7 +196,7 @@ assetsやlocalesにファイル生成</p>
 $ rails g bootstrap:layout application fluid
 </code></p>
 
-<p>application_name/dtabase.ymlを編集して、ユーザをpostgresに。
+<p>application_name/config/dtabase.ymlを編集して、ユーザをpostgresに。
 そのあと<em>rake db:create RAILS_ENV=development</em>を実行。</p>
 ]]></content>
   </entry>

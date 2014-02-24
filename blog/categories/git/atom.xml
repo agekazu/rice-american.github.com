@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Git | こめぶろぐ]]></title>
+  <link href="http://rice-american.github.io/blog/categories/git/atom.xml" rel="self"/>
+  <link href="http://rice-american.github.io/"/>
+  <updated>2014-02-24T12:21:06+09:00</updated>
+  <id>http://rice-american.github.io/</id>
+  <author>
+    <name><![CDATA[rice_american]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Git-memo]]></title>
+    <link href="http://rice-american.github.io/blog/2014/02/09/git-memo/"/>
+    <updated>2014-02-09T16:03:42+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/02/09/git-memo</id>
+    <content type="html"><![CDATA[<ul>
+<li>git branch
+ブランチ一覧を出力</li>
+<li>git checkout -b branchを作ってbranch移動</li>
+<li>git branch -d branch名でbranch削除</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

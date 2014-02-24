@@ -4,7 +4,7 @@
   <title><![CDATA[こめぶろぐ]]></title>
   <link href="http://rice-american.github.io/feed" rel="self"/>
   <link href="http://rice-american.github.io/"/>
-  <updated>2014-02-08T16:15:46+09:00</updated>
+  <updated>2014-02-24T12:21:06+09:00</updated>
   <id>http://rice-american.github.io/</id>
   <author>
     <name><![CDATA[rice_american]]></name>
@@ -12,6 +12,453 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[pgbackupsを使って、HerokuのDBをlocalにリストアしてDBにデータをinsertしてHerokuのDBへリストアするまで。]]></title>
+    <link href="http://rice-american.github.io/blog/2014/02/24/pgbackups/"/>
+    <updated>2014-02-24T12:10:02+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/02/24/pgbackups</id>
+    <content type="html"><![CDATA[<h2>何を使うか。</h2>
+
+<p>調べてみるとpgbackupsというherokuのpluginがあった。コレを使えばherokuのDBからリストアしてローカルで復元、なんてこともできるらしい。</p>
+
+<p>参考: <a href="http://qiita.com/quattro_4/items/a2eb3618207e21ca00d3">Rails &ndash; herokuのデータベースをリセット/リストア/再構築する &ndash; Qiita</a></p>
+
+<h2>やってみた。</h2>
+
+<p>pluginをinstallする。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>% heroku addons:add pgbackups
+</span><span class='line'>Adding pgbackups on kitaken-mahjong... <span class="k">done</span>, v16 <span class="o">(</span>free<span class="o">)</span>
+</span><span class='line'>You can now use <span class="s2">&quot;pgbackups&quot;</span> to backup your databases or import an external backup.
+</span><span class='line'>Use <span class="sb">`</span>heroku addons:docs pgbackups<span class="sb">`</span> to view documentation.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>backupないか確認</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>% heroku pgbackups
+</span><span class='line'> !    No backups. Capture one with <span class="sb">`</span>heroku pgbackups:capture<span class="sb">`</span>.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ないので、backupを行う</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>% heroku pgbackups:capture
+</span><span class='line'>
+</span><span class='line'>HEROKU_POSTGRESQL_ORANGE_URL <span class="o">(</span>DATABASE_URL<span class="o">)</span>  ----backup---&gt;  b001
+</span><span class='line'>
+</span><span class='line'>Capturing... <span class="k">done</span>
+</span><span class='line'>Storing... <span class="k">done</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>$ heroku pgbackups --app appname</code>とかすると、appを指定してバックアップできる。
+続いて取得したbackupをlocalにDLしてみる。
+(追記: <code>curl -o latest.dump</code>heroku pgbackups:url &mdash;app heroku_appname`ってやると一発でdlできるみたい。)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>% heroku pgbackups
+</span><span class='line'>ID    Backup Time          Status                          Size   Database
+</span><span class='line'>----  -------------------  ------------------------------  -----  -------------------------------------------
+</span><span class='line'>b001  2014/02/23 09:00.07  Finished @ 2014/02/23 09:00.10  5.9KB  HEROKU_POSTGRESQL_ORANGE_URL <span class="o">(</span>DATABASE_URL<span class="o">)</span>
+</span><span class='line'>% heroku pgbackups:url b001
+</span><span class='line'><span class="s2">&quot;https://s3.amazonaws.com/hkpgbackups/app22056631@heroku.com/b001.dump?AWSAccessKeyId=(ながいkeyidがずらずら)&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>リンクに行くとb001.dumpというファイルがDLされた。リンクは<strong>約10分後にはAccessDenied</strong>になるらしい。</p>
+
+<p>ではdumpファイルをリストアします。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>% pg_restore --verbose --clean --no-acl --no-owner -h localhost -U myuser -d mydb b001.dump
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>myuserに任意のユーザ名、mydbに任意のデータベース名を入れましょう。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>% createdb mydb
+</span><span class='line'>% pg_restore --verbose --clean --no-acl --no-owner -h localhost -U myuser -d mydb /Users/user/Desktop/b001.dump
+</span><span class='line'>pg_restore: connecting to database <span class="k">for </span>restore
+</span><span class='line'>pg_restore: dropping INDEX unique_schema_migrations
+</span><span class='line'>pg_restore: <span class="o">[</span>archiver <span class="o">(</span>db<span class="o">)]</span> Error <span class="k">while </span>PROCESSING TOC:
+</span><span class='line'>pg_restore: <span class="o">[</span>archiver <span class="o">(</span>db<span class="o">)]</span> Error from TOC entry 2728; 1259 1466031 INDEX unique_schema_migrations wblyjdvsoodhup
+</span><span class='line'>pg_restore: <span class="o">[</span>archiver <span class="o">(</span>db<span class="o">)]</span> could not execute query: ERROR:  index <span class="s2">&quot;unique_schema_migrations&quot;</span> does not exist
+</span><span class='line'>    Command was: DROP INDEX public.unique_schema_migrations;
+</span><span class='line'><span class="o">(</span>中略<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>エラーが出まくってる気がするけど気にしない。</p>
+
+<p><code>psql</code>をコマンドラインで実行して</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">user</span><span class="o">=</span><span class="c"># \l</span>
+</span><span class='line'>                                         List of databases
+</span><span class='line'>           Name            |   Owner   | Encoding |   Collate   |    Ctype    |  Access privileges
+</span><span class='line'>---------------------------+-----------+----------+-------------+-------------+---------------------
+</span><span class='line'> mydb                      | user   | UTF8     | ja_JP.UTF-8 | ja_JP.UTF-8 |**←コレ**
+</span><span class='line'>
+</span><span class='line'><span class="nv">user</span><span class="o">=</span><span class="c"># \connect mydb</span>
+</span><span class='line'>You are now connected to database <span class="s2">&quot;mydb&quot;</span> as user <span class="s2">&quot;user&quot;</span>.
+</span><span class='line'><span class="nv">mydb</span><span class="o">=</span><span class="c"># \d</span>
+</span><span class='line'>               List of relations
+</span><span class='line'> Schema |       Name        |   Type   | Owner
+</span><span class='line'>--------+-------------------+----------+--------
+</span><span class='line'> public | schema_migrations | table    | myuser
+</span><span class='line'> public | users             | table    | myuser
+</span><span class='line'> public | users_id_seq      | sequence | myuser
+</span><span class='line'> public | yakus             | table    | myuser
+</span><span class='line'> public | yakus_id_seq      | sequence | myuser
+</span><span class='line'><span class="o">(</span>5 rows<span class="o">)</span>
+</span><span class='line'><span class="nv">mydb</span><span class="o">=</span><span class="c"># select * from users;</span>
+</span><span class='line'> id | user_name | email_address | password | created_at | updated_at
+</span><span class='line'>----+-----------+---------------+----------+------------+------------
+</span><span class='line'><span class="o">(</span>0 rows<span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">mydb</span><span class="o">=</span><span class="c"># select * from yakus;</span>
+</span><span class='line'> id | name | han | fu |         created_at         |         updated_at
+</span><span class='line'>----+------+-----+----+----------------------------+----------------------------
+</span><span class='line'>  1 | 平和 |   1 |  0 | 2014-02-09 10:34:56.670672 | 2014-02-09 10:34:56.670672
+</span><span class='line'><span class="o">(</span>1 row<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>リストアまで出来ている模様。</p>
+
+<p>\connect知らなくて詰んでた。mysqlでいう<code>use database名</code>みたいに、<code>\connect database名(or \c database名)</code>として使う。あとは<code>\d</code>でtableの情報を表示できる。その他のコマンドについては<a href="http://www.ne.jp/asahi/hishidama/home/tech/postgres/psql.html">ポストグレスpsqlメモ(Hishidama&rsquo;s psql Memo)</a>が一覧で載っててわかりやすいかも。</p>
+
+<h2>localに落としたdbからherokuへリストアしてみよう。</h2>
+
+<p>参考: <a href="http://www.workabroad.jp/posts/2050">ローカルのデータベースをherokuにリストアする | Workabroad.jp</a></p>
+
+<h3>0. DBの書き換え</h3>
+
+<p>今回はYakusのDBに次のように挿入。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">mydb</span><span class="o">=</span><span class="c"># insert into yakus values (2, &#39;断么九&#39;, 1, 20);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>断么九の符翻はテキトー。</p>
+
+<h3>1. まずは手元のDBをdumpする。</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pg_dump -Fc --no-acl --no-owner -h localhost -U myuser mydb &gt; mydb.dump
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>mypassword データベースのパスワード</li>
+<li>myuser ユーザー名</li>
+<li>mydb データベース名</li>
+<li>mydb.dump ダンプのファイル名</li>
+</ul>
+
+
+<h3>2. アップロードする</h3>
+
+<p>herokuにリストアするには、dumpファイルを外部からDL出来る形式にしないといけない。
+ここではDropboxにdumpファイルをいれてurlをコピペすることにした。</p>
+
+<p>なお、DropboxからDLのリンクを得るには、
+1. Dropbox内からdumpファイルを右クリック
+2. Dropboxリンクを共有をクリックしてclipboardにurlをコピー
+3. ブラウザでリンクをたどって、ダウンロードボタンのリンクをコピーする
+としなければならなかった。</p>
+
+<h3>3. herokuのDBへリストアする</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>% heroku pgbackups:restore DATABASE <span class="s1">&#39;https://dl.dropboxusercontent.com/s/ほげほげ&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とする。
+DATABASEには、<code>heroku config</code>で<code>HEROKU_POSTGRESQL_{COLOR}_URL</code>が出てくるはずなので、COLORを自分の環境で表示された色で置き換えて、実行するとOK.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>% heroku pgbackups:restore HEROKU_POSTGRESQL_<span class="o">{</span>COLOR<span class="o">}</span>_URL <span class="o">(</span>以下略<span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>HEROKU_POSTGRESQL_<span class="o">{</span>COLOR<span class="o">}</span>_URL <span class="o">(</span>DATABASE_URL<span class="o">)</span>  &lt;---restore---  mydb.dump
+</span><span class='line'>
+</span><span class='line'>Retrieving... <span class="k">done</span>
+</span><span class='line'>Restoring... <span class="k">done</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>出来た！herokuappを確認してみよう。</p>
+
+<p><img src="https://f.cloud.github.com/assets/1464221/2242377/54a66162-9d00-11e3-9640-e774af5c6995.png" alt="2014-02-24 12 03 46" /></p>
+
+<p>出来てる！</p>
+
+<h1>おまけ</h1>
+
+<h2>pgbackupsで使えるコマンド一覧</h2>
+
+<p><code>heroku help pg</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>% heroku <span class="nb">help </span>pg
+</span><span class='line'>Usage: heroku pg
+</span><span class='line'>
+</span><span class='line'> list databases <span class="k">for </span>an app
+</span><span class='line'>
+</span><span class='line'>Additional commands, <span class="nb">type</span> <span class="s2">&quot;heroku help COMMAND&quot;</span> <span class="k">for </span>more details:
+</span><span class='line'>
+</span><span class='line'>  pg:credentials DATABASE                                   <span class="c">#  display the DATABASE credentials.</span>
+</span><span class='line'>  pg:info <span class="o">[</span>DATABASE<span class="o">]</span>                                        <span class="c">#</span>
+</span><span class='line'>  pg:kill procpid <span class="o">[</span>DATABASE<span class="o">]</span>                                <span class="c">#  kill a query</span>
+</span><span class='line'>  pg:killall <span class="o">[</span>DATABASE<span class="o">]</span>                                     <span class="c">#  terminates ALL connections</span>
+</span><span class='line'>  pg:promote DATABASE                                       <span class="c">#  sets DATABASE as your DATABASE_URL</span>
+</span><span class='line'>  pg:ps <span class="o">[</span>DATABASE<span class="o">]</span>                                          <span class="c">#  view active queries with execution time</span>
+</span><span class='line'>  pg:psql <span class="o">[</span>DATABASE<span class="o">]</span>                                        <span class="c">#</span>
+</span><span class='line'>  pg:pull &lt;REMOTE_SOURCE_DATABASE&gt; &lt;LOCAL_TARGET_DATABASE&gt;  <span class="c">#  pull from REMOTE_SOURCE_DATABASE to LOCAL_TARGET_DATABASE</span>
+</span><span class='line'>  pg:push &lt;LOCAL_SOURCE_DATABASE&gt; &lt;REMOTE_TARGET_DATABASE&gt;  <span class="c">#  push from LOCAL_SOURCE_DATABASE to REMOTE_TARGET_DATABASE</span>
+</span><span class='line'>  pg:reset DATABASE                                         <span class="c">#  delete all data in DATABASE</span>
+</span><span class='line'>  pg:unfollow REPLICA                                       <span class="c">#  stop a replica from following and make it a read/write database</span>
+</span><span class='line'>  pg:wait <span class="o">[</span>DATABASE<span class="o">]</span>                                        <span class="c">#  monitor database creation, exit when complet</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>試してみた。</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>% heroku pg:info
+</span><span class='line'><span class="o">===</span> HEROKU_POSTGRESQL_ORANGE_URL <span class="o">(</span>DATABASE_URL<span class="o">)</span>
+</span><span class='line'>Plan:        Hobby-dev
+</span><span class='line'>Status:      available
+</span><span class='line'>Connections: 0
+</span><span class='line'>PG Version:  9.3.3
+</span><span class='line'>Created:     2014-02-09 10:02 UTC
+</span><span class='line'>Data Size:   6.5 MB
+</span><span class='line'>Tables:      3
+</span><span class='line'>Rows:        3/10000 <span class="o">(</span>In compliance<span class="o">)</span>
+</span><span class='line'>Fork/Follow: Unsupported
+</span><span class='line'>Rollback:    Unsupported
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>herokuのDBで無料で作成できるのは10000件までらしいです。超えたままだと一週間後にINSERTできなくなるとか。行削除、再構築などをすれば利用継続できるそう。</p>
+
+<h2>他に便利なコマンド</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c"># データベースマイグレーション</span>
+</span><span class='line'>heroku run rake db:migrate
+</span><span class='line'>heroku run rake db:seed
+</span><span class='line'><span class="c"># 環境の確認 (ENVの値など)</span>
+</span><span class='line'>heroku config
+</span><span class='line'><span class="c"># railsコンソール</span>
+</span><span class='line'>heroku run console
+</span><span class='line'>&gt; JunkData.delete_all
+</span><span class='line'><span class="c"># ログ確認</span>
+</span><span class='line'>% heroku logs -t
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以上!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[railsでuser登録画面を作る]]></title>
+    <link href="http://rice-american.github.io/blog/2014/02/17/rails-nyuryoku/"/>
+    <updated>2014-02-17T20:33:23+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/02/17/rails-nyuryoku</id>
+    <content type="html"><![CDATA[<p>デザインをいろいろ検討した結果、Tumblrのユーザ登録画面を<del>パク</del>参考にすることに。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[bootstrapのnavbar-fixed-topで、ナビゲーションバーでページが隠れてしまう件]]></title>
+    <link href="http://rice-american.github.io/blog/2014/02/14/rails-kaihatu/"/>
+    <updated>2014-02-14T18:20:19+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/02/14/rails-kaihatu</id>
+    <content type="html"><![CDATA[<p>navigation-toolbarを指定しているとページ上部がナビゲーションバーで見えなくなってしまった･･･</p>
+
+<p>&#8220;`</p>
+
+<p>&#8220;`</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[git-memo]]></title>
+    <link href="http://rice-american.github.io/blog/2014/02/09/git-memo/"/>
+    <updated>2014-02-09T16:03:42+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/02/09/git-memo</id>
+    <content type="html"><![CDATA[<ul>
+<li>git branch
+ブランチ一覧を出力</li>
+<li>git checkout -b branchを作ってbranch移動</li>
+<li>git branch -d branch名でbranch削除</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[jenkinsさんにイカしたpluginを入れてみよう！]]></title>
+    <link href="http://rice-american.github.io/blog/2014/02/09/jenkins-plugin/"/>
+    <updated>2014-02-09T14:05:01+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/02/09/jenkins-plugin</id>
+    <content type="html"><![CDATA[<p>jenkinsのpluginはかなりたくさんある！</p>
+
+<p>そんな中でよさ気なpluginを入れてみました。</p>
+
+<ul>
+<li><p>参考:<a href="http://sue445.hatenablog.com/entry/2014/01/08/225128">Jenkinsに入れているプラグインまとめ（Rails中心） &ndash; くりにっき</a></p></li>
+<li><p>AnsiColor Plugin &ndash; Jenkins &ndash; Jenkins Wiki</p>
+
+<ul>
+<li>コンソールに色がつく。</li>
+</ul>
+</li>
+<li>Green Balls &ndash; Jenkins &ndash; Jenkins Wiki
+
+<ul>
+<li>デフォルトでテストが成功すると青になるボールを緑にする。このへんは完全に好み。</li>
+</ul>
+</li>
+<li><p>Emotional Jenkins Plugin</p>
+
+<ul>
+<li>ビルドが失敗するとJenkinsさんが鬼の形相に、不安定だと不安げに。コレも好み。</li>
+</ul>
+</li>
+<li><p>monitoring Plugin</p>
+
+<ul>
+<li>/monitoringでjenkinsさんの状態をグラフで解りやすく表示してくれる！</li>
+</ul>
+</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[jenkinsでherokuにdeploy!]]></title>
+    <link href="http://rice-american.github.io/blog/2014/02/09/jenkins-heroku-deploy/"/>
+    <updated>2014-02-09T13:57:13+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/02/09/jenkins-heroku-deploy</id>
+    <content type="html"><![CDATA[<p>試しにJenkinsを使ってみよう！ということで、JenkinsからHerokuへ前に作ったbootstrapのsampleappをdeployしてみました。</p>
+
+<ul>
+<li>参考:<a href="http://www.buildinsider.net/enterprise/jenkins/03">Jenkins： アプリケーションをデプロイしてみよう（Mac OS X＆Linux）［Ruby、Rails］ &ndash; Build Insider</a></li>
+</ul>
+
+
+<p>こちらでほとんど出来ました。</p>
+
+<ul>
+<li><a href="http://journal.sooey.com/162">herokuコマンドで複数アカウントを使いわける &ndash; Sooey</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[bundle exec rspec spec/*/*.featureが失敗する件]]></title>
@@ -92,7 +539,7 @@
 
 <p>参考:<a href="http://www.webcreatorbox.com/tech/fonticons/">アイコンフォントでリンクタイプ別にアイコンつける方法 | Webクリエイターボックス</a></p>
 
-<p>scssファイルに記入</p>
+<p>css,scssファイルに記入</p>
 
 <p><em>{Rails.root}/app/assets/stylesheets/font-awesome.css</em></p>
 
@@ -344,7 +791,7 @@
 </pre></td><td class='code'><pre><code class=''><span class='line'>$ rails g bootstrap:layout application fluid</span></code></pre></td></tr></table></div></figure>
 
 
-<p>application_name/dtabase.ymlを編集して、ユーザをpostgresに。
+<p>application_name/config/dtabase.ymlを編集して、ユーザをpostgresに。
 そのあと<em>rake db:create RAILS_ENV=development</em>を実行。</p>
 ]]></content>
   </entry>
