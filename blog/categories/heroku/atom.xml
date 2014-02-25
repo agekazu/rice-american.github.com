@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Heroku | こめぶろぐ]]></title>
   <link href="http://rice-american.github.io/blog/categories/heroku/atom.xml" rel="self"/>
   <link href="http://rice-american.github.io/"/>
-  <updated>2014-02-24T12:21:06+09:00</updated>
+  <updated>2014-02-26T01:26:48+09:00</updated>
   <id>http://rice-american.github.io/</id>
   <author>
     <name><![CDATA[rice_american]]></name>
@@ -14,163 +14,244 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Jenkinsでherokuにdeploy!]]></title>
-    <link href="http://rice-american.github.io/blog/2014/02/09/jenkins-heroku-deploy/"/>
-    <updated>2014-02-09T13:57:13+09:00</updated>
-    <id>http://rice-american.github.io/blog/2014/02/09/jenkins-heroku-deploy</id>
-    <content type="html"><![CDATA[<p>試しにJenkinsを使ってみよう！ということで、JenkinsからHerokuへ前に作ったbootstrapのsampleappをdeployしてみました。</p>
+    <title type="html"><![CDATA[pgbackupsを使って、HerokuのDBをlocalにリストアしてDBにデータをinsertしてHerokuのDBへリストアするまで。]]></title>
+    <link href="http://rice-american.github.io/blog/2014/02/24/pgbackups/"/>
+    <updated>2014-02-24T12:10:02+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/02/24/pgbackups</id>
+    <content type="html"><![CDATA[<h2>何を使うか。</h2>
 
-<ul>
-<li>参考:<a href="http://www.buildinsider.net/enterprise/jenkins/03">Jenkins： アプリケーションをデプロイしてみよう（Mac OS X＆Linux）［Ruby、Rails］ &ndash; Build Insider</a></li>
-</ul>
+<p>調べてみるとpgbackupsというherokuのpluginがあった。コレを使えばherokuのDBからリストアしてローカルで復元、なんてこともできるらしい。</p>
 
+<p>参考: <a href="http://qiita.com/quattro_4/items/a2eb3618207e21ca00d3">Rails &ndash; herokuのデータベースをリセット/リストア/再構築する &ndash; Qiita</a></p>
 
-<p>こちらでほとんど出来ました。</p>
+<h2>やってみた。</h2>
 
-<ul>
-<li><a href="http://journal.sooey.com/162">herokuコマンドで複数アカウントを使いわける &ndash; Sooey</a></li>
-</ul>
+<p>pluginをinstallする。
+<code>sh
+% heroku addons:add pgbackups
+Adding pgbackups on kitaken-mahjong... done, v16 (free)
+You can now use "pgbackups" to backup your databases or import an external backup.
+Use `heroku addons:docs pgbackups` to view documentation.
+</code>
+backupないか確認
+<code>sh
+% heroku pgbackups           
+ !    No backups. Capture one with `heroku pgbackups:capture`.
+</code>
+ないので、backupを行う
+```sh
+% heroku pgbackups:capture</p>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[herokuへRuby on Railsアプリケーションをdeployするまで]]></title>
-    <link href="http://rice-american.github.io/blog/2014/01/26/heroku-RoR/"/>
-    <updated>2014-01-26T00:24:57+09:00</updated>
-    <id>http://rice-american.github.io/blog/2014/01/26/heroku-RoR</id>
-    <content type="html"><![CDATA[<p><strong>参考</strong>:<a href="http://qiita.com/mah_lab/items/9df8230e709a23b04f7f">Herokuでアプリを公開する直前までのチュートリアル &ndash; Qiita [キータ]</a></p>
+<p>HEROKU_POSTGRESQL_ORANGE_URL (DATABASE_URL)  &mdash;&mdash;backup&mdash;&ndash;>  b001</p>
 
-<pre><code>$ git clone git://github.com/heroku/ruby-sample.git
-$ cd ruby-sample
-$ heroku create
-$ git push heroku master
-$ heroku open
+<p>Capturing&hellip; done
+Storing&hellip; done
+<code>
+`$ heroku pgbackups --app appname`とかすると、appを指定してバックアップできる。
+続いて取得したbackupをlocalにDLしてみる。
+(追記: `curl -o latest.dump `heroku pgbackups:url --app heroku_appname`ってやると一発でdlできるみたい。)
+</code>
+% heroku pgbackups         <br/>
+ID    Backup Time          Status                          Size   Database</p>
+
+<hr />
+
+<p>b001  2014/02/23 09:00.07  Finished @ 2014/02/23 09:00.10  5.9KB  HEROKU_POSTGRESQL_ORANGE_URL (DATABASE_URL)
+% heroku pgbackups:url b001<br/>
+&ldquo;<a href="https://s3.amazonaws.com/hkpgbackups/app22056631@heroku.com/b001.dump?AWSAccessKeyId=">https://s3.amazonaws.com/hkpgbackups/app22056631@heroku.com/b001.dump?AWSAccessKeyId=</a>(ながいkeyidがずらずら)&rdquo;
+```</p>
+
+<p>リンクに行くとb001.dumpというファイルがDLされた。リンクは<strong>約10分後にはAccessDenied</strong>になるらしい。</p>
+
+<p>ではdumpファイルをリストアします。</p>
+
+<p><code>sh
+% pg_restore --verbose --clean --no-acl --no-owner -h localhost -U myuser -d mydb b001.dump
+</code>
+myuserに任意のユーザ名、mydbに任意のデータベース名を入れましょう。</p>
+
+<p>```sh
+% createdb mydb            <br/>
+% pg_restore &mdash;verbose &mdash;clean &mdash;no-acl &mdash;no-owner -h localhost -U myuser -d mydb /Users/user/Desktop/b001.dump
+pg_restore: connecting to database for restore
+pg_restore: dropping INDEX unique_schema_migrations
+pg_restore: [archiver (db)] Error while PROCESSING TOC:
+pg_restore: [archiver (db)] Error from TOC entry 2728; 1259 1466031 INDEX unique_schema_migrations wblyjdvsoodhup
+pg_restore: [archiver (db)] could not execute query: ERROR:  index &ldquo;unique_schema_migrations&rdquo; does not exist</p>
+
+<pre><code>Command was: DROP INDEX public.unique_schema_migrations;
 </code></pre>
 
-<p><em>heroku open</em>を実行すると先ほどpushしたrailsアプリが表示される。</p>
-
-<p>applicationの名前を変更するときは<em>$ heroku rename hogehoge</em>とする。</p>
-
-<p>次のようにした。</p>
-
-<p><code>
-$ heroku rename rice-rails-bootstrap-test                         
-Renaming warm-castle-8443 to rice-rails-test... done
-http://rice-rails-bootstrap-test.com/ | git@heroku.com:rice-rails-bootstrap-test.git
-Git remote heroku updated
-</code></p>
-
-<h2>前に作ったbootstrap+railsなアプリをdeployする。</h2>
-
-<p>作ったアプリケーションに移動して</p>
-
-<p><code>
-$ git init
-$ heroku create rice-rails-bootstrap-test
-$ git push heroku master
-$ heroku open
-</code></p>
-
-<p>表示されたページにerrorがでた</p>
-
-<p><code>
-The page you were looking for doesn't exist.
-</code></p>
-
-<p>検索すると･･･:<a href="http://qiita.com/seltzer/items/d52a31c558a30c857a3f">herokuで「The page you were looking for doesn’t exist.」エラーが出るときの対処法 &ndash; Qiita [キータ]</a></p>
-
-<p><em>『Rails 3.2以降で発生する現象で、アセット周りのプリコンパイルが影響しているのだとか。これを回避するには、オフィシャルドキュメントの手順に加えて次の手順をしなければならないようです。』</em>
-とのこと。</p>
-
-<p><code>
-$ rake assets:precompile
-</code></p>
-
-<p>だがだめ、</p>
-
-<p><code>
-$ vim config/environments/production.rb
-config.assets.compile = true
-</code>
-としてdeployするもだめ、</p>
-
-<p><a href="http://d.hatena.ne.jp/piggery/20120807">HerokuでRailsアプリを動かす &ndash; かいはつにっき</a></p>
-
-<p>ここを見ると、</p>
-
-<p><code>
-$ rails server -e production
-</code>
-として動かすと,dbがないと言われた。</p>
-
-<p><code>
-The page you were looking for doesn't exist.
-</code></p>
-
-<p>検索すると･･･:<a href="http://qiita.com/seltzer/items/d52a31c558a30c857a3f">herokuで「The page you were looking for doesn’t exist.」エラーが出るときの対処法 &ndash; Qiita [キータ]</a></p>
-
-<p><em>『Rails 3.2以降で発生する現象で、アセット周りのプリコンパイルが影響しているのだとか。これを回避するには、オフィシャルドキュメントの手順に加えて次の手順をしなければならないようです。』</em>
-とのこと。</p>
-
-<p><code>
-$ vim config/environments/production.rb
-config.assets.compile = true
-</code>
-としてdeployするもだめ、</p>
-
-<p><a href="http://d.hatena.ne.jp/piggery/20120807">HerokuでRailsアプリを動かす &ndash; かいはつにっき</a></p>
-
-<p>ここを見ると、</p>
-
-<p><code>
-$ rails server -e production
-</code>
-として動かすとdbがないと言われた。</p>
-
-<p><code>
-$ rake db:migrate
-$ rake db:create
-</code></p>
-
-<p>なんやかんや最終的にはurlが間違ってたっぽい･･･url+=/books</p>
-
-<p><a href="http://rice-rails-bootstrap-test.herokuapp.com/books">http://rice-rails-bootstrap-test.herokuapp.com/books</a></p>
-
-<p>アホや･･･</p>
-
-<h2>CentOSにherokuを</h2>
-
-<p>参考:<a href="http://succi.jp/blog/?p=1137">「CentOSにheroku toolbeltをインストール」が失敗する場合の対処</a></p>
-
-<p>```</p>
-
-<h1>いきなりshに送る事は避けて、install.shをダウンロード</h1>
-
-<p>$ wget &mdash;no-check-certificate <a href="https://toolbelt.heroku.com/install.sh">https://toolbelt.heroku.com/install.sh</a></p>
-
-<h1>install.shの内容を確認してから、改めて実行</h1>
-
-<p>$ sh ./install.sh
-This script requires superuser access to install software.
-You will be prompted for your password by sudo.
-Installation complete</p>
-
-<h1>install.shを削除</h1>
-
-<p>$ rm install.sh</p>
-
-<h1>パスを追加</h1>
-
-<p>$ echo &lsquo;PATH=&ldquo;/usr/local/heroku/bin:$PATH&rdquo;&rsquo; >> .bashrc
-$ source .bashrc</p>
-
-<h1>実行</h1>
-
-<p>$ heroku &mdash;version
-heroku-toolbelt/3.1.0 (x86_64-linux) ruby/2.0.0
+<p>(中略)
 ```
-ok</p>
+エラーが出まくってる気がするけど気にしない。</p>
+
+<p><code>psql</code>をコマンドラインで実行して</p>
+
+<p>```
+user=# \l</p>
+
+<pre><code>                                     List of databases
+       Name            |   Owner   | Encoding |   Collate   |    Ctype    |  Access privileges
+</code></pre>
+
+<p>&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;+&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;+&mdash;&mdash;&mdash;&mdash;&mdash;+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;
+ mydb                      | user   | UTF8     | ja_JP.UTF-8 | ja_JP.UTF-8 |<strong>←コレ</strong></p>
+
+<p>user=# \connect mydb
+You are now connected to database &ldquo;mydb&rdquo; as user &ldquo;user&rdquo;.
+mydb=# \d</p>
+
+<pre><code>           List of relations
+</code></pre>
+
+<p> Schema |       Name        |   Type   | Owner
+&mdash;&mdash;&mdash;&mdash;+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;+&mdash;&mdash;&mdash;&mdash;&mdash;+&mdash;&mdash;&mdash;&mdash;
+ public | schema_migrations | table    | myuser
+ public | users             | table    | myuser
+ public | users_id_seq      | sequence | myuser
+ public | yakus             | table    | myuser
+ public | yakus_id_seq      | sequence | myuser
+(5 rows)
+mydb=# select * from users;
+ id | user_name | email_address | password | created_at | updated_at
+&mdash;&mdash;+&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;+&mdash;&mdash;&mdash;&mdash;&mdash;+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;
+(0 rows)</p>
+
+<p>mydb=# select * from yakus;
+ id | name | han | fu |         created_at         |         updated_at
+&mdash;&mdash;+&mdash;&mdash;&mdash;+&mdash;&mdash;&ndash;+&mdash;&mdash;+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;
+  1 | 平和 |   1 |  0 | 2014-02-09 10:34:56.670672 | 2014-02-09 10:34:56.670672
+(1 row)
+```
+リストアまで出来ている模様。</p>
+
+<p>\connect知らなくて詰んでた。mysqlでいう<code>use database名</code>みたいに、<code>\connect database名(or \c database名)</code>として使う。あとは<code>\d</code>でtableの情報を表示できる。その他のコマンドについては<a href="http://www.ne.jp/asahi/hishidama/home/tech/postgres/psql.html">ポストグレスpsqlメモ(Hishidama&rsquo;s psql Memo)</a>が一覧で載っててわかりやすいかも。</p>
+
+<h2>localに落としたdbからherokuへリストアしてみよう。</h2>
+
+<p>参考: <a href="http://www.workabroad.jp/posts/2050">ローカルのデータベースをherokuにリストアする | Workabroad.jp</a></p>
+
+<h3>0. DBの書き換え</h3>
+
+<p>今回はYakusのDBに次のように挿入。
+<code>
+mydb=# insert into yakus values (2, '断么九', 1, 20);
+</code>
+断么九の符翻はテキトー。</p>
+
+<h3>1. まずは手元のDBをdumpする。</h3>
+
+<p><code>
+$ pg_dump -Fc --no-acl --no-owner -h localhost -U myuser mydb &gt; mydb.dump
+</code>
+* mypassword データベースのパスワード
+* myuser ユーザー名
+* mydb データベース名
+* mydb.dump ダンプのファイル名</p>
+
+<h3>2. アップロードする</h3>
+
+<p>herokuにリストアするには、dumpファイルを外部からDL出来る形式にしないといけない。
+ここではDropboxにdumpファイルをいれてurlをコピペすることにした。</p>
+
+<p>なお、DropboxからDLのリンクを得るには、
+1. Dropbox内からdumpファイルを右クリック
+2. Dropboxリンクを共有をクリックしてclipboardにurlをコピー
+3. ブラウザでリンクをたどって、ダウンロードボタンのリンクをコピーする
+としなければならなかった。</p>
+
+<h3>3. herokuのDBへリストアする</h3>
+
+<p><code>
+% heroku pgbackups:restore DATABASE 'https://dl.dropboxusercontent.com/s/ほげほげ'
+</code>
+とする。
+DATABASEには、<code>heroku config</code>で<code>HEROKU_POSTGRESQL_{COLOR}_URL</code>が出てくるはずなので、COLORを自分の環境で表示された色で置き換えて、実行するとOK.</p>
+
+<p>```
+% heroku pgbackups:restore HEROKU_POSTGRESQL<em>{COLOR}</em>URL (以下略)</p>
+
+<p>HEROKU_POSTGRESQL<em>{COLOR}</em>URL (DATABASE_URL)  &lt;&mdash;-restore&mdash;&ndash;  mydb.dump</p>
+
+<p>Retrieving&hellip; done
+Restoring&hellip; done
+```
+出来た！herokuappを確認してみよう。</p>
+
+<p><img src="https://f.cloud.github.com/assets/1464221/2242377/54a66162-9d00-11e3-9640-e774af5c6995.png" alt="2014-02-24 12 03 46" /></p>
+
+<p>出来てる！</p>
+
+<h1>おまけ</h1>
+
+<h2>pgbackupsで使えるコマンド一覧</h2>
+
+<p><code>heroku help pg</code>
+```
+% heroku help pg           <br/>
+Usage: heroku pg</p>
+
+<p> list databases for an app</p>
+
+<p>Additional commands, type &ldquo;heroku help COMMAND&rdquo; for more details:</p>
+
+<p>  pg:credentials DATABASE                                   #  display the DATABASE credentials.
+  pg:info [DATABASE]                                        #
+  pg:kill procpid [DATABASE]                                #  kill a query
+  pg:killall [DATABASE]                                     #  terminates ALL connections
+  pg:promote DATABASE                                       #  sets DATABASE as your DATABASE_URL
+  pg:ps [DATABASE]                                          #  view active queries with execution time
+  pg:psql [DATABASE]                                        #
+  pg:pull &lt;REMOTE_SOURCE_DATABASE> &lt;LOCAL_TARGET_DATABASE>  #  pull from REMOTE_SOURCE_DATABASE to LOCAL_TARGET_DATABASE
+  pg:push &lt;LOCAL_SOURCE_DATABASE> &lt;REMOTE_TARGET_DATABASE>  #  push from LOCAL_SOURCE_DATABASE to REMOTE_TARGET_DATABASE
+  pg:reset DATABASE                                         #  delete all data in DATABASE
+  pg:unfollow REPLICA                                       #  stop a replica from following and make it a read/write database
+  pg:wait [DATABASE]                                        #  monitor database creation, exit when complet
+```</p>
+
+<h2>試してみた。</h2>
+
+<p><code>sh
+% heroku pg:info             
+=== HEROKU_POSTGRESQL_ORANGE_URL (DATABASE_URL)
+Plan:        Hobby-dev
+Status:      available
+Connections: 0
+PG Version:  9.3.3
+Created:     2014-02-09 10:02 UTC
+Data Size:   6.5 MB
+Tables:      3
+Rows:        3/10000 (In compliance)
+Fork/Follow: Unsupported
+Rollback:    Unsupported
+</code>
+herokuのDBで無料で作成できるのは10000件までらしいです。超えたままだと一週間後にINSERTできなくなるとか。行削除、再構築などをすれば利用継続できるそう。</p>
+
+<h2>他に便利なコマンド</h2>
+
+<p>```sh</p>
+
+<h1>データベースマイグレーション</h1>
+
+<p>heroku run rake db:migrate
+heroku run rake db:seed</p>
+
+<h1>環境の確認 (ENVの値など)</h1>
+
+<p>heroku config</p>
+
+<h1>railsコンソール</h1>
+
+<p>heroku run console</p>
+
+<blockquote><p>JunkData.delete_all</p>
+
+<h1>ログ確認</h1>
+
+<p>% heroku logs -t           <br/>
+```
+以上!</p></blockquote>
 ]]></content>
   </entry>
   

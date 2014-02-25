@@ -447,124 +447,6 @@ DATABASEには、<code>heroku config</code>で<code>HEROKU_POSTGRESQL_{COLOR}_UR
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/02/17/rails-nyuryoku/">Railsでuser登録画面を作る</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-17T20:33:23+09:00" pubdate data-updated="true">Feb 17<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>デザインをいろいろ検討した結果、Tumblrのユーザ登録画面を<del>パク</del>参考にすることに。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/14/rails-kaihatu/">Bootstrapのnavbar-fixed-topで、ナビゲーションバーでページが隠れてしまう件</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-14T18:20:19+09:00" pubdate data-updated="true">Feb 14<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>navigation-toolbarを指定しているとページ上部がナビゲーションバーで見えなくなってしまった･･･</p>
-
-<p>&#8220;`</p>
-
-<p>&#8220;`</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/09/git-memo/">Git-memo</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-09T16:03:42+09:00" pubdate data-updated="true">Feb 9<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><ul>
-<li>git branch
-ブランチ一覧を出力</li>
-<li>git checkout -b branchを作ってbranch移動</li>
-<li>git branch -d branch名でbranch削除</li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
       <h1 class="entry-title"><a href="/blog/2014/02/09/jenkins-plugin/">Jenkinsさんにイカしたpluginを入れてみよう！</a></h1>
     
     
@@ -618,54 +500,6 @@ DATABASEには、<code>heroku config</code>で<code>HEROKU_POSTGRESQL_{COLOR}_UR
 <li>/monitoringでjenkinsさんの状態をグラフで解りやすく表示してくれる！</li>
 </ul>
 </li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/09/jenkins-heroku-deploy/">Jenkinsでherokuにdeploy!</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-09T13:57:13+09:00" pubdate data-updated="true">Feb 9<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>試しにJenkinsを使ってみよう！ということで、JenkinsからHerokuへ前に作ったbootstrapのsampleappをdeployしてみました。</p>
-
-<ul>
-<li>参考:<a href="http://www.buildinsider.net/enterprise/jenkins/03">Jenkins： アプリケーションをデプロイしてみよう（Mac OS X＆Linux）［Ruby、Rails］ &ndash; Build Insider</a></li>
-</ul>
-
-
-<p>こちらでほとんど出来ました。</p>
-
-<ul>
-<li><a href="http://journal.sooey.com/162">herokuコマンドで複数アカウントを使いわける &ndash; Sooey</a></li>
 </ul>
 
 </div>
@@ -1119,6 +953,834 @@ DATABASEには、<code>heroku config</code>で<code>HEROKU_POSTGRESQL_{COLOR}_UR
 
     </article>
   
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/26/heroku-RoR/">herokuへRuby on Railsアプリケーションをdeployするまで</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-26T00:24:57+09:00" pubdate data-updated="true">Jan 26<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong>参考</strong>:<a href="http://qiita.com/mah_lab/items/9df8230e709a23b04f7f">Herokuでアプリを公開する直前までのチュートリアル &ndash; Qiita [キータ]</a></p>
+
+<pre><code>$ git clone git://github.com/heroku/ruby-sample.git
+$ cd ruby-sample
+$ heroku create
+$ git push heroku master
+$ heroku open
+</code></pre>
+
+<p><em>heroku open</em>を実行すると先ほどpushしたrailsアプリが表示される。</p>
+
+<p>applicationの名前を変更するときは<em>$ heroku rename hogehoge</em>とする。</p>
+
+<p>次のようにした。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ heroku rename rice-rails-bootstrap-test                         
+</span><span class='line'>Renaming warm-castle-8443 to rice-rails-test... done
+</span><span class='line'>http://rice-rails-bootstrap-test.com/ | git@heroku.com:rice-rails-bootstrap-test.git
+</span><span class='line'>Git remote heroku updated</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>前に作ったbootstrap+railsなアプリをdeployする。</h2>
+
+<p>作ったアプリケーションに移動して</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git init
+</span><span class='line'>$ heroku create rice-rails-bootstrap-test
+</span><span class='line'>$ git push heroku master
+</span><span class='line'>$ heroku open</span></code></pre></td></tr></table></div></figure>
+
+
+<p>表示されたページにerrorがでた</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>The page you were looking for doesn't exist.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>検索すると･･･:<a href="http://qiita.com/seltzer/items/d52a31c558a30c857a3f">herokuで「The page you were looking for doesn’t exist.」エラーが出るときの対処法 &ndash; Qiita [キータ]</a></p>
+
+<p><em>『Rails 3.2以降で発生する現象で、アセット周りのプリコンパイルが影響しているのだとか。これを回避するには、オフィシャルドキュメントの手順に加えて次の手順をしなければならないようです。』</em>
+とのこと。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ rake assets:precompile</span></code></pre></td></tr></table></div></figure>
+
+
+<p>だがだめ、</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ vim config/environments/production.rb
+</span><span class='line'>config.assets.compile = true</span></code></pre></td></tr></table></div></figure>
+
+
+<p>としてdeployするもだめ、</p>
+
+<p><a href="http://d.hatena.ne.jp/piggery/20120807">HerokuでRailsアプリを動かす &ndash; かいはつにっき</a></p>
+
+<p>ここを見ると、</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ rails server -e production</span></code></pre></td></tr></table></div></figure>
+
+
+<p>として動かすと,dbがないと言われた。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>The page you were looking for doesn't exist.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>検索すると･･･:<a href="http://qiita.com/seltzer/items/d52a31c558a30c857a3f">herokuで「The page you were looking for doesn’t exist.」エラーが出るときの対処法 &ndash; Qiita [キータ]</a></p>
+
+<p><em>『Rails 3.2以降で発生する現象で、アセット周りのプリコンパイルが影響しているのだとか。これを回避するには、オフィシャルドキュメントの手順に加えて次の手順をしなければならないようです。』</em>
+とのこと。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ vim config/environments/production.rb
+</span><span class='line'>config.assets.compile = true</span></code></pre></td></tr></table></div></figure>
+
+
+<p>としてdeployするもだめ、</p>
+
+<p><a href="http://d.hatena.ne.jp/piggery/20120807">HerokuでRailsアプリを動かす &ndash; かいはつにっき</a></p>
+
+<p>ここを見ると、</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ rails server -e production</span></code></pre></td></tr></table></div></figure>
+
+
+<p>として動かすとdbがないと言われた。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ rake db:migrate
+</span><span class='line'>$ rake db:create</span></code></pre></td></tr></table></div></figure>
+
+
+<p>なんやかんや最終的にはurlが間違ってたっぽい･･･url+=/books</p>
+
+<p><a href="http://rice-rails-bootstrap-test.herokuapp.com/books">http://rice-rails-bootstrap-test.herokuapp.com/books</a></p>
+
+<p>アホや･･･</p>
+
+<h2>CentOSにherokuを</h2>
+
+<p>参考:<a href="http://succi.jp/blog/?p=1137">「CentOSにheroku toolbeltをインストール」が失敗する場合の対処</a></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># いきなりshに送る事は避けて、install.shをダウンロード
+</span><span class='line'>$ wget --no-check-certificate https://toolbelt.heroku.com/install.sh
+</span><span class='line'>
+</span><span class='line'># install.shの内容を確認してから、改めて実行
+</span><span class='line'>$ sh ./install.sh
+</span><span class='line'>This script requires superuser access to install software.
+</span><span class='line'>You will be prompted for your password by sudo.
+</span><span class='line'>Installation complete
+</span><span class='line'>
+</span><span class='line'># install.shを削除
+</span><span class='line'>$ rm install.sh
+</span><span class='line'>
+</span><span class='line'># パスを追加
+</span><span class='line'>$ echo 'PATH="/usr/local/heroku/bin:$PATH"' &gt;&gt; .bashrc
+</span><span class='line'>$ source .bashrc
+</span><span class='line'>
+</span><span class='line'># 実行
+</span><span class='line'>$ heroku --version
+</span><span class='line'>heroku-toolbelt/3.1.0 (x86_64-linux) ruby/2.0.0</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ok</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/19/about_jenkins/">Jenkinsについて学ぶ</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-19T12:51:01+09:00" pubdate data-updated="true">Jan 19<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Jenkins本『入門Jenkins』にて学んだことをメモ。
+hogehogeo</p>
+
+<h1>第1章</h1>
+
+<h2>継続的インテグレーション(CI)とは</h2>
+
+<ul>
+<li>CIという言葉が生まれる以前:スモークテストと夜間ビルド</li>
+<li><p>90年台後半:アジャイル開発の中で、XP(eXtreme Programming)のプラクティスの一つとしてCIが提案され、Webアプリケーション開発の現場で使われ始めた。
+よく使われていたのは、<em>CruiseControl</em>や<em>Apache Continum</em>など。</p></li>
+<li><p>CIは夜間ビルドのように、決まった時間にビルドするのではなく、CIツールがバージョン監視システムのリポジトリを監視し、リポジトリに変更があった場合にコンパイル、テスト、デプロイという一連のビルドを実施してくれる。</p></li>
+</ul>
+
+
+<h2>CIのメリット</h2>
+
+<ol>
+<li>欠陥の早期検知
+
+<ul>
+<li>複数人開発の場合、ほかの人の開発したモジュールと結合してみると、全くテストが動作しないということがある。CIツールを使用して、常時修正を取り込み、ビルドすることで、結合時の問題を解消できる。</li>
+<li>独立したCIサーバが常にリポジトリを関し、変更があったら一連のビルドを実施することで、特に結合に絡む欠陥の早期に検出し、各開発者にフィードバックできるようになる。</li>
+</ul>
+</li>
+<li>手作業によるミスの低減
+
+<ul>
+<li>コンパイル、テスト、デプロイを手作業でやった場合、ミスが発生することが考えられるが、CIツールを使えば大丈夫。</li>
+</ul>
+</li>
+<li>時系列品質の可視化
+
+<ul>
+<li>CIツールでは各ビルドに関する情報を格納しているので、時系列でビルドに関する各種情報を可視化できる。</li>
+</ul>
+</li>
+</ol>
+
+
+<h2>CIの構成要素</h2>
+
+<h3>CIのフロー</h3>
+
+<ol>
+<li>開発者がソースコードやテストを作成or修正して変更をバージョン管理サーバのリポジトリに登録</li>
+<li>CIサーバがバージョン管理サーバ上のリポジトリの変更を検知</li>
+<li>CIサーバが対象のリポジトリに紐づく各種ジョブの実施をビルドサーバに依頼する。ビルドサーバはCIサーバと独立していないこともある</li>
+<li>ビルドサーバがコンパイルやテストなどのジョブを実施する。</li>
+<li>ジョブの結果をCIサーバが収集し、レポートをにまとめる</li>
+<li>CIサーバがジョブの結果を開発者にメールやチャットなどでフィードバックする</li>
+</ol>
+
+
+<p>基本的に上記の流れを繰り返す。CIサーバは定期ビルドも実施できたり、トリガを設定できたりする。</p>
+
+<h4>バージョン管理システム</h4>
+
+<p>Git marcurialなど</p>
+
+<h4>ビルドツール</h4>
+
+<p>JavaではApache Ant, Apache Maven, RubyでつかわれるRakeなど。</p>
+
+<h4>CIツール</h4>
+
+<p>JenkinsはオープンソースCIツールのデファクトスタンダード
+商用ツールではMicrosoft Visual Studio Term Founation Serverなど</p>
+
+<h4>テストツール</h4>
+
+<ul>
+<li>CIツールではJUnitのようなユニットテストツールをはじめとして様々なレベルのテストツールを実施、レポーティングをサポートする。</li>
+<li>LL言語ではテスト・ツールを使ったテストに成る。
+
+<h4>コードカバレッジツール</h4>
+
+自動テキストを実施したさいに、テスト対象の製品コードを自動テストがどれだけテストを実行できたかをステートメントカバレッジと言った網羅基準に従って計測してくれるもの。
+CIツールではコードカバレッジも示してくれる。
+
+<h4>コードインスペクションツール</h4></li>
+<li>テストのようにコードを実行するのではなく、ソースコードもしくはバイトコードを読み取って、コーディングルールの準拠や潜在バグの検出をするもの。</li>
+<li>Javaの開発ではCheckstyleとFindBugsがデファクトスタンダード。両方使われることが多い。</li>
+<li>CIツールではコードインスペクションツールの実施結果もレポートにでき、また時系列に可視化できる。
+
+<h4>コードレビューシステム</h4></li>
+<li>CIの目的はビルドのすべての作業を自動化するだけではない。</li>
+<li>コードレビューや手動テストといったどうしても人でのワークフローが必要な領域があり、その一つがコードレビューシステム。</li>
+<li>Gerritを始めとするコードレビューシステムにより、手動でのコードレビューをサポートする。</li>
+</ul>
+
+
+<h1>第2章 Jenkinsの生まれた背景と歴史</h1>
+
+<h2>Jenkinsの生まれた背景</h2>
+
+<p>Jenkinsは元々Hudosonという名称で、2004年川口耕介氏によって開発された。</p>
+
+<h2>CIツールとしてのJenkinsのメリット</h2>
+
+<ul>
+<li>CruiseControlやApacheContinumよりもJenkinsが選ばれる理由について</li>
+</ul>
+
+
+<h3>インストールが容易</h3>
+
+<ul>
+<li>installerの指示に従えば、数ステップでCIサーバが立てられる。</li>
+</ul>
+
+
+<h3>つかいやすいWebインタフェースによる運用の容易性</h3>
+
+<ul>
+<li>Pluginによる拡張性の高い運用が可能だが、これもWebインタフェースによりできる。</li>
+</ul>
+
+
+<h3>豊富なPlugin</h3>
+
+<ul>
+<li>デフォルトではSubversionだが、Git Pluginなどを入れれば、各種バージョン管理システムが利用できる。また、ユニットテストツール、メトリックスツール、ビルドツール、課題管理ツール、テスト管理ツールでもメジャーなものはPluginを導入すれば使える。</li>
+</ul>
+
+
+<h2>JavaEE以外の利用</h2>
+
+<ul>
+<li>JenkinsはJavaで開発されていることから、JavaEEで使用されていることが多い、しかし、他の領域でも使用できる。
+
+<ul>
+<li>Android Application</li>
+<li>RoR</li>
+<li>コードレビューシステムGerrit</li>
+<li>Catalystアプリケーション開発</li>
+</ul>
+</li>
+</ul>
+
+
+<h1>第4章 Jenkinsの導入</h1>
+
+<h2>Jenkinsのyum install</h2>
+
+<p>今回は本書で使われているUbuntuではなく、Centos6.5に導入することに。</p>
+
+<p>CentOSにJenkinsを入れるに当たり、<a href="http://qiita.com/phimcall/items/10e2003b712ed0adfc7c">CentOS に Jenkins を入れて自動的にコミットとかやりたかった &ndash; Qiita [キータ]</a>を参考にしたのん。</p>
+
+<h1>第7章 RoRをもいいたアプリケーションでのJenkins実践</h1>
+
+<h2>rails newとRSpec</h2>
+
+<ul>
+<li>TestToolにRSpecをgem installするため、Gemfileに以下の行を加え、bundle installを行います。</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>group :test, :development do
+</span><span class='line'>  gem 'rspec-rails', '~&gt;2.0'
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>RSpecに必要なファイルを生成</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>vagrant:&gt;rails generate rspec:install    [/vagrant/work/blog][01/19 06:05:44]
+</span><span class='line'>      create  .rspec
+</span><span class='line'>      create  spec
+</span><span class='line'>      create  spec/spec_helper.rb</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Railsのscaffoldを用いてProject基礎部分をテストとともに生成する。</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>rails generate scaffold Port name:string title:string content:text</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><p>capybara-webkitのインストール
+capybara-webkitは、<strong>RSpecではやってくれないJavaScriptのテストを含めた結合テスト</strong>を行ってくれる。</p></li>
+<li><p>Qtをインストール</p></li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ yum install qt4 qt4-devel qt4-doc qt4-postgresql qt4-odbc qt4-sqlite qt-creator</span></code></pre></td></tr></table></div></figure>
+
+
+<p>rspec-rails
+database_cleaner</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>group :test, :development do
+</span><span class='line'>    gem 'rspec-rails', '~&gt;2.0'
+</span><span class='line'>    gem 'database_cleaner'
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>group :test do
+</span><span class='line'>    gem 'headless'
+</span><span class='line'>end
+</span><span class='line'>~</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Gem::Ext::BuildError: ERROR: Failed to build gem native extension.
+</span><span class='line'>
+</span><span class='line'>    /home/vagrant/.rbenv/versions/2.1.0/bin/ruby extconf.rb
+</span><span class='line'>Command 'qmake -spec linux-g++ ' not available
+</span><span class='line'>
+</span><span class='line'>Makefile not found
+</span><span class='line'>
+</span><span class='line'>Gem files will remain installed in /home/vagrant/.rbenv/versions/2.1.0/lib/ruby/gems/2.1.0/gems/capybara-webkit-1.1.1 for inspection.
+</span><span class='line'>Results logged to /home/vagrant/.rbenv/versions/2.1.0/lib/ruby/gems/2.1.0/extensions/x86_64-linux/2.1.0-static/capybara-webkit-1.1.1/gem_make.out
+</span><span class='line'>An error occurred while installing capybara-webkit (1.1.1), and Bundler cannot
+</span><span class='line'>continue.
+</span><span class='line'>Make sure that `gem install capybara-webkit -v '1.1.1'` succeeds before
+</span><span class='line'>bundling.
+</span><span class='line'>FAILED...gem install capybara-webkit -v '1.1.1'</span></code></pre></td></tr></table></div></figure>
+
+
+<p>今日(2014/01/19)はここまで</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/18/octpress/">Octpressを導入してイカすBlogを作る</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-18T10:57:20+09:00" pubdate data-updated="true">Jan 18<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Jekyllをそのまま使うより<a href="http://octopress.org/">Octopress</a>を使うのが、Blogの運用には最適らしい。
+<code>rake new_post["title"]</code>で記事作成できるのが楽。</p>
+
+<h2>導入方法</h2>
+
+<p>Octpress導入までは<a href="http://tantant.jp/blog/Octopress/installing-octopress/">Markdownで書いてGitで管理するブログ「Octopress」の始め方 &ndash; tantant</a>を参考にした。</p>
+
+<h2>theme</h2>
+
+<p><a href="http://opthemes.com/">Opthemes · Octopress Themes</a>を見ながら、Octpressのthemeを決める。今回入れたのは<a href="https://github.com/shashankmehta/greyshade">shashankmehta/greyshade</a>. READMEにinstall方法が載っているのでそのまま導入。</p>
+
+<h2>icon</h2>
+
+<p><a href="http://ja.gravatar.com/">Gravatar</a>を使用している際は、_config.ymlのemail: にGravatarに登録しているemail addressを指定すると、反映される。この場合、メールのリンクがトップ画面に追加される。
+また、email addressを載せるのに抵抗がある人はemail_md5: にmd5でhash化したemail addressを指定してあげると良い。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/18/rails_app/">Rails アプリケーション作成の手順</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-18T00:00:00+09:00" pubdate data-updated="true">Jan 18<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>#
+1. DBの設定</p>
+
+<p>databaseの設定は<code>application_name/dtabase.yml</code>を編集して行う。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>% vim config/database.yml
+</span><span class='line'>----
+</span><span class='line'># PostgreSQL. Versions 8.2 and up are supported.
+</span><span class='line'>#
+</span><span class='line'># Install the pg driver:
+</span><span class='line'>#   gem install pg
+</span><span class='line'># On OS X with Homebrew:
+</span><span class='line'>#   gem install pg -- --with-pg-config=/usr/local/bin/pg_config
+</span><span class='line'># On OS X with MacPorts:
+</span><span class='line'>#   gem install pg -- --with-pg-config=/opt/local/lib/postgresql84/bin/pg_config
+</span><span class='line'># On Windows:
+</span><span class='line'>#   gem install pg
+</span><span class='line'>#       Choose the win32 build.
+</span><span class='line'>#       Install PostgreSQL and put its /bin directory on your path.
+</span><span class='line'>#
+</span><span class='line'># Configure Using Gemfile
+</span><span class='line'># gem 'pg'
+</span><span class='line'>#
+</span><span class='line'>development:
+</span><span class='line'>  adapter: postgresql
+</span><span class='line'>  encoding: unicode
+</span><span class='line'>  database: sample_development
+</span><span class='line'>  pool: 5
+</span><span class='line'>  username: vagrant
+</span><span class='line'>  password: vagrant_password
+</span><span class='line'>
+</span><span class='line'>  # Connect on a TCP socket. Omitted by default since the client uses a
+</span><span class='line'>  # domain socket that doesn't need configuration. Windows does not have
+</span><span class='line'>  # domain sockets, so uncomment these lines.
+</span><span class='line'>  #host: localhost
+</span><span class='line'>
+</span><span class='line'>  # The TCP port the server listens on. Defaults to 5432.
+</span><span class='line'>  # If your server runs on a different port number, change accordingly.
+</span><span class='line'>  #port: 5432
+</span><span class='line'>
+</span><span class='line'>  # Schema search path. The server defaults to $user,public
+</span><span class='line'>  #schema_search_path: myapp,sharedapp,public
+</span><span class='line'>
+</span><span class='line'>  # Minimum log levels, in increasing order:
+</span><span class='line'>  #   debug5, debug4, debug3, debug2, debug1,
+</span><span class='line'>  #   log, notice, warning, error, fatal, and panic
+</span><span class='line'>  # Defaults to warning.
+</span><span class='line'>  #min_messages: notice
+</span><span class='line'>
+</span><span class='line'># Warning: The database defined as "test" will be erased and
+</span><span class='line'># re-generated from your development database when you run "rake".
+</span><span class='line'># Do not set this db to the same as development or production.
+</span><span class='line'>test:
+</span><span class='line'>  adapter: postgresql
+</span><span class='line'>  encoding: unicode
+</span><span class='line'>  database: sample_test
+</span><span class='line'>  pool: 5
+</span><span class='line'>  username: vagrant
+</span><span class='line'>  password: vagrant_password
+</span><span class='line'>
+</span><span class='line'>production:
+</span><span class='line'>  adapter: postgresql
+</span><span class='line'>  encoding: unicode
+</span><span class='line'>  database: sample_production
+</span><span class='line'>  pool: 5
+</span><span class='line'>  username: vagrant
+</span><span class='line'>  password: vagrant_password</span></code></pre></td></tr></table></div></figure>
+
+
+<p>DBを作成</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>% rake db:create RAILS_ENV=development</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2.controllerを作成</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>% rails generate controller hoge</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Controllerは<code>application_name/app/controllers</code>に<code>hoge_controller.rb</code>として作成される。</p>
+
+<p>ControllerにはActionを設定する。</p>
+
+<p>3.Routingの設定</p>
+
+<p>Routing設定では、利用者から呼び出された時のActionをどのように実行するかを定義する。設定は<code>application_name/config/routes.rb</code>を書き換えて行う。</p>
+
+<p>例えばユーザが<code>http://localhost:3000/hello</code>を呼び出した時、Controllerで設定したaction｢hello｣を呼び出すには、次のようにRoutingを設定する。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>get 'hello' =&gt; 'booklist#hello'</span></code></pre></td></tr></table></div></figure>
+
+
+<p>4.railsサーバの起動</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>% rails server</span></code></pre></td></tr></table></div></figure>
+
+
+<p>5.modelの作成</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>% rails generate model title</span></code></pre></td></tr></table></div></figure>
+
+
+<p><em>app/models/title.rb</em>が作成される。</p>
+
+<pre><code>また、作成された```db/migrate/20140115163018_create_titles.rb```はmigrationである。migrationは、
+1. テーブルに関して行なった処理を記録し、元に戻したり別の環境で同じ処理を簡単に行なわせることができる
+2. データベースの種類に関係無く同じスクリプトでテーブルを作成できる
+
+という利点がある。
+</code></pre>
+
+<p>6.migration編集</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class CreateTitles &lt; ActiveRecord::Migration
+</span><span class='line'>  def change
+</span><span class='line'>    create_table :titles do |t|
+</span><span class='line'>
+</span><span class='line'>      t.string: name
+</span><span class='line'>      t.data: sales_data
+</span><span class='line'>      t.timestamps
+</span><span class='line'>    end
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>migration scriptを起動</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>% rake db:migrate</span></code></pre></td></tr></table></div></figure>
+
+
+<p>7.テストデータ作成</p>
+
+<pre><code>```db/seeds.rb```を編集し、テストデータを作成する。
+</code></pre>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Title.create(:name =&gt; '宇宙に行った日', :sales_date =&gt; '2011-06-28')
+</span><span class='line'>Title.create(:name =&gt; '観察日記', :sales_date =&gt; '2011-11-14')</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>% rake db:seed</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>確認</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sample_development=# select * from titles;
+</span><span class='line'> id |         name          | sales_date |         created_at         |
+</span><span class='line'>  updated_at
+</span><span class='line'>----+-----------------------+------------+----------------------------+-------
+</span><span class='line'>---------------------
+</span><span class='line'>  1 | 宇宙に行った日 | 2011-06-28 | 2014-01-16 04:46:10.565985 | 2014-01-16 04:46:10.565985
+</span><span class='line'>  2 | 観察日記          | 2011-11-14 | 2014-01-16 04:46:10.666546 | 2014-01-16 04:46:1
+</span><span class='line'>0.666546
+</span><span class='line'>(2 rows)</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<pre><code>migrationを利用し、作成されている。
+</code></pre>
+
+<p>8.Databaseの情報を取得し表示する</p>
+
+<p>action methodを書き換える。<code>controller/booklist_controller.rb</code></p>
+</div>
+  
+  
+
+
+    </article>
+  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1138,23 +1800,7 @@ DATABASEには、<code>heroku config</code>で<code>HEROKU_POSTGRESQL_{COLOR}_UR
       </li>
     
       <li class="post">
-        <a href="/blog/2014/02/17/rails-nyuryoku/">Railsでuser登録画面を作る</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/02/14/rails-kaihatu/">Bootstrapのnavbar-fixed-topで、ナビゲーションバーでページが隠れてしまう件</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/02/09/git-memo/">Git-memo</a>
-      </li>
-    
-      <li class="post">
         <a href="/blog/2014/02/09/jenkins-plugin/">Jenkinsさんにイカしたpluginを入れてみよう！</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/02/09/jenkins-heroku-deploy/">Jenkinsでherokuにdeploy!</a>
       </li>
     
       <li class="post">
