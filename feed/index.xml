@@ -4,7 +4,7 @@
   <title><![CDATA[こめぶろぐ]]></title>
   <link href="http://rice-american.github.io/feed" rel="self"/>
   <link href="http://rice-american.github.io/"/>
-  <updated>2014-02-26T01:26:48+09:00</updated>
+  <updated>2014-02-28T23:41:20+09:00</updated>
   <id>http://rice-american.github.io/</id>
   <author>
     <name><![CDATA[rice_american]]></name>
@@ -12,6 +12,132 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[+rubyなvimを入れた奮闘記]]></title>
+    <link href="http://rice-american.github.io/blog/2014/02/28/vim-ruby/"/>
+    <updated>2014-02-28T23:33:04+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/02/28/vim-ruby</id>
+    <content type="html"><![CDATA[<p>使っていたvimが-rubyだったので+rubyにするように奮闘した記録。</p>
+
+<p>現在(2014/02/28)の段階で<code>% brew install vim</code>で入るのがversion 7.4.192なのだが、<code>% brew options vim</code>とかやると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>% brew options vim                                                <span class="o">[</span>~<span class="o">]</span>
+</span><span class='line'>--disable-nls
+</span><span class='line'>  Build vim without National Language Support <span class="o">(</span>translated messages, keymaps<span class="o">)</span>
+</span><span class='line'>--override-system-vi
+</span><span class='line'>  Override system vi
+</span><span class='line'>--with-client-server
+</span><span class='line'>  Enable client/server mode
+</span><span class='line'>--with-lua
+</span><span class='line'>  Build vim with lua support
+</span><span class='line'>--with-mzscheme
+</span><span class='line'>  Build vim with mzscheme support
+</span><span class='line'>--with-perl
+</span><span class='line'>  Build vim with perl support
+</span><span class='line'>--with-python3
+</span><span class='line'>  Build vim with python3 support
+</span><span class='line'>--with-tcl
+</span><span class='line'>  Build vim with tcl support
+</span><span class='line'>--without-python
+</span><span class='line'>  Build vim without python support
+</span><span class='line'>--without-ruby
+</span><span class='line'>  Build vim without ruby support
+</span><span class='line'>--HEAD
+</span><span class='line'>  install HEAD version
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>+rubyにするオプションがなく･･･困った。</p>
+
+<p>しかたがないのでbrewでDLしたvimのsrcファイルに移動して、</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>% ls                      <span class="o">(</span>default<span class="o">)[</span>/Library/Caches/Homebrew/vim--hg<span class="o">]</span>
+</span><span class='line'>Contents                README_srcdos.txt
+</span><span class='line'>Contents.info*          README_unix.txt
+</span><span class='line'>Filelist                README_vms.txt
+</span><span class='line'>Makefile                README_w32s.txt
+</span><span class='line'>README.txt              Vim.info*
+</span><span class='line'>README.txt.info*        Xxd.info*
+</span><span class='line'>README_ami.txt          configure*
+</span><span class='line'>README_ami.txt.info*    csdpmi4b.zip*
+</span><span class='line'>README_amibin.txt       farsi/
+</span><span class='line'>README_amibin.txt.info* libs/
+</span><span class='line'>README_amisrc.txt       nsis/
+</span><span class='line'>README_amisrc.txt.info* pixmaps/
+</span><span class='line'>README_bindos.txt       runtime/
+</span><span class='line'>README_dos.txt          runtime.info*
+</span><span class='line'>README_extra.txt        src/
+</span><span class='line'>README_mac.txt          src.info*
+</span><span class='line'>README_ole.txt          uninstal.txt
+</span><span class='line'>README_os2.txt          vimdir.info*
+</span><span class='line'>README_os390.txt        vimtutor.bat
+</span><span class='line'>README_src.txt          vimtutor.com*
+</span><span class='line'>% ./configure --prefix<span class="o">=</span>/usr/local --mandir<span class="o">=</span>/usr/local/Cellar/vim/7.4  --enable-rubyinterp
+</span><span class='line'>% make <span class="o">&amp;&amp;</span> make install
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とやると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>% vim --version | grep ruby
+</span><span class='line'>+diff            +menu            +ruby            +writebackup
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>できた。</p>
+
+<p>無理やりだけどまぁ、いいや。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[pgbackupsを使って、HerokuのDBをlocalにリストアしてDBにデータをinsertしてHerokuのDBへリストアするまで。]]></title>

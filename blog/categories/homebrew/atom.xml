@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Homebrew | こめぶろぐ]]></title>
+  <link href="http://rice-american.github.io/blog/categories/homebrew/atom.xml" rel="self"/>
+  <link href="http://rice-american.github.io/"/>
+  <updated>2014-02-28T23:41:20+09:00</updated>
+  <id>http://rice-american.github.io/</id>
+  <author>
+    <name><![CDATA[rice_american]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[+rubyなvimを入れた奮闘記]]></title>
+    <link href="http://rice-american.github.io/blog/2014/02/28/vim-ruby/"/>
+    <updated>2014-02-28T23:33:04+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/02/28/vim-ruby</id>
+    <content type="html"><![CDATA[<p>使っていたvimが-rubyだったので+rubyにするように奮闘した記録。</p>
+
+<p>現在(2014/02/28)の段階で<code>% brew install vim</code>で入るのがversion 7.4.192なのだが、<code>% brew options vim</code>とかやると</p>
+
+<p>```sh
+% brew options vim                                                [~]
+&mdash;disable-nls</p>
+
+<pre><code>Build vim without National Language Support (translated messages, keymaps)
+</code></pre>
+
+<p>&mdash;override-system-vi</p>
+
+<pre><code>Override system vi
+</code></pre>
+
+<p>&mdash;with-client-server</p>
+
+<pre><code>Enable client/server mode
+</code></pre>
+
+<p>&mdash;with-lua</p>
+
+<pre><code>Build vim with lua support
+</code></pre>
+
+<p>&mdash;with-mzscheme</p>
+
+<pre><code>Build vim with mzscheme support
+</code></pre>
+
+<p>&mdash;with-perl</p>
+
+<pre><code>Build vim with perl support
+</code></pre>
+
+<p>&mdash;with-python3</p>
+
+<pre><code>Build vim with python3 support
+</code></pre>
+
+<p>&mdash;with-tcl</p>
+
+<pre><code>Build vim with tcl support
+</code></pre>
+
+<p>&mdash;without-python</p>
+
+<pre><code>Build vim without python support
+</code></pre>
+
+<p>&mdash;without-ruby</p>
+
+<pre><code>Build vim without ruby support
+</code></pre>
+
+<p>&mdash;HEAD</p>
+
+<pre><code>install HEAD version
+</code></pre>
+
+<p>```</p>
+
+<p>+rubyにするオプションがなく･･･困った。</p>
+
+<p>しかたがないのでbrewでDLしたvimのsrcファイルに移動して、</p>
+
+<p><code>sh
+% ls                      (default)[/Library/Caches/Homebrew/vim--hg]
+Contents                README_srcdos.txt
+Contents.info*          README_unix.txt
+Filelist                README_vms.txt
+Makefile                README_w32s.txt
+README.txt              Vim.info*
+README.txt.info*        Xxd.info*
+README_ami.txt          configure*
+README_ami.txt.info*    csdpmi4b.zip*
+README_amibin.txt       farsi/
+README_amibin.txt.info* libs/
+README_amisrc.txt       nsis/
+README_amisrc.txt.info* pixmaps/
+README_bindos.txt       runtime/
+README_dos.txt          runtime.info*
+README_extra.txt        src/
+README_mac.txt          src.info*
+README_ole.txt          uninstal.txt
+README_os2.txt          vimdir.info*
+README_os390.txt        vimtutor.bat
+README_src.txt          vimtutor.com*
+% ./configure --prefix=/usr/local --mandir=/usr/local/Cellar/vim/7.4  --enable-rubyinterp
+% make &amp;&amp; make install
+</code>
+とやると</p>
+
+<p><code>sh
+% vim --version | grep ruby
++diff            +menu            +ruby            +writebackup
+</code></p>
+
+<p>できた。</p>
+
+<p>無理やりだけどまぁ、いいや。</p>
+]]></content>
+  </entry>
+  
+</feed>
