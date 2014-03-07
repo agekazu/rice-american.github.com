@@ -9,18 +9,9 @@
   <meta name="author" content="rice_american">
 
   
-  <meta name="description" content="使っていたvimが-rubyだったので+rubyにするように奮闘した記録。 現在(2014/02/28)の段階で% brew install vimで入るのがversion 7.4.192なのだが、% brew options vimとかやると 1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12 &hellip;">
+  <meta name="description" content="前回でpasswordの暗号化までいけたので、今度はそれを使ってログインするところまで。
+参考: Rails4対応 Gemを使わずに自分だけログインできる環境を作る &ndash; Qiita 1. ログイン環境のsessionコントローラを生成 1
+$ rails g controller &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +66,643 @@
   <div id="main">
     <div id="content">
       
+
+
+    <article class="post">
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/07/rails-sec-login/">ログイン機構を作ってみる。</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-07T13:23:17+09:00" pubdate data-updated="true">Mar 7<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>前回でpasswordの暗号化までいけたので、今度はそれを使ってログインするところまで。
+参考: <a href="http://qiita.com/regonn/items/4c76d4f3ef6c6af5c5e5">Rails4対応 Gemを使わずに自分だけログインできる環境を作る &ndash; Qiita</a></p>
+
+<h3>1. ログイン環境のsessionコントローラを生成</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>rails g controller sessions
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>2. viewの作成</h3>
+
+<p><code>views/sessions/new.html.erb</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;row&quot;</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;span6 offset3&quot;</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="o">&lt;</span><span class="sr">/div&gt;&lt;%- model_class = User -%&gt;</span>
+</span><span class='line'><span class="sr">&lt;div class=&quot;page-header&quot;&gt;</span>
+</span><span class='line'><span class="sr">  &lt;!--  &lt;h1&gt;&lt;%=t &#39;.title&#39;, :default =&gt; [:&#39;helpers.titles.new&#39;, &#39;New %{model}&#39;], :model =&gt; model_class.model_name.human.titleize %&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;--&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="sr">/div&gt;</span>
+</span><span class='line'><span class="sr">&lt;%= simple_form_for @user, url: sessions_path, html: { class: &#39;form-horizontal&#39; } do |f| %&gt;</span>
+</span><span class='line'><span class="sr">  &lt;h2 class=&quot;simple_form-heading&quot;&gt;ログイン&lt;/</span><span class="n">h2</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="o">&lt;</span><span class="sx">%= f.input :user_name, label: false, placeholder: &#39;ユーザ名 or メールアドレス&#39;, input_html: { type: &#39;text&#39;, class: &#39;form-control input-xlarge&#39;, id: &#39;user_user_name&#39;} %&gt;</span>
+</span><span class='line'><span class="sx">  &lt;%=</span> <span class="n">f</span><span class="o">.</span><span class="n">input</span> <span class="ss">:password</span><span class="p">,</span> <span class="ss">label</span><span class="p">:</span> <span class="kp">false</span><span class="p">,</span> <span class="ss">placeholder</span><span class="p">:</span> <span class="s1">&#39;パスワード&#39;</span><span class="p">,</span> <span class="n">input_html</span><span class="p">:</span> <span class="p">{</span> <span class="ss">type</span><span class="p">:</span> <span class="s1">&#39;password_confirm&#39;</span><span class="p">,</span> <span class="ss">class</span><span class="p">:</span> <span class="s1">&#39;form-control input-xlarge&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="s1">&#39;password&#39;</span><span class="p">}</span>  <span class="sx">%&gt;</span>
+</span><span class='line'><span class="sx">  &lt;%= f.button :submit, label: false, value: &#39;login&#39;, class: &#39;btn btn-lg btn-primary btn-block&#39; %&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="sx">% end %&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sx">&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>3. routes.rbにsessionsのルートを追加</h3>
+
+<p><code>config/routes.rb</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="n">resources</span> <span class="ss">:sessions</span><span class="p">,</span> <span class="ss">only</span><span class="p">:</span> <span class="o">[</span><span class="ss">:new</span><span class="p">,</span> <span class="ss">:create</span><span class="p">,</span> <span class="ss">:destroy</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>4. controllerを編集</h3>
+
+<p><code>app/controller/session_controller.rb</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">class</span> <span class="nc">SessionsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">new</span>
+</span><span class='line'>        <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">create</span>
+</span><span class='line'>        <span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find_by_user_name</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:user</span><span class="o">][</span><span class="ss">:user_name</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">if</span> <span class="n">user</span> <span class="o">&amp;&amp;</span> <span class="n">user</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:user</span><span class="o">][</span><span class="ss">:password</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>            <span class="n">session</span><span class="o">[</span><span class="ss">:user_id</span><span class="o">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span>
+</span><span class='line'>            <span class="n">redirect_to</span> <span class="n">root_path</span>
+</span><span class='line'>        <span class="k">else</span>
+</span><span class='line'>            <span class="n">flash</span><span class="o">.</span><span class="n">now</span><span class="o">.</span><span class="n">alert</span> <span class="o">=</span> <span class="s2">&quot;ユーザ名かパスワードが間違っています&quot;</span>
+</span><span class='line'>            <span class="kp">new</span><span class="p">()</span>
+</span><span class='line'>            <span class="n">render</span> <span class="s2">&quot;new&quot;</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">destroy</span>
+</span><span class='line'>        <span class="n">session</span><span class="o">[</span><span class="ss">:user_id</span><span class="o">]</span> <span class="o">=</span> <span class="kp">nil</span>
+</span><span class='line'>        <span class="n">redirect_to</span> <span class="n">root_path</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>現段階では、ログイン認証に成功すると、root(jantaku)に飛びます。</p>
+
+<h3>5. Viewのヘルパーメソッドでログイン情報を取得できるようにする</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="c1">#app/controller/application_controller.rb</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">current_user</span>
+</span><span class='line'>    <span class="vi">@current_user</span> <span class="o">||=</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">session</span><span class="o">[</span><span class="ss">:user_id</span><span class="o">]</span><span class="p">)</span> <span class="k">if</span> <span class="n">session</span><span class="o">[</span><span class="ss">:user_id</span><span class="o">]</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">helper_method</span> <span class="ss">:current_user</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>6. Viewにログイン機能へのパスを書きます。</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='erb'><span class='line'><span class="x">&lt;h1&gt;kitaken Top&lt;/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">&lt;%</span> <span class="k">if</span> <span class="n">current_user</span> <span class="o">==</span> <span class="kp">nil</span> <span class="cp">%&gt;</span><span class="x"></span>
+</span><span class='line'><span class="cp">&lt;%=</span> <span class="n">button_to</span> <span class="s2">&quot;create account&quot;</span><span class="p">,</span> <span class="n">new_user_path</span><span class="p">,</span> <span class="nb">method</span><span class="p">:</span> <span class="ss">:get</span><span class="p">,</span> <span class="ss">class</span><span class="p">:</span> <span class="s2">&quot;btn btn-lg&quot;</span> <span class="cp">%&gt;</span><span class="x"></span>
+</span><span class='line'><span class="cp">&lt;%=</span> <span class="n">button_to</span> <span class="s2">&quot;login&quot;</span><span class="p">,</span> <span class="n">new_session_path</span><span class="p">,</span> <span class="nb">method</span><span class="p">:</span> <span class="ss">:get</span><span class="p">,</span> <span class="ss">class</span><span class="p">:</span>  <span class="s2">&quot;btn btn-lg&quot;</span> <span class="cp">%&gt;</span><span class="x"></span>
+</span><span class='line'><span class="cp">&lt;%</span> <span class="k">else</span> <span class="cp">%&gt;</span><span class="x"></span>
+</span><span class='line'><span class="x">  </span><span class="cp">&lt;%=</span> <span class="n">button_to</span> <span class="s2">&quot;logout&quot;</span><span class="p">,</span> <span class="n">session_path</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">id</span><span class="p">),</span> <span class="ss">data</span><span class="p">:</span> <span class="p">{</span><span class="ss">:confirm</span> <span class="o">=&gt;</span> <span class="s1">&#39;ログアウトしますか？&#39;</span><span class="p">},</span> <span class="nb">method</span><span class="p">:</span> <span class="ss">:delete</span><span class="p">,</span> <span class="ss">class</span><span class="p">:</span> <span class="s2">&quot;btn btn-lg&quot;</span> <span class="cp">%&gt;</span><span class="x"></span>
+</span><span class='line'><span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>未ログイン時</li>
+</ul>
+
+
+<p><img src="https://f.cloud.github.com/assets/1464221/2343867/8611e0e6-a516-11e3-9c6d-e7cf0617eba5.png" alt="2014-03-06 18 58 36" /></p>
+
+<ul>
+<li>ログイン時</li>
+</ul>
+
+
+<p><img src="https://f.cloud.github.com/assets/1464221/2343918/7ee8d0c6-a517-11e3-91cc-f748920c79d6.png" alt="2014-03-06 18 59 06" /></p>
+
+<h3>他のcontrollerで次のように書けばログインしていない状態でeditやnewのページに行こうとするとrootへ戻す。</h3>
+
+<h1>controller</h1>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="n">before_action</span> <span class="ss">:login_check</span><span class="p">,</span> <span class="ss">only</span><span class="p">:</span> <span class="o">[</span><span class="ss">:new</span><span class="p">,</span> <span class="ss">:edit</span><span class="p">,</span> <span class="ss">:destroy</span><span class="o">]</span>
+</span><span class='line'><span class="c1">#各メソッド</span>
+</span><span class='line'>
+</span><span class='line'><span class="kp">private</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">login_check</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">session</span><span class="o">[</span><span class="ss">:user_id</span><span class="o">]</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">redirect_to</span> <span class="n">root_path</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>今回、コレは行っていません。</p>
+
+<p>以上！</p>
+</div>
+  
+  
+
+</article>
+
+
+    <article class="post">
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/03/secdb-rails-2/">Secdb-rails-2</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-03T16:30:03+09:00" pubdate data-updated="true">Mar 3<span>rd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>前回調べたセキュアなDB運用の手順を実際にやってみる。</p>
+
+<h3>1. bcrypt-rubyをGemfileに追加する。(passwordをhash化するgem)</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="n">gem</span> <span class="s1">&#39;bcrypt-ruby&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>2. migrationの実行</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>vagrant:% rails generate migration <span class="se">\</span>
+</span><span class='line'>&gt; add_password_digest_to_users password_digest:string
+</span><span class='line'>
+</span><span class='line'>      invoke  active_record
+</span><span class='line'>      create    db/migrate/20140303080315_add_password_digest_to_users.rb
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>3. userstableにpassword_digestを追加する</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>vagrant:% bundle <span class="nb">exec </span>rake db:migrate                                            <span class="o">[</span>/vagrant/work/Mahjong<span class="o">]</span>
+</span><span class='line'><span class="o">==</span>  AddPasswordDigestToUsers: <span class="nv">migrating</span> <span class="o">=======================================</span>
+</span><span class='line'>-- add_column<span class="o">(</span>:users, :password_digest, :string<span class="o">)</span>
+</span><span class='line'>   -&gt; 0.0008s
+</span><span class='line'><span class="o">==</span>  AddPasswordDigestToUsers: migrated <span class="o">(</span>0.0009s<span class="o">)</span> <span class="o">==============================</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>4. テスト用のDBの用意</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>% bundle <span class="nb">exec </span>rake <span class="nb">test</span>:prepare
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>5. パスワードの長さとauthenticateメソッドをテストする。</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">describe</span> <span class="no">User</span> <span class="k">do</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">before</span> <span class="k">do</span>
+</span><span class='line'>    <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">name</span><span class="p">:</span> <span class="s2">&quot;Example User&quot;</span><span class="p">,</span> <span class="ss">email</span><span class="p">:</span> <span class="s2">&quot;user@example.com&quot;</span><span class="p">,</span>
+</span><span class='line'>                     <span class="ss">password</span><span class="p">:</span> <span class="s2">&quot;foobar&quot;</span><span class="p">,</span> <span class="n">password_confirmation</span><span class="p">:</span> <span class="s2">&quot;foobar&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">subject</span> <span class="p">{</span> <span class="vi">@user</span> <span class="p">}</span>
+</span><span class='line'>  <span class="o">.</span>
+</span><span class='line'>  <span class="o">.</span>
+</span><span class='line'>  <span class="o">.</span>
+</span><span class='line'>  <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">respond_to</span><span class="p">(</span><span class="ss">:authenticate</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>  <span class="o">.</span>
+</span><span class='line'>  <span class="o">.</span>
+</span><span class='line'>  <span class="o">.</span>
+</span><span class='line'>  <span class="n">describe</span> <span class="s2">&quot;with a password that&#39;s too short&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">before</span> <span class="p">{</span> <span class="vi">@user</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="vi">@user</span><span class="o">.</span><span class="n">password_confirmation</span> <span class="o">=</span> <span class="s2">&quot;a&quot;</span> <span class="o">*</span> <span class="mi">5</span> <span class="p">}</span>
+</span><span class='line'>    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">be_invalid</span> <span class="p">}</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">describe</span> <span class="s2">&quot;return value of authenticate method&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">before</span> <span class="p">{</span> <span class="vi">@user</span><span class="o">.</span><span class="n">save</span> <span class="p">}</span>
+</span><span class='line'>    <span class="n">let</span><span class="p">(</span><span class="ss">:found_user</span><span class="p">)</span> <span class="p">{</span> <span class="no">User</span><span class="o">.</span><span class="n">find_by</span><span class="p">(</span><span class="ss">email</span><span class="p">:</span> <span class="vi">@user</span><span class="o">.</span><span class="n">email</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">describe</span> <span class="s2">&quot;with valid password&quot;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">eq</span> <span class="n">found_user</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="vi">@user</span><span class="o">.</span><span class="n">password</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">describe</span> <span class="s2">&quot;with invalid password&quot;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">let</span><span class="p">(</span><span class="ss">:user_for_invalid_password</span><span class="p">)</span> <span class="p">{</span> <span class="n">found_user</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="s2">&quot;invalid&quot;</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="n">it</span> <span class="p">{</span> <span class="n">should_not</span> <span class="n">eq</span> <span class="n">user_for_invalid_password</span> <span class="p">}</span>
+</span><span class='line'>      <span class="n">specify</span> <span class="p">{</span> <span class="n">expect</span><span class="p">(</span><span class="n">user_for_invalid_password</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">be_false</span> <span class="p">}</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li><code>bundle exec rspec spec/</code>を実行</li>
+</ol>
+
+
+<p>するとallOKになるらしいけど、エラーでまくった･･･テストは今は考えないでおきます
+取り敢えず進める。</p>
+
+<p>最終的にapp/models/users.rbは次のようになった。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>    <span class="n">before_save</span> <span class="p">{</span> <span class="nb">self</span><span class="o">.</span><span class="n">email_address</span> <span class="o">=</span> <span class="n">email_address</span><span class="o">.</span><span class="n">downcase</span> <span class="p">}</span>
+</span><span class='line'>    <span class="n">validates</span> <span class="ss">:user_name</span><span class="p">,</span> <span class="ss">presence</span><span class="p">:</span> <span class="kp">true</span><span class="p">,</span> <span class="ss">length</span><span class="p">:</span> <span class="p">{</span> <span class="ss">maximum</span><span class="p">:</span> <span class="mi">50</span> <span class="p">}</span>
+</span><span class='line'>    <span class="c1"># 英字:小文字、大文字、数字 format:hoGe@hgoe.hoge</span>
+</span><span class='line'>    <span class="no">VALID_EMAIL_REGEX</span> <span class="o">=</span> <span class="sr">/\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i</span>
+</span><span class='line'>    <span class="no">VALID_PASSWORD_REGEX</span> <span class="o">=</span> <span class="sr">/\w/i</span>
+</span><span class='line'>    <span class="no">VALID_USERNAME_REGEX</span> <span class="o">=</span> <span class="sr">/\w/i</span>
+</span><span class='line'>    <span class="n">validates</span> <span class="ss">:user_name</span><span class="p">,</span> <span class="ss">presence</span><span class="p">:</span> <span class="kp">true</span><span class="p">,</span>
+</span><span class='line'>        <span class="nb">format</span><span class="p">:</span>     <span class="p">{</span><span class="ss">with</span><span class="p">:</span> <span class="no">VALID_USERNAME_REGEX</span><span class="p">},</span>
+</span><span class='line'>        <span class="ss">length</span><span class="p">:</span>     <span class="p">{</span><span class="ss">maximum</span><span class="p">:</span> <span class="mi">30</span><span class="p">},</span>
+</span><span class='line'>        <span class="ss">uniqueness</span><span class="p">:</span> <span class="p">{</span><span class="n">case_sensitive</span><span class="p">:</span> <span class="kp">true</span><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">validates</span> <span class="ss">:email_address</span><span class="p">,</span> <span class="ss">presence</span><span class="p">:</span> <span class="kp">true</span><span class="p">,</span>
+</span><span class='line'>        <span class="nb">format</span><span class="p">:</span>     <span class="p">{</span><span class="ss">with</span><span class="p">:</span> <span class="no">VALID_EMAIL_REGEX</span><span class="p">},</span>
+</span><span class='line'>        <span class="ss">length</span><span class="p">:</span>     <span class="p">{</span><span class="ss">maximum</span><span class="p">:</span> <span class="mi">500</span><span class="p">},</span>
+</span><span class='line'>        <span class="ss">uniqueness</span><span class="p">:</span> <span class="p">{</span><span class="n">case_sensitive</span><span class="p">:</span> <span class="kp">false</span><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">validates</span> <span class="ss">:password</span><span class="p">,</span> <span class="ss">presence</span><span class="p">:</span> <span class="kp">true</span><span class="p">,</span>
+</span><span class='line'>        <span class="nb">format</span><span class="p">:</span>     <span class="p">{</span><span class="ss">with</span><span class="p">:</span> <span class="no">VALID_PASSWORD_REGEX</span><span class="p">},</span>
+</span><span class='line'>        <span class="ss">length</span><span class="p">:</span>     <span class="p">{</span><span class="ss">within</span><span class="p">:</span> <span class="mi">6</span><span class="o">.</span><span class="n">.</span><span class="mi">30</span><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">has_secure_password</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>追加したvalidationは</p>
+
+<ol>
+<li>username: 30文字以内、記号なし、半角英大文字小文字、数字有り、重複なし</li>
+<li>email_address: 100文字以内、記号なし、emailのフォーマットを則っているかを見る</li>
+<li>password: 6文字以上30文字以内、記号なし、半角英大文字小文字、数字有り</li>
+</ol>
+
+
+<p>です。</p>
+
+<ul>
+<li><p>メモ: 正規表現について</p></li>
+<li><p>\A 文字の頭</p></li>
+<li>\w 単語構成文字 [a-zA-Z0-9_]</li>
+<li>\d 10進数字 [0-9]</li>
+</ul>
+
+
+<p>このへんもおいおい勉強しないと。</p>
+</div>
+  
+  
+
+</article>
+
+
+    <article class="post">
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/03/secdb-rails/">secDB-rails</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-03T16:27:35+09:00" pubdate data-updated="true">Mar 3<span>rd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ユーザの入力したpasswordをそのまま保存するのは危険！
+ので、passwordを暗号化する。</p>
+
+<p>参考: <a href="http://railstutorial.jp/chapters/modeling-users?version=4.0#sec-an_encrypted_password">Ruby on Rails チュートリアル：実例を使って Rails を学ぼう6.3 セキュアなパスワードを追加する</a>
+→ 今回セキュアなDBの運用のために引用したけど、全部読んだほうがいいかも。。。</p>
+
+<blockquote><p>セキュアなパスワードの実装は、has_secure_passwordというRailsのメソッドを呼び出すだけでほとんど終わってしまいます (このメソッドはRails 3.1から導入されました)。このメソッド1つだけでセキュアなパスワードの実装がほとんど終わってしまうので、逆にこの機能を最初から手作りするのは簡単ではありません。6.3.2以降では、has_secure_passwordメソッドを早期に導入しておき、テストを新しく書くたびにこのメソッドを一時的にコメントアウトして、正しいテスト駆動開発を行うことをお勧めします。(スクリーンキャストは、このような一からの手作り開発手順を解説するのに向いています。この課題を十分に理解したい方は「Ruby on Railsチュートリアルのスクリーンキャスト (英語)」を参照してください)。</p></blockquote>
+
+<h2>導入手順</h2>
+
+<ol>
+<li>userstableに<code>password_digest</code>を追加する</li>
+<li>bcrypt-rubyをGemfileに追加する。(passwordをhash化するgem)</li>
+<li>Userオブジェクトにpassword_digestカラムがあることを確認するテストを追加
+<code>spec/models/user_spec.rb</code></li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">describe</span> <span class="no">User</span> <span class="k">do</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">before</span> <span class="k">do</span>
+</span><span class='line'>    <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">name</span><span class="p">:</span> <span class="s2">&quot;Example User&quot;</span><span class="p">,</span> <span class="ss">email</span><span class="p">:</span> <span class="s2">&quot;user@example.com&quot;</span><span class="p">,</span>
+</span><span class='line'>                     <span class="ss">password</span><span class="p">:</span> <span class="s2">&quot;foobar&quot;</span><span class="p">,</span> <span class="n">password_confirmation</span><span class="p">:</span> <span class="s2">&quot;foobar&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">subject</span> <span class="p">{</span> <span class="vi">@user</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">respond_to</span><span class="p">(</span><span class="ss">:name</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">respond_to</span><span class="p">(</span><span class="ss">:email</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">respond_to</span><span class="p">(</span><span class="ss">:password_digest</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">respond_to</span><span class="p">(</span><span class="ss">:password</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">respond_to</span><span class="p">(</span><span class="ss">:password_confirmation</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">be_valid</span> <span class="p">}</span>
+</span><span class='line'>  <span class="o">.</span>
+</span><span class='line'>  <span class="o">.</span>
+</span><span class='line'>  <span class="o">.</span>
+</span><span class='line'>  <span class="n">describe</span> <span class="s2">&quot;when password is not present&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">before</span> <span class="k">do</span>
+</span><span class='line'>      <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">name</span><span class="p">:</span> <span class="s2">&quot;Example User&quot;</span><span class="p">,</span> <span class="ss">email</span><span class="p">:</span> <span class="s2">&quot;user@example.com&quot;</span><span class="p">,</span>
+</span><span class='line'>                       <span class="ss">password</span><span class="p">:</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">password_confirmation</span><span class="p">:</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="n">it</span> <span class="p">{</span> <span class="n">should_not</span> <span class="n">be_valid</span> <span class="p">}</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">describe</span> <span class="s2">&quot;when password doesn&#39;t match confirmation&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">before</span> <span class="p">{</span> <span class="vi">@user</span><span class="o">.</span><span class="n">password_confirmation</span> <span class="o">=</span> <span class="s2">&quot;mismatch&quot;</span> <span class="p">}</span>
+</span><span class='line'>    <span class="n">it</span> <span class="p">{</span> <span class="n">should_not</span> <span class="n">be_valid</span> <span class="p">}</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>このコードは、実は次の一行に置き換えられる。
+<code>app/models/user_spec.rb</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="o">.</span>
+</span><span class='line'>  <span class="o">.</span>
+</span><span class='line'>  <span class="o">.</span>
+</span><span class='line'>  <span class="n">has_secure_password</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>has_secure_passwordは、</p>
+
+<blockquote><p>password属性とpassword_confirmation属性を追加し、パスワードが存在することを要求し、パスワードとパスワードの確認が一致することを要求し、さらにauthenticateメソッドを使用して、暗号化されたパスワードとpassword_digestを比較してユーザーを認証する</p></blockquote>
+
+<p>ことができるすごいやつ。ソースコードよみたいならココ→<a href="https://github.com/rails/rails/blob/master/activemodel/lib/active_model/secure_password.rb">rails/activemodel/lib/active_model/secure_password.rb at master · rails/rails</a>
+(ただし、password_digestカラムを入れておくのを忘れないように。)</p>
+
+<p>セキュアパスワードの最終的な実装は</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">before_save</span> <span class="p">{</span> <span class="nb">self</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">email</span><span class="o">.</span><span class="n">downcase</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">validates</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">presence</span><span class="p">:</span> <span class="kp">true</span><span class="p">,</span> <span class="ss">length</span><span class="p">:</span> <span class="p">{</span> <span class="ss">maximum</span><span class="p">:</span> <span class="mi">50</span> <span class="p">}</span>
+</span><span class='line'>  <span class="no">VALID_EMAIL_REGEX</span> <span class="o">=</span> <span class="sr">/\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i</span>
+</span><span class='line'>  <span class="n">validates</span> <span class="ss">:email</span><span class="p">,</span> <span class="ss">presence</span><span class="p">:</span>   <span class="kp">true</span><span class="p">,</span>
+</span><span class='line'>                    <span class="nb">format</span><span class="p">:</span>     <span class="p">{</span> <span class="ss">with</span><span class="p">:</span> <span class="no">VALID_EMAIL_REGEX</span> <span class="p">},</span>
+</span><span class='line'>                    <span class="ss">uniqueness</span><span class="p">:</span> <span class="p">{</span> <span class="n">case_sensitive</span><span class="p">:</span> <span class="kp">false</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">has_secure_password</span>
+</span><span class='line'>  <span class="n">validates</span> <span class="ss">:password</span><span class="p">,</span> <span class="ss">length</span><span class="p">:</span> <span class="p">{</span> <span class="ss">minimum</span><span class="p">:</span> <span class="mi">6</span> <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こうなる。
+時間が来たので、実際にやってみるのは次回。</p>
+</div>
+  
+  
+
+</article>
 
 
     <article class="post">
@@ -1096,535 +1724,6 @@ DATABASEには、<code>heroku config</code>で<code>HEROKU_POSTGRESQL_{COLOR}_UR
 
 <p>application_name/config/dtabase.ymlを編集して、ユーザをpostgresに。
 そのあと<em>rake db:create RAILS_ENV=development</em>を実行。</p>
-</div>
-  
-  
-
-</article>
-
-
-    <article class="post">
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/26/heroku-RoR/">herokuへRuby on Railsアプリケーションをdeployするまで</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-26T00:24:57+09:00" pubdate data-updated="true">Jan 26<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><strong>参考</strong>:<a href="http://qiita.com/mah_lab/items/9df8230e709a23b04f7f">Herokuでアプリを公開する直前までのチュートリアル &ndash; Qiita [キータ]</a></p>
-
-<pre><code>$ git clone git://github.com/heroku/ruby-sample.git
-$ cd ruby-sample
-$ heroku create
-$ git push heroku master
-$ heroku open
-</code></pre>
-
-<p><em>heroku open</em>を実行すると先ほどpushしたrailsアプリが表示される。</p>
-
-<p>applicationの名前を変更するときは<em>$ heroku rename hogehoge</em>とする。</p>
-
-<p>次のようにした。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ heroku rename rice-rails-bootstrap-test                         
-</span><span class='line'>Renaming warm-castle-8443 to rice-rails-test... done
-</span><span class='line'>http://rice-rails-bootstrap-test.com/ | git@heroku.com:rice-rails-bootstrap-test.git
-</span><span class='line'>Git remote heroku updated</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>前に作ったbootstrap+railsなアプリをdeployする。</h2>
-
-<p>作ったアプリケーションに移動して</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ git init
-</span><span class='line'>$ heroku create rice-rails-bootstrap-test
-</span><span class='line'>$ git push heroku master
-</span><span class='line'>$ heroku open</span></code></pre></td></tr></table></div></figure>
-
-
-<p>表示されたページにerrorがでた</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>The page you were looking for doesn't exist.</span></code></pre></td></tr></table></div></figure>
-
-
-<p>検索すると･･･:<a href="http://qiita.com/seltzer/items/d52a31c558a30c857a3f">herokuで「The page you were looking for doesn’t exist.」エラーが出るときの対処法 &ndash; Qiita [キータ]</a></p>
-
-<p><em>『Rails 3.2以降で発生する現象で、アセット周りのプリコンパイルが影響しているのだとか。これを回避するには、オフィシャルドキュメントの手順に加えて次の手順をしなければならないようです。』</em>
-とのこと。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ rake assets:precompile</span></code></pre></td></tr></table></div></figure>
-
-
-<p>だがだめ、</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ vim config/environments/production.rb
-</span><span class='line'>config.assets.compile = true</span></code></pre></td></tr></table></div></figure>
-
-
-<p>としてdeployするもだめ、</p>
-
-<p><a href="http://d.hatena.ne.jp/piggery/20120807">HerokuでRailsアプリを動かす &ndash; かいはつにっき</a></p>
-
-<p>ここを見ると、</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ rails server -e production</span></code></pre></td></tr></table></div></figure>
-
-
-<p>として動かすと,dbがないと言われた。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>The page you were looking for doesn't exist.</span></code></pre></td></tr></table></div></figure>
-
-
-<p>検索すると･･･:<a href="http://qiita.com/seltzer/items/d52a31c558a30c857a3f">herokuで「The page you were looking for doesn’t exist.」エラーが出るときの対処法 &ndash; Qiita [キータ]</a></p>
-
-<p><em>『Rails 3.2以降で発生する現象で、アセット周りのプリコンパイルが影響しているのだとか。これを回避するには、オフィシャルドキュメントの手順に加えて次の手順をしなければならないようです。』</em>
-とのこと。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ vim config/environments/production.rb
-</span><span class='line'>config.assets.compile = true</span></code></pre></td></tr></table></div></figure>
-
-
-<p>としてdeployするもだめ、</p>
-
-<p><a href="http://d.hatena.ne.jp/piggery/20120807">HerokuでRailsアプリを動かす &ndash; かいはつにっき</a></p>
-
-<p>ここを見ると、</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ rails server -e production</span></code></pre></td></tr></table></div></figure>
-
-
-<p>として動かすとdbがないと言われた。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ rake db:migrate
-</span><span class='line'>$ rake db:create</span></code></pre></td></tr></table></div></figure>
-
-
-<p>なんやかんや最終的にはurlが間違ってたっぽい･･･url+=/books</p>
-
-<p><a href="http://rice-rails-bootstrap-test.herokuapp.com/books">http://rice-rails-bootstrap-test.herokuapp.com/books</a></p>
-
-<p>アホや･･･</p>
-
-<h2>CentOSにherokuを</h2>
-
-<p>参考:<a href="http://succi.jp/blog/?p=1137">「CentOSにheroku toolbeltをインストール」が失敗する場合の対処</a></p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'># いきなりshに送る事は避けて、install.shをダウンロード
-</span><span class='line'>$ wget --no-check-certificate https://toolbelt.heroku.com/install.sh
-</span><span class='line'>
-</span><span class='line'># install.shの内容を確認してから、改めて実行
-</span><span class='line'>$ sh ./install.sh
-</span><span class='line'>This script requires superuser access to install software.
-</span><span class='line'>You will be prompted for your password by sudo.
-</span><span class='line'>Installation complete
-</span><span class='line'>
-</span><span class='line'># install.shを削除
-</span><span class='line'>$ rm install.sh
-</span><span class='line'>
-</span><span class='line'># パスを追加
-</span><span class='line'>$ echo 'PATH="/usr/local/heroku/bin:$PATH"' &gt;&gt; .bashrc
-</span><span class='line'>$ source .bashrc
-</span><span class='line'>
-</span><span class='line'># 実行
-</span><span class='line'>$ heroku --version
-</span><span class='line'>heroku-toolbelt/3.1.0 (x86_64-linux) ruby/2.0.0</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ok</p>
-</div>
-  
-  
-
-</article>
-
-
-    <article class="post">
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/19/about_jenkins/">Jenkinsについて学ぶ</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-19T12:51:01+09:00" pubdate data-updated="true">Jan 19<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Jenkins本『入門Jenkins』にて学んだことをメモ。
-hogehogeo</p>
-
-<h1>第1章</h1>
-
-<h2>継続的インテグレーション(CI)とは</h2>
-
-<ul>
-<li>CIという言葉が生まれる以前:スモークテストと夜間ビルド</li>
-<li><p>90年台後半:アジャイル開発の中で、XP(eXtreme Programming)のプラクティスの一つとしてCIが提案され、Webアプリケーション開発の現場で使われ始めた。
-よく使われていたのは、<em>CruiseControl</em>や<em>Apache Continum</em>など。</p></li>
-<li><p>CIは夜間ビルドのように、決まった時間にビルドするのではなく、CIツールがバージョン監視システムのリポジトリを監視し、リポジトリに変更があった場合にコンパイル、テスト、デプロイという一連のビルドを実施してくれる。</p></li>
-</ul>
-
-
-<h2>CIのメリット</h2>
-
-<ol>
-<li>欠陥の早期検知
-
-<ul>
-<li>複数人開発の場合、ほかの人の開発したモジュールと結合してみると、全くテストが動作しないということがある。CIツールを使用して、常時修正を取り込み、ビルドすることで、結合時の問題を解消できる。</li>
-<li>独立したCIサーバが常にリポジトリを関し、変更があったら一連のビルドを実施することで、特に結合に絡む欠陥の早期に検出し、各開発者にフィードバックできるようになる。</li>
-</ul>
-</li>
-<li>手作業によるミスの低減
-
-<ul>
-<li>コンパイル、テスト、デプロイを手作業でやった場合、ミスが発生することが考えられるが、CIツールを使えば大丈夫。</li>
-</ul>
-</li>
-<li>時系列品質の可視化
-
-<ul>
-<li>CIツールでは各ビルドに関する情報を格納しているので、時系列でビルドに関する各種情報を可視化できる。</li>
-</ul>
-</li>
-</ol>
-
-
-<h2>CIの構成要素</h2>
-
-<h3>CIのフロー</h3>
-
-<ol>
-<li>開発者がソースコードやテストを作成or修正して変更をバージョン管理サーバのリポジトリに登録</li>
-<li>CIサーバがバージョン管理サーバ上のリポジトリの変更を検知</li>
-<li>CIサーバが対象のリポジトリに紐づく各種ジョブの実施をビルドサーバに依頼する。ビルドサーバはCIサーバと独立していないこともある</li>
-<li>ビルドサーバがコンパイルやテストなどのジョブを実施する。</li>
-<li>ジョブの結果をCIサーバが収集し、レポートをにまとめる</li>
-<li>CIサーバがジョブの結果を開発者にメールやチャットなどでフィードバックする</li>
-</ol>
-
-
-<p>基本的に上記の流れを繰り返す。CIサーバは定期ビルドも実施できたり、トリガを設定できたりする。</p>
-
-<h4>バージョン管理システム</h4>
-
-<p>Git marcurialなど</p>
-
-<h4>ビルドツール</h4>
-
-<p>JavaではApache Ant, Apache Maven, RubyでつかわれるRakeなど。</p>
-
-<h4>CIツール</h4>
-
-<p>JenkinsはオープンソースCIツールのデファクトスタンダード
-商用ツールではMicrosoft Visual Studio Term Founation Serverなど</p>
-
-<h4>テストツール</h4>
-
-<ul>
-<li>CIツールではJUnitのようなユニットテストツールをはじめとして様々なレベルのテストツールを実施、レポーティングをサポートする。</li>
-<li>LL言語ではテスト・ツールを使ったテストに成る。
-
-<h4>コードカバレッジツール</h4>
-
-自動テキストを実施したさいに、テスト対象の製品コードを自動テストがどれだけテストを実行できたかをステートメントカバレッジと言った網羅基準に従って計測してくれるもの。
-CIツールではコードカバレッジも示してくれる。
-
-<h4>コードインスペクションツール</h4></li>
-<li>テストのようにコードを実行するのではなく、ソースコードもしくはバイトコードを読み取って、コーディングルールの準拠や潜在バグの検出をするもの。</li>
-<li>Javaの開発ではCheckstyleとFindBugsがデファクトスタンダード。両方使われることが多い。</li>
-<li>CIツールではコードインスペクションツールの実施結果もレポートにでき、また時系列に可視化できる。
-
-<h4>コードレビューシステム</h4></li>
-<li>CIの目的はビルドのすべての作業を自動化するだけではない。</li>
-<li>コードレビューや手動テストといったどうしても人でのワークフローが必要な領域があり、その一つがコードレビューシステム。</li>
-<li>Gerritを始めとするコードレビューシステムにより、手動でのコードレビューをサポートする。</li>
-</ul>
-
-
-<h1>第2章 Jenkinsの生まれた背景と歴史</h1>
-
-<h2>Jenkinsの生まれた背景</h2>
-
-<p>Jenkinsは元々Hudosonという名称で、2004年川口耕介氏によって開発された。</p>
-
-<h2>CIツールとしてのJenkinsのメリット</h2>
-
-<ul>
-<li>CruiseControlやApacheContinumよりもJenkinsが選ばれる理由について</li>
-</ul>
-
-
-<h3>インストールが容易</h3>
-
-<ul>
-<li>installerの指示に従えば、数ステップでCIサーバが立てられる。</li>
-</ul>
-
-
-<h3>つかいやすいWebインタフェースによる運用の容易性</h3>
-
-<ul>
-<li>Pluginによる拡張性の高い運用が可能だが、これもWebインタフェースによりできる。</li>
-</ul>
-
-
-<h3>豊富なPlugin</h3>
-
-<ul>
-<li>デフォルトではSubversionだが、Git Pluginなどを入れれば、各種バージョン管理システムが利用できる。また、ユニットテストツール、メトリックスツール、ビルドツール、課題管理ツール、テスト管理ツールでもメジャーなものはPluginを導入すれば使える。</li>
-</ul>
-
-
-<h2>JavaEE以外の利用</h2>
-
-<ul>
-<li>JenkinsはJavaで開発されていることから、JavaEEで使用されていることが多い、しかし、他の領域でも使用できる。
-
-<ul>
-<li>Android Application</li>
-<li>RoR</li>
-<li>コードレビューシステムGerrit</li>
-<li>Catalystアプリケーション開発</li>
-</ul>
-</li>
-</ul>
-
-
-<h1>第4章 Jenkinsの導入</h1>
-
-<h2>Jenkinsのyum install</h2>
-
-<p>今回は本書で使われているUbuntuではなく、Centos6.5に導入することに。</p>
-
-<p>CentOSにJenkinsを入れるに当たり、<a href="http://qiita.com/phimcall/items/10e2003b712ed0adfc7c">CentOS に Jenkins を入れて自動的にコミットとかやりたかった &ndash; Qiita [キータ]</a>を参考にしたのん。</p>
-
-<h1>第7章 RoRをもいいたアプリケーションでのJenkins実践</h1>
-
-<h2>rails newとRSpec</h2>
-
-<ul>
-<li>TestToolにRSpecをgem installするため、Gemfileに以下の行を加え、bundle installを行います。</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>group :test, :development do
-</span><span class='line'>  gem 'rspec-rails', '~&gt;2.0'
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>RSpecに必要なファイルを生成</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>vagrant:&gt;rails generate rspec:install    [/vagrant/work/blog][01/19 06:05:44]
-</span><span class='line'>      create  .rspec
-</span><span class='line'>      create  spec
-</span><span class='line'>      create  spec/spec_helper.rb</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>Railsのscaffoldを用いてProject基礎部分をテストとともに生成する。</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>rails generate scaffold Port name:string title:string content:text</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li><p>capybara-webkitのインストール
-capybara-webkitは、<strong>RSpecではやってくれないJavaScriptのテストを含めた結合テスト</strong>を行ってくれる。</p></li>
-<li><p>Qtをインストール</p></li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ yum install qt4 qt4-devel qt4-doc qt4-postgresql qt4-odbc qt4-sqlite qt-creator</span></code></pre></td></tr></table></div></figure>
-
-
-<p>rspec-rails
-database_cleaner</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>group :test, :development do
-</span><span class='line'>    gem 'rspec-rails', '~&gt;2.0'
-</span><span class='line'>    gem 'database_cleaner'
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>group :test do
-</span><span class='line'>    gem 'headless'
-</span><span class='line'>end
-</span><span class='line'>~</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Gem::Ext::BuildError: ERROR: Failed to build gem native extension.
-</span><span class='line'>
-</span><span class='line'>    /home/vagrant/.rbenv/versions/2.1.0/bin/ruby extconf.rb
-</span><span class='line'>Command 'qmake -spec linux-g++ ' not available
-</span><span class='line'>
-</span><span class='line'>Makefile not found
-</span><span class='line'>
-</span><span class='line'>Gem files will remain installed in /home/vagrant/.rbenv/versions/2.1.0/lib/ruby/gems/2.1.0/gems/capybara-webkit-1.1.1 for inspection.
-</span><span class='line'>Results logged to /home/vagrant/.rbenv/versions/2.1.0/lib/ruby/gems/2.1.0/extensions/x86_64-linux/2.1.0-static/capybara-webkit-1.1.1/gem_make.out
-</span><span class='line'>An error occurred while installing capybara-webkit (1.1.1), and Bundler cannot
-</span><span class='line'>continue.
-</span><span class='line'>Make sure that `gem install capybara-webkit -v '1.1.1'` succeeds before
-</span><span class='line'>bundling.
-</span><span class='line'>FAILED...gem install capybara-webkit -v '1.1.1'</span></code></pre></td></tr></table></div></figure>
-
-
-<p>今日(2014/01/19)はここまで</p>
-</div>
-  
-  
-
-</article>
-
-
-    <article class="post">
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/18/octpress/">Octpressを導入してイカすBlogを作る</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-18T10:57:20+09:00" pubdate data-updated="true">Jan 18<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Jekyllをそのまま使うより<a href="http://octopress.org/">Octopress</a>を使うのが、Blogの運用には最適らしい。
-<code>rake new_post["title"]</code>で記事作成できるのが楽。</p>
-
-<h2>導入方法</h2>
-
-<p>Octpress導入までは<a href="http://tantant.jp/blog/Octopress/installing-octopress/">Markdownで書いてGitで管理するブログ「Octopress」の始め方 &ndash; tantant</a>を参考にした。</p>
-
-<h2>theme</h2>
-
-<p><a href="http://opthemes.com/">Opthemes · Octopress Themes</a>を見ながら、Octpressのthemeを決める。今回入れたのは<a href="https://github.com/shashankmehta/greyshade">shashankmehta/greyshade</a>. READMEにinstall方法が載っているのでそのまま導入。</p>
-
-<h2>icon</h2>
-
-<p><a href="http://ja.gravatar.com/">Gravatar</a>を使用している際は、_config.ymlのemail: にGravatarに登録しているemail addressを指定すると、反映される。この場合、メールのリンクがトップ画面に追加される。
-また、email addressを載せるのに抵抗がある人はemail_md5: にmd5でhash化したemail addressを指定してあげると良い。</p>
 </div>
   
   

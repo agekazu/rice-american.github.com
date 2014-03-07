@@ -1,0 +1,486 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>ログイン機構を作ってみる。 - こめぶろぐ</title>
+  <meta name="author" content="rice_american">
+
+  
+  <meta name="description" content="前回でpasswordの暗号化までいけたので、今度はそれを使ってログインするところまで。
+参考: Rails4対応 Gemを使わずに自分だけログインできる環境を作る &ndash; Qiita 1. ログイン環境のsessionコントローラを生成 1
+$ rails g controller &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://rice-american.github.io/blog/2014/03/07/rails-sec-login">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="こめぶろぐ" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">こめぶろぐ</a></h1>
+  
+    <h2>rice_american's blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:rice-american.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">ログイン機構を作ってみる。</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-07T13:23:17+09:00" pubdate data-updated="true">Mar 7<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>前回でpasswordの暗号化までいけたので、今度はそれを使ってログインするところまで。
+参考: <a href="http://qiita.com/regonn/items/4c76d4f3ef6c6af5c5e5">Rails4対応 Gemを使わずに自分だけログインできる環境を作る &ndash; Qiita</a></p>
+
+<h3>1. ログイン環境のsessionコントローラを生成</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>rails g controller sessions
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>2. viewの作成</h3>
+
+<p><code>views/sessions/new.html.erb</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;row&quot;</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;span6 offset3&quot;</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="o">&lt;</span><span class="sr">/div&gt;&lt;%- model_class = User -%&gt;</span>
+</span><span class='line'><span class="sr">&lt;div class=&quot;page-header&quot;&gt;</span>
+</span><span class='line'><span class="sr">  &lt;!--  &lt;h1&gt;&lt;%=t &#39;.title&#39;, :default =&gt; [:&#39;helpers.titles.new&#39;, &#39;New %{model}&#39;], :model =&gt; model_class.model_name.human.titleize %&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;--&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="sr">/div&gt;</span>
+</span><span class='line'><span class="sr">&lt;%= simple_form_for @user, url: sessions_path, html: { class: &#39;form-horizontal&#39; } do |f| %&gt;</span>
+</span><span class='line'><span class="sr">  &lt;h2 class=&quot;simple_form-heading&quot;&gt;ログイン&lt;/</span><span class="n">h2</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="o">&lt;</span><span class="sx">%= f.input :user_name, label: false, placeholder: &#39;ユーザ名 or メールアドレス&#39;, input_html: { type: &#39;text&#39;, class: &#39;form-control input-xlarge&#39;, id: &#39;user_user_name&#39;} %&gt;</span>
+</span><span class='line'><span class="sx">  &lt;%=</span> <span class="n">f</span><span class="o">.</span><span class="n">input</span> <span class="ss">:password</span><span class="p">,</span> <span class="ss">label</span><span class="p">:</span> <span class="kp">false</span><span class="p">,</span> <span class="ss">placeholder</span><span class="p">:</span> <span class="s1">&#39;パスワード&#39;</span><span class="p">,</span> <span class="n">input_html</span><span class="p">:</span> <span class="p">{</span> <span class="ss">type</span><span class="p">:</span> <span class="s1">&#39;password_confirm&#39;</span><span class="p">,</span> <span class="ss">class</span><span class="p">:</span> <span class="s1">&#39;form-control input-xlarge&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="s1">&#39;password&#39;</span><span class="p">}</span>  <span class="sx">%&gt;</span>
+</span><span class='line'><span class="sx">  &lt;%= f.button :submit, label: false, value: &#39;login&#39;, class: &#39;btn btn-lg btn-primary btn-block&#39; %&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="sx">% end %&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sx">&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>3. routes.rbにsessionsのルートを追加</h3>
+
+<p><code>config/routes.rb</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="n">resources</span> <span class="ss">:sessions</span><span class="p">,</span> <span class="ss">only</span><span class="p">:</span> <span class="o">[</span><span class="ss">:new</span><span class="p">,</span> <span class="ss">:create</span><span class="p">,</span> <span class="ss">:destroy</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>4. controllerを編集</h3>
+
+<p><code>app/controller/session_controller.rb</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">class</span> <span class="nc">SessionsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">new</span>
+</span><span class='line'>        <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">create</span>
+</span><span class='line'>        <span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find_by_user_name</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:user</span><span class="o">][</span><span class="ss">:user_name</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">if</span> <span class="n">user</span> <span class="o">&amp;&amp;</span> <span class="n">user</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:user</span><span class="o">][</span><span class="ss">:password</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>            <span class="n">session</span><span class="o">[</span><span class="ss">:user_id</span><span class="o">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span>
+</span><span class='line'>            <span class="n">redirect_to</span> <span class="n">root_path</span>
+</span><span class='line'>        <span class="k">else</span>
+</span><span class='line'>            <span class="n">flash</span><span class="o">.</span><span class="n">now</span><span class="o">.</span><span class="n">alert</span> <span class="o">=</span> <span class="s2">&quot;ユーザ名かパスワードが間違っています&quot;</span>
+</span><span class='line'>            <span class="kp">new</span><span class="p">()</span>
+</span><span class='line'>            <span class="n">render</span> <span class="s2">&quot;new&quot;</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">destroy</span>
+</span><span class='line'>        <span class="n">session</span><span class="o">[</span><span class="ss">:user_id</span><span class="o">]</span> <span class="o">=</span> <span class="kp">nil</span>
+</span><span class='line'>        <span class="n">redirect_to</span> <span class="n">root_path</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>現段階では、ログイン認証に成功すると、root(jantaku)に飛びます。</p>
+
+<h3>5. Viewのヘルパーメソッドでログイン情報を取得できるようにする</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="c1">#app/controller/application_controller.rb</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">current_user</span>
+</span><span class='line'>    <span class="vi">@current_user</span> <span class="o">||=</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">session</span><span class="o">[</span><span class="ss">:user_id</span><span class="o">]</span><span class="p">)</span> <span class="k">if</span> <span class="n">session</span><span class="o">[</span><span class="ss">:user_id</span><span class="o">]</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">helper_method</span> <span class="ss">:current_user</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>6. Viewにログイン機能へのパスを書きます。</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='erb'><span class='line'><span class="x">&lt;h1&gt;kitaken Top&lt;/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">&lt;%</span> <span class="k">if</span> <span class="n">current_user</span> <span class="o">==</span> <span class="kp">nil</span> <span class="cp">%&gt;</span><span class="x"></span>
+</span><span class='line'><span class="cp">&lt;%=</span> <span class="n">button_to</span> <span class="s2">&quot;create account&quot;</span><span class="p">,</span> <span class="n">new_user_path</span><span class="p">,</span> <span class="nb">method</span><span class="p">:</span> <span class="ss">:get</span><span class="p">,</span> <span class="ss">class</span><span class="p">:</span> <span class="s2">&quot;btn btn-lg&quot;</span> <span class="cp">%&gt;</span><span class="x"></span>
+</span><span class='line'><span class="cp">&lt;%=</span> <span class="n">button_to</span> <span class="s2">&quot;login&quot;</span><span class="p">,</span> <span class="n">new_session_path</span><span class="p">,</span> <span class="nb">method</span><span class="p">:</span> <span class="ss">:get</span><span class="p">,</span> <span class="ss">class</span><span class="p">:</span>  <span class="s2">&quot;btn btn-lg&quot;</span> <span class="cp">%&gt;</span><span class="x"></span>
+</span><span class='line'><span class="cp">&lt;%</span> <span class="k">else</span> <span class="cp">%&gt;</span><span class="x"></span>
+</span><span class='line'><span class="x">  </span><span class="cp">&lt;%=</span> <span class="n">button_to</span> <span class="s2">&quot;logout&quot;</span><span class="p">,</span> <span class="n">session_path</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">id</span><span class="p">),</span> <span class="ss">data</span><span class="p">:</span> <span class="p">{</span><span class="ss">:confirm</span> <span class="o">=&gt;</span> <span class="s1">&#39;ログアウトしますか？&#39;</span><span class="p">},</span> <span class="nb">method</span><span class="p">:</span> <span class="ss">:delete</span><span class="p">,</span> <span class="ss">class</span><span class="p">:</span> <span class="s2">&quot;btn btn-lg&quot;</span> <span class="cp">%&gt;</span><span class="x"></span>
+</span><span class='line'><span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>未ログイン時</li>
+</ul>
+
+
+<p><img src="https://f.cloud.github.com/assets/1464221/2343867/8611e0e6-a516-11e3-9c6d-e7cf0617eba5.png" alt="2014-03-06 18 58 36" /></p>
+
+<ul>
+<li>ログイン時</li>
+</ul>
+
+
+<p><img src="https://f.cloud.github.com/assets/1464221/2343918/7ee8d0c6-a517-11e3-91cc-f748920c79d6.png" alt="2014-03-06 18 59 06" /></p>
+
+<h3>他のcontrollerで次のように書けばログインしていない状態でeditやnewのページに行こうとするとrootへ戻す。</h3>
+
+<h1>controller</h1>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="n">before_action</span> <span class="ss">:login_check</span><span class="p">,</span> <span class="ss">only</span><span class="p">:</span> <span class="o">[</span><span class="ss">:new</span><span class="p">,</span> <span class="ss">:edit</span><span class="p">,</span> <span class="ss">:destroy</span><span class="o">]</span>
+</span><span class='line'><span class="c1">#各メソッド</span>
+</span><span class='line'>
+</span><span class='line'><span class="kp">private</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">login_check</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">session</span><span class="o">[</span><span class="ss">:user_id</span><span class="o">]</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">redirect_to</span> <span class="n">root_path</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>今回、コレは行っていません。</p>
+
+<p>以上！</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">rice_american</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-07T13:23:17+09:00" pubdate data-updated="true">Mar 7<span>th</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/security/'>security</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://rice-american.github.io/blog/2014/03/07/rails-sec-login/" data-via="rice_american" data-counturl="http://rice-american.github.io/blog/2014/03/07/rails-sec-login/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/03/03/secdb-rails-2/" title="Previous Post: secdb-rails-2">&laquo; secdb-rails-2</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/03/07/rails-sec-login/">ログイン機構を作ってみる。</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/03/secdb-rails-2/">Secdb-rails-2</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/03/secdb-rails/">secDB-rails</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/02/28/vim-ruby/">+rubyなvimを入れた奮闘記</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/02/24/pgbackups/">pgbackupsを使って、HerokuのDBをlocalにリストアしてDBにデータをinsertしてHerokuのDBへリストアするまで。</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/02/09/jenkins-plugin/">Jenkinsさんにイカしたpluginを入れてみよう！</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/02/08/jenkins-rspec/">Bundle Exec Rspec spec/*/*.featureが失敗する件</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/27/rails-iconfont/">Railsでfonticon</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/27/nginx-jenkins/">さくらVPSにjenkinsとNginxでJenkinsサーバを構築する。</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/26/rails-bootstrap/">Rails+bootstrapなアプリケーションを作る</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/26/heroku-RoR/">herokuへRuby on Railsアプリケーションをdeployするまで</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/19/about_jenkins/">Jenkinsについて学ぶ</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/18/octpress/">Octpressを導入してイカすBlogを作る</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/18/rails_app/">Rails アプリケーション作成の手順</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/12/vagrant/">VagrantでCentOSを入れてRails環境構築</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/12/jekyll/">github+page+jekyll+jekyll+bootstarpでBlogを始めたかったんだ</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/12/about_Jenkins_Chef_Bundle/">Jenkins Chef Bundleについて調べた</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/rice-american">@rice-american</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'rice-american',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - rice_american -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
