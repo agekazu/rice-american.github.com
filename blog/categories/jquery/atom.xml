@@ -1,0 +1,557 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: jQuery | こめぶろぐ]]></title>
+  <link href="http://rice-american.github.io/blog/categories/jquery/atom.xml" rel="self"/>
+  <link href="http://rice-american.github.io/"/>
+  <updated>2014-03-08T20:23:48+09:00</updated>
+  <id>http://rice-american.github.io/</id>
+  <author>
+    <name><![CDATA[rice_american]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[dotinstallでjQueryの勉強]]></title>
+    <link href="http://rice-american.github.io/blog/2014/03/08/jquery-lesson/"/>
+    <updated>2014-03-08T20:20:30+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/03/08/jquery-lesson</id>
+    <content type="html"><![CDATA[<p>やってみた。
+* <a href="http://dotinstall.com/lessons/basic_jquery_v2">jQuery入門 (全15回) &ndash; プログラミングならドットインストール</a></p>
+
+<p>以降はメモ。</p>
+
+<h3>01 jQueryとはなにか</h3>
+
+<p>jsを便利に使うためのライブラリです。</p>
+
+<p>jQueryライブラリ読み込み
+```html
+  <body></p>
+
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+
+
+<p>```</p>
+
+<h3>02初めてのjQuery</h3>
+
+<p>```html
+&lt;!DOCTYPE html>
+<html lang="ja">
+  <head></p>
+
+<pre><code>&lt;meta charset="UTF-8"&gt;
+&lt;meta name="discription" content=""&gt;
+&lt;link rel="stylesheet" href=".css"&gt;
+&lt;title&gt;jQueryの練習 &lt;/title&gt;
+</code></pre>
+
+<p>  </head>
+  <body></p>
+
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+
+
+<p>  <script>
+  //  $(document.read(function(){}) → html本文が読み込まれたら実行するという意味、下のように書ける↓
+  $(function(){</p>
+
+<pre><code>// セレクタ: 処理対象となるDOM要素を指定する記法
+// メソッド: 処理(.で繋げられる=&gt;メソッドチェーン
+// pがセレクタ、.以降がメソッド。
+$('p').css('color', 'red').hide('slow');
+</code></pre>
+
+<p>  });
+  </script>
+  <p>jQueryの練習</p>
+  </body>
+</html>
+```</p>
+
+<h3>03</h3>
+
+<p>```html</p>
+
+<ul id="main">
+  <li>1</li>
+  <li>2</li>
+  <li>3</li>
+  <ul id="sub">
+    <li>3-1</li>
+    <li>3-2</li>
+    <li class="item">3-3</li>
+    <li class="item">3-4</li>
+  </ul>
+  <li>4</li>
+</ul>
+
+
+
+
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+
+
+<p>  <script></p>
+
+<p>  //  $(document.read(function(){})
+  $(function(){</p>
+
+<pre><code>// セレクタ: 処理対象となるDOM要素を指定する記法
+// メソッド: 処理(.で繋げられる=&gt;メソッドチェーン)
+// pがセレクタ、.以降がメソッド。
+
+// セレクタメソッド 
+// $("~")
+// html要素 p h1 ulとか
+// id #main
+// class .item
+$("#sub").css('color', 'red');
+</code></pre>
+
+<p>  });
+  </script>
+```</p>
+
+<pre><code>$("#sub").css('color', 'red');とすると
+</code></pre>
+
+<p>subclassの要素が赤くなる</p>
+
+<h2>04もっとセレクタを使ってみよう</h2>
+
+<p>```html
+  //  $(document.read(function(){})
+  $(function(){</p>
+
+<pre><code>// セレクタ: 処理対象となるDOM要素を指定する記法
+// メソッド: 処理(.で繋げられる=&gt;メソッドチェーン)
+// pがセレクタ、.以降がメソッド。
+
+// セレクタメソッド 
+// #id .class
+// &gt; 直下の子要素
+// , 複数の要素
+// + 隣接する要素
+  $("#main &gt; #sub &gt; .item").css('color', 'red');
+  $("#main .item").css('color', 'red');
+  $("p, .item").css('color', 'red');
+  $(".item + .item").css('color', 'red');
+</code></pre>
+
+<p>  });
+```</p>
+
+<h2>05 フィルタを使ってみよう</h2>
+
+<p>フィルタは:以降に指定します。
+例えば
+* :eq() →等しい
+* :gt(), :lt() → より大きい、より小さい
+* :even, :odd → 偶数、奇数
+* :contains() → valueに含まれている値を指定する。
+* :first :last → 最初と最後</p>
+
+<p>実際に使ってみると</p>
+
+<p>```html</p>
+
+<pre><code>$("#sub &gt; li:eq(2)").css('color', 'blue');
+</code></pre>
+
+<p>```
+は、subclass以下のli要素の2番めを指定する。(連番は0から始まる)</p>
+
+<p><img src="https://f.cloud.github.com/assets/1464221/2353114/a302753e-a599-11e3-96a4-0c5f6a5a16df.png" alt="2014-03-07 10 41 24" /></p>
+
+<p>containsは、valueに含まれている値をしていすると、その条件を満たす要素に適応される。</p>
+
+<p>```html</p>
+
+<pre><code>// :eq() 
+// :gt(), :lt()
+// :even, :odd
+// :contains()
+// :first :last
+// $("#sub &gt; li:eq(2)").css('color', 'blue');
+// $("#sub &gt; li:gt(0)").css('color', 'green');
+$("#sub &gt; li:contains(2)").css('color', 'green');
+</code></pre>
+
+<p>```
+<img src="https://f.cloud.github.com/assets/1464221/2353182/c20e3f20-a59a-11e3-8266-7e11176298d0.png" alt="2014-03-07 10 49 31" /></p>
+
+<p>id=sub以下の2を含むli要素だけが緑に。</p>
+
+<h3>06 メソッドを使ったDOM要素指定</h3>
+
+<ul>
+<li>parent() 親要素を指す</li>
+<li>children() 子要素を指す</li>
+<li>siblings() 兄弟要素を指す。自分は含まない。</li>
+<li>next() 要素の次の要素を指す</li>
+<li>prev() 要素の前の要素を指す</li>
+</ul>
+
+
+<p><code>例 next()を使う</code>
+```html
+  $(function(){</p>
+
+<pre><code>// parent(), children()
+// next(), prev()
+// siblings() - 兄弟要素
+$("#sub &gt; li:eq(2)").next().css('color', 'green');
+</code></pre>
+
+<p>  });
+```
+<img src="https://f.cloud.github.com/assets/1464221/2353208/cab4ab22-a59b-11e3-9364-714f77d6eae6.png" alt="2014-03-07 10 56 57" /></p>
+
+<h3>07 属性セレクタを使ってみよう</h3>
+
+<ul>
+<li>= 等しい</li>
+<li>!= 等しくない</li>
+<li>*= 含まれる</li>
+<li>^= 先頭一致</li>
+<li>$= 末尾一致</li>
+</ul>
+
+
+<p>```html
+$(function(){</p>
+
+<pre><code>$('a[href*="dot"]').css("background","red");
+</code></pre>
+
+<p>});
+```
+<img src="https://f.cloud.github.com/assets/1464221/2353315/22b427ba-a59e-11e3-94cb-b7436dcef8ee.png" alt="2014-03-07 11 13 42" /></p>
+
+<h3>08 css､addClass/removeClassを使おう</h3>
+
+<p>```html
+  $(function(){</p>
+
+<pre><code>$('p').css('color', 'red').css('background','blue');
+console.log($('p').css('color'));
+</code></pre>
+
+<p>  });
+```
+* $(&lsquo;p&rsquo;).css(&lsquo;color&rsquo;) で、colorを取ってこれる
+* こういうふうにcssをつなげて書くのは、拡張が面倒なので、styleとしてまとめておいたほうが良いです。</p>
+
+<p>styleの指定
+```html</p>
+
+<pre><code>&lt;title&gt;jQueryの練習 &lt;/title&gt;
+&lt;style&gt;
+  .myStyle {
+    border: 5px solid green;
+    font-size:48px;
+  }
+&lt;/style&gt;
+</code></pre>
+
+<p><code>
+その後、
+</code>html
+  <script>
+  $(function(){</p>
+
+<pre><code>// $('p').css('color', 'red').css('background','blue');
+// console.log($('p').css('color'));
+$('p').addClass('myStyle');
+</code></pre>
+
+<p>  });
+  </script>
+```
+ってやると、
+<img src="https://f.cloud.github.com/assets/1464221/2353399/46ee3e16-a5a0-11e3-8f9a-0dd152296ba6.png" alt="2014-03-07 11 28 56" />
+こうなる。removeClassで、除ける。</p>
+
+<h3>09 attr､dataを使ってみよう</h3>
+
+<ul>
+<li>attr: 値をgetする奴。
+```html
+<body>
+<p>Hello, jQuery</p>
+<a href="http://google.com">google</a></li>
+</ul>
+
+
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+
+
+<p>  <script>
+  $(function(){</p>
+
+<pre><code>  console.log($('a').attr('href'));
+</code></pre>
+
+<p>  });
+  </script>
+  </body>
+<code>``
+でconsoleに</code>&ldquo;<a href="http://google.com">http://google.com</a>&rdquo;`が表示される。
+また、attrメソッドを使って、値を変えることもできる。
+こうする。</p>
+
+<p>```html
+  $(function(){</p>
+
+<pre><code>  console.log($('a').attr('href','http://yahoo.co.jp'));
+</code></pre>
+
+<p>  });
+```
+カスタム属性を取得したいときはdataを使います。
+html5ではカスタム属性をdata-のあとにつける。</p>
+
+<p>bodyを次のように書くと
+<code>html
+  &lt;a href="http://google.com" data-sitename="google"&gt;google&lt;/a&gt;
+</code></p>
+
+<p>```html
+  <script>
+  $(function(){</p>
+
+<pre><code>  console.log($('a').data('sitename'));
+</code></pre>
+
+<p>  });
+  </script>
+```
+で値を取ってこれる。</p>
+
+<h3>10 タグの中身を操作してみよう</h3>
+
+<ul>
+<li>text 指定したタグの要素に文字列を書く</li>
+<li>html 指定したタグの要素にhtml文を書く</li>
+<li>val 指定したタグの要素を書き換える</li>
+<li>empty 指定したタグの要素を空にする</li>
+<li>remove 指定したタグを消滅させる</li>
+</ul>
+
+
+<p>```html</p>
+
+<pre><code>  $('p').text('just changed')
+  $('p').html('&lt;a href=""&gt;click me&lt;/a&gt;')
+  console.log($('input').val());
+  $('input').val("hogehoge");
+  $('p').remove();
+</code></pre>
+
+<p>```</p>
+
+<h3>11 要素を追加してみよう</h3>
+
+<p>bodyに次のように書く
+```html
+  <p>Hello, jQuery</p>
+  <ul></p>
+
+<pre><code>&lt;li&gt;0&lt;/li&gt;
+&lt;li&gt;1&lt;/li&gt;
+&lt;li&gt;2&lt;/li&gt;
+</code></pre>
+
+<p>  </ul>
+```</p>
+
+<p>```html
+  <script>
+  $(function(){</p>
+
+<pre><code>  // before, after == InsertBefore, InsertAfter
+  // prepend, append
+  var li = $('&lt;li&gt;').text('just added'); // あたらしいli要素
+  $('ul &gt; li:eq(1)').before(li); // あたらしいli要素を追加する場所の指定
+</code></pre>
+
+<p>  });
+  </script>
+<code>``
+* 要素を追加するときは、不等号記号で囲ってやる必要がありけり。→</code><li>`
+<img src="https://f.cloud.github.com/assets/1464221/2353692/7c39f716-a5a7-11e3-8996-be6fc1fdc398.png" alt="2014-03-07 12 20 45" /></p>
+
+<p>```html</p>
+
+<pre><code>  var li2 = $('&lt;li&gt;').text('just added2');
+  $('ul').append(li2);
+</code></pre>
+
+<p>```</p>
+
+<p>とすると、末尾にli2を追加してくれる。先頭に追加するには<code>prepend()</code>を使う。</p>
+
+<h3>12 エフェクトを使ってみよう</h3>
+
+<p><strong>アニメィション！</strong></p>
+
+<ul>
+<li>hide, show
+<code>html
+  &lt;script&gt;
+    $(function(){
+        // hide, show
+        // fadeIn, fadeOut
+        // toggle
+        // $('#box').fadeIn(1000);
+        // $('#box').fadeOut(1000);
+        // $('#box').toggle(1000);
+        // $('#box').toggle(1000);
+        // $('#box').fadeOut(200,function(){
+        //   alert("gone!!!!!!!!!!!!!!!!!!");
+        // });
+    });
+  &lt;/script&gt;
+</code></li>
+</ul>
+
+
+<h3>13 イベントを使ってみよう</h3>
+
+<p>mouseイベントについて
+```html</p>
+
+<pre><code>&lt;script&gt;
+  $(function(){
+      // clip event
+      // mouseover, mousemove
+      $('#box').click(function(){
+        console.log("hogehoge");
+      });
+      $('#box')
+        .mouseover(function(){
+          $(this).css('background','blue');
+      })
+        .mousemove(function(e
+             ){
+          $(this).text(e.pageX);
+      })
+        .mouseout(function(){
+          $(this).css('background','green');
+      });
+  });
+</code></pre>
+
+<p>```</p>
+
+<h3>14 focus､blur､changeを使おう</h3>
+
+<p>フォーカスされた時、フォーカスが外れた時、メニュー選択された時</p>
+
+<p>```html
+&lt;!DOCTYPE html>
+<html lang="ja">
+  <head></p>
+
+<pre><code>&lt;meta charset="UTF-8"&gt;
+&lt;meta name="discription" content=""&gt;
+&lt;link rel="stylesheet" href=".css"&gt;
+&lt;title&gt;jQueryの練習 &lt;/title&gt;
+</code></pre>
+
+<p>  </head>
+  <body></p>
+
+<pre><code>&lt;p&gt;Hello, jQuery&lt;/p&gt;
+&lt;input type="text" id="name"&gt;
+&lt;select id="members" name="members"&gt;
+  &lt;option&gt;hoge&lt;/option&gt;
+  &lt;option&gt;fuga&lt;/option&gt;
+  &lt;option&gt;piyo&lt;/option&gt;
+&lt;/select&gt;
+</code></pre>
+
+<p>  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script></p>
+
+<pre><code>&lt;script&gt;
+  // focus フォーカスされた時
+  // blur  フォーカスから外れた時
+  // change ボトムダウンメニューから選択された時
+  $(function(){
+      // focusされた時の処理
+      $("#name").focus(function(){
+        $(this).css('background','red');
+      });
+      // blur
+      $("#name").blur(function(){
+        $(this).css('background', 'white');
+      });
+      $('#members').change(function() {
+        $("input").val("aho");
+      });
+  });
+&lt;/script&gt;
+</code></pre>
+
+<p>  </body>
+</html>
+```</p>
+
+<h3>15 onメソッドを使ってみよう</h3>
+
+<h4>onメソッドは、jQueryで動的に生成された要素に対して操作するためのメソッド。</h4>
+
+<p><code>$(function())</code>では、htmlが読み込まれた段階での要素に対して操作を行うため、jQuery
+で生成された要素に対しては操作できない。そこで、<code>onメソッド</code>を使う。</p>
+
+<p>```html
+&lt;!DOCTYPE html>
+<html lang="ja">
+  <head></p>
+
+<pre><code>&lt;meta charset="UTF-8"&gt;
+&lt;meta name="discription" content=""&gt;
+&lt;link rel="stylesheet" href=".css"&gt;
+&lt;title&gt;jQueryの練習 &lt;/title&gt;
+</code></pre>
+
+<p>  </head>
+  <body></p>
+
+<pre><code>&lt;p&gt;Hello, jQuery&lt;/p&gt;
+&lt;button&gt;add!&lt;/button&gt;
+</code></pre>
+
+<p>  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script></p>
+
+<pre><code>&lt;script&gt;
+  $(function(){
+      $('button').click(function(){
+        var p = $('&lt;p&gt;').text("add!").addClass("vanish");
+        $(this).before(p);
+      });
+
+      $('body').on('click', '.vanish', (function(){
+          $(this).remove();
+      }));
+  });
+&lt;/script&gt;
+</code></pre>
+
+<p>  </body>
+</html>
+```</p>
+
+<p><img src="https://f.cloud.github.com/assets/1464221/2353964/33017fc6-a5af-11e3-9d34-1895500a6079.png" alt="2014-03-07 13 15 57" /></p>
+
+<p>addボタンを押すと"add!&ldquo;が追加される。で、"add!"をクリックすると消える。これはonメソッドのため。</p>
+
+<p>以上！</p>
+]]></content>
+  </entry>
+  
+</feed>

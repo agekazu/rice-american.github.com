@@ -9,10 +9,14 @@
   <meta name="author" content="rice_american">
 
   
-  <meta name="description" content="参考:Herokuでアプリを公開する直前までのチュートリアル &ndash; Qiita [キータ] $ git clone git://github.com/heroku/ruby-sample.git
-$ cd ruby-sample
-$ heroku create
-$ git push &hellip;">
+  <meta name="description" content="install及びアプリ作成までは次のページを参考に
+参考: simple_formとTwitter bootstrapで作る俺流鉄板Railsアプリ（その１） / Oh My Enter!
+Gemfileに追加 1
+2
+3
+4
+gem "therubyracer"
+# bootstrap &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -68,6 +72,85 @@ $ git push &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/26/rails-bootstrap/">Rails+bootstrapなアプリケーションを作る</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-26T00:44:29+09:00" pubdate data-updated="true">Jan 26<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><ul>
+<li>install及びアプリ作成までは次のページを参考に</li>
+<li><p>参考: <a href="http://www.ohmyenter.com/?p=197">simple_formとTwitter bootstrapで作る俺流鉄板Railsアプリ（その１） / Oh My Enter!</a></p></li>
+<li><p>Gemfileに追加</p></li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem "therubyracer"
+</span><span class='line'># bootstrap
+</span><span class='line'>gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) s    upports LESS
+</span><span class='line'>gem "twitter-bootstrap-rails"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>次に
+<em>bundle install</em>実行</p>
+
+<ul>
+<li>bootstrapのinstall</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ rails generate bootstrap:install less</span></code></pre></td></tr></table></div></figure>
+
+
+<p>assetsやlocalesにファイル生成</p>
+
+<p>基本となるレイアウトを生成する。</p>
+
+<ul>
+<li>レスポンシブレイアウトをinstall</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ rails g bootstrap:layout application fluid</span></code></pre></td></tr></table></div></figure>
+
+
+<p>application_name/config/dtabase.ymlを編集して、ユーザをpostgresに。
+そのあと<em>rake db:create RAILS_ENV=development</em>を実行。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1599,6 +1682,10 @@ BlogはOctpressに移行。短い天下だった。</p>
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/03/08/jquery-lesson/">dotinstallでjQueryの勉強</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/03/07/rails-sec-login/">Railsで、暗号化されたpasswordを使ってログイン機構を作ってみる。</a>

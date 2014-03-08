@@ -4,7 +4,7 @@
   <title><![CDATA[こめぶろぐ]]></title>
   <link href="http://rice-american.github.io/atom.xml" rel="self"/>
   <link href="http://rice-american.github.io/"/>
-  <updated>2014-03-07T13:35:32+09:00</updated>
+  <updated>2014-03-08T20:23:48+09:00</updated>
   <id>http://rice-american.github.io/</id>
   <author>
     <name><![CDATA[rice_american]]></name>
@@ -12,6 +12,741 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[dotinstallでjQueryの勉強]]></title>
+    <link href="http://rice-american.github.io/blog/2014/03/08/jquery-lesson/"/>
+    <updated>2014-03-08T20:20:30+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/03/08/jquery-lesson</id>
+    <content type="html"><![CDATA[<p>やってみた。
+* <a href="http://dotinstall.com/lessons/basic_jquery_v2">jQuery入門 (全15回) &ndash; プログラミングならドットインストール</a></p>
+
+<p>以降はメモ。</p>
+
+<h3>01 jQueryとはなにか</h3>
+
+<p>jsを便利に使うためのライブラリです。</p>
+
+<p>jQueryライブラリ読み込み</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>  <span class="nt">&lt;body&gt;</span>
+</span><span class='line'><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;http://code.jquery.com/jquery-1.11.0.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>02初めてのjQuery</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span><span class='line'><span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">&quot;ja&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;head&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&quot;UTF-8&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">&quot;discription&quot;</span> <span class="na">content=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;.css&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;title&gt;</span>jQueryの練習 <span class="nt">&lt;/title&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/head&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;body&gt;</span>
+</span><span class='line'><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;http://code.jquery.com/jquery-1.11.0.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;script&gt;</span>
+</span><span class='line'>  <span class="c1">//  $(document.read(function(){}) → html本文が読み込まれたら実行するという意味、下のように書ける↓</span>
+</span><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>    <span class="c1">// セレクタ: 処理対象となるDOM要素を指定する記法</span>
+</span><span class='line'>    <span class="c1">// メソッド: 処理(.で繋げられる=&gt;メソッドチェーン</span>
+</span><span class='line'>    <span class="c1">// pがセレクタ、.以降がメソッド。</span>
+</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">).</span><span class="nx">css</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">).</span><span class="nx">hide</span><span class="p">(</span><span class="s1">&#39;slow&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>  <span class="nt">&lt;/script&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;p&gt;</span>jQueryの練習<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/body&gt;</span>
+</span><span class='line'><span class="nt">&lt;/html&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>03</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;ul</span> <span class="na">id=</span><span class="s">&quot;main&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;li&gt;</span>1<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;li&gt;</span>2<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;li&gt;</span>3<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;ul</span> <span class="na">id=</span><span class="s">&quot;sub&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;li&gt;</span>3-1<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;li&gt;</span>3-2<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">&quot;item&quot;</span><span class="nt">&gt;</span>3-3<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">&quot;item&quot;</span><span class="nt">&gt;</span>3-4<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/ul&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;li&gt;</span>4<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;/ul&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;http://code.jquery.com/jquery-1.11.0.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;script&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">//  $(document.read(function(){})</span>
+</span><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>    <span class="c1">// セレクタ: 処理対象となるDOM要素を指定する記法</span>
+</span><span class='line'>    <span class="c1">// メソッド: 処理(.で繋げられる=&gt;メソッドチェーン)</span>
+</span><span class='line'>    <span class="c1">// pがセレクタ、.以降がメソッド。</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// セレクタメソッド </span>
+</span><span class='line'>    <span class="c1">// $(&quot;~&quot;)</span>
+</span><span class='line'>    <span class="c1">// html要素 p h1 ulとか</span>
+</span><span class='line'>    <span class="c1">// id #main</span>
+</span><span class='line'>    <span class="c1">// class .item</span>
+</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#sub&quot;</span><span class="p">).</span><span class="nx">css</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>  <span class="nt">&lt;/script&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<pre><code>$("#sub").css('color', 'red');とすると
+</code></pre>
+
+<p>subclassの要素が赤くなる</p>
+
+<h2>04もっとセレクタを使ってみよう</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>  //  $(document.read(function(){})
+</span><span class='line'>  $(function(){
+</span><span class='line'>    // セレクタ: 処理対象となるDOM要素を指定する記法
+</span><span class='line'>    // メソッド: 処理(.で繋げられる=&gt;メソッドチェーン)
+</span><span class='line'>    // pがセレクタ、.以降がメソッド。
+</span><span class='line'>
+</span><span class='line'>    // セレクタメソッド
+</span><span class='line'>    // #id .class
+</span><span class='line'>    // &gt; 直下の子要素
+</span><span class='line'>    // , 複数の要素
+</span><span class='line'>    // + 隣接する要素
+</span><span class='line'>      $(&quot;#main &gt; #sub &gt; .item&quot;).css(&#39;color&#39;, &#39;red&#39;);
+</span><span class='line'>      $(&quot;#main .item&quot;).css(&#39;color&#39;, &#39;red&#39;);
+</span><span class='line'>      $(&quot;p, .item&quot;).css(&#39;color&#39;, &#39;red&#39;);
+</span><span class='line'>      $(&quot;.item + .item&quot;).css(&#39;color&#39;, &#39;red&#39;);
+</span><span class='line'>  });
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>05 フィルタを使ってみよう</h2>
+
+<p>フィルタは:以降に指定します。
+例えば
+* :eq() →等しい
+* :gt(), :lt() → より大きい、より小さい
+* :even, :odd → 偶数、奇数
+* :contains() → valueに含まれている値を指定する。
+* :first :last → 最初と最後</p>
+
+<p>実際に使ってみると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>$(&quot;#sub &gt; li:eq(2)&quot;).css(&#39;color&#39;, &#39;blue&#39;);
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>は、subclass以下のli要素の2番めを指定する。(連番は0から始まる)</p>
+
+<p><img src="https://f.cloud.github.com/assets/1464221/2353114/a302753e-a599-11e3-96a4-0c5f6a5a16df.png" alt="2014-03-07 10 41 24" /></p>
+
+<p>containsは、valueに含まれている値をしていすると、その条件を満たす要素に適応される。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>// :eq()
+</span><span class='line'>// :gt(), :lt()
+</span><span class='line'>// :even, :odd
+</span><span class='line'>// :contains()
+</span><span class='line'>// :first :last
+</span><span class='line'>// $(&quot;#sub &gt; li:eq(2)&quot;).css(&#39;color&#39;, &#39;blue&#39;);
+</span><span class='line'>// $(&quot;#sub &gt; li:gt(0)&quot;).css(&#39;color&#39;, &#39;green&#39;);
+</span><span class='line'>$(&quot;#sub &gt; li:contains(2)&quot;).css(&#39;color&#39;, &#39;green&#39;);
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="https://f.cloud.github.com/assets/1464221/2353182/c20e3f20-a59a-11e3-8266-7e11176298d0.png" alt="2014-03-07 10 49 31" /></p>
+
+<p>id=sub以下の2を含むli要素だけが緑に。</p>
+
+<h3>06 メソッドを使ったDOM要素指定</h3>
+
+<ul>
+<li>parent() 親要素を指す</li>
+<li>children() 子要素を指す</li>
+<li>siblings() 兄弟要素を指す。自分は含まない。</li>
+<li>next() 要素の次の要素を指す</li>
+<li>prev() 要素の前の要素を指す</li>
+</ul>
+
+
+<p><code>例 next()を使う</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>  $(function(){
+</span><span class='line'>
+</span><span class='line'>    // parent(), children()
+</span><span class='line'>    // next(), prev()
+</span><span class='line'>    // siblings() - 兄弟要素
+</span><span class='line'>    $(&quot;#sub &gt; li:eq(2)&quot;).next().css(&#39;color&#39;, &#39;green&#39;);
+</span><span class='line'>  });
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="https://f.cloud.github.com/assets/1464221/2353208/cab4ab22-a59b-11e3-9364-714f77d6eae6.png" alt="2014-03-07 10 56 57" /></p>
+
+<h3>07 属性セレクタを使ってみよう</h3>
+
+<ul>
+<li>= 等しい</li>
+<li>!= 等しくない</li>
+<li>*= 含まれる</li>
+<li>^= 先頭一致</li>
+<li>$= 末尾一致</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>$(function(){
+</span><span class='line'>    $(&#39;a[href*=&quot;dot&quot;]&#39;).css(&quot;background&quot;,&quot;red&quot;);
+</span><span class='line'>});
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="https://f.cloud.github.com/assets/1464221/2353315/22b427ba-a59e-11e3-94cb-b7436dcef8ee.png" alt="2014-03-07 11 13 42" /></p>
+
+<h3>08 css､addClass/removeClassを使おう</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>  $(function(){
+</span><span class='line'>    $(&#39;p&#39;).css(&#39;color&#39;, &#39;red&#39;).css(&#39;background&#39;,&#39;blue&#39;);
+</span><span class='line'>    console.log($(&#39;p&#39;).css(&#39;color&#39;));
+</span><span class='line'>  });
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>$(&lsquo;p&rsquo;).css(&lsquo;color&rsquo;) で、colorを取ってこれる</li>
+<li>こういうふうにcssをつなげて書くのは、拡張が面倒なので、styleとしてまとめておいたほうが良いです。</li>
+</ul>
+
+
+<p>styleの指定</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;title&gt;</span>jQueryの練習 <span class="nt">&lt;/title&gt;</span>
+</span><span class='line'><span class="nt">&lt;style&gt;</span>
+</span><span class='line'>  <span class="nc">.myStyle</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">border</span><span class="o">:</span> <span class="m">5px</span> <span class="k">solid</span> <span class="nb">green</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">font-size</span><span class="o">:</span><span class="m">48px</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="nt">&lt;/style&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>その後、</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>  <span class="nt">&lt;script&gt;</span>
+</span><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>    <span class="c1">// $(&#39;p&#39;).css(&#39;color&#39;, &#39;red&#39;).css(&#39;background&#39;,&#39;blue&#39;);</span>
+</span><span class='line'>    <span class="c1">// console.log($(&#39;p&#39;).css(&#39;color&#39;));</span>
+</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s1">&#39;myStyle&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>  <span class="nt">&lt;/script&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ってやると、
+<img src="https://f.cloud.github.com/assets/1464221/2353399/46ee3e16-a5a0-11e3-8f9a-0dd152296ba6.png" alt="2014-03-07 11 28 56" />
+こうなる。removeClassで、除ける。</p>
+
+<h3>09 attr､dataを使ってみよう</h3>
+
+<ul>
+<li>attr: 値をgetする奴。</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>  <span class="nt">&lt;body&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;p&gt;</span>Hello, jQuery<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://google.com&quot;</span><span class="nt">&gt;</span>google<span class="nt">&lt;/a&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;http://code.jquery.com/jquery-1.11.0.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;script&gt;</span>
+</span><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;href&#39;</span><span class="p">));</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>  <span class="nt">&lt;/script&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/body&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でconsoleに<code>"http://google.com"</code>が表示される。
+また、attrメソッドを使って、値を変えることもできる。
+こうする。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>  $(function(){
+</span><span class='line'>      console.log($(&#39;a&#39;).attr(&#39;href&#39;,&#39;http://yahoo.co.jp&#39;));
+</span><span class='line'>  });
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>カスタム属性を取得したいときはdataを使います。
+html5ではカスタム属性をdata-のあとにつける。</p>
+
+<p>bodyを次のように書くと</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>  <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://google.com&quot;</span> <span class="na">data-sitename=</span><span class="s">&quot;google&quot;</span><span class="nt">&gt;</span>google<span class="nt">&lt;/a&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>  <span class="nt">&lt;script&gt;</span>
+</span><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s1">&#39;sitename&#39;</span><span class="p">));</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>  <span class="nt">&lt;/script&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で値を取ってこれる。</p>
+
+<h3>10 タグの中身を操作してみよう</h3>
+
+<ul>
+<li>text 指定したタグの要素に文字列を書く</li>
+<li>html 指定したタグの要素にhtml文を書く</li>
+<li>val 指定したタグの要素を書き換える</li>
+<li>empty 指定したタグの要素を空にする</li>
+<li>remove 指定したタグを消滅させる</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>  $(&#39;p&#39;).text(&#39;just changed&#39;)
+</span><span class='line'>  $(&#39;p&#39;).html(&#39;<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>click me<span class="nt">&lt;/a&gt;</span>&#39;)
+</span><span class='line'>  console.log($(&#39;input&#39;).val());
+</span><span class='line'>  $(&#39;input&#39;).val(&quot;hogehoge&quot;);
+</span><span class='line'>  $(&#39;p&#39;).remove();
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>11 要素を追加してみよう</h3>
+
+<p>bodyに次のように書く</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>  <span class="nt">&lt;p&gt;</span>Hello, jQuery<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;ul&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;li&gt;</span>0<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;li&gt;</span>1<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;li&gt;</span>2<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/ul&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>  <span class="nt">&lt;script&gt;</span>
+</span><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>      <span class="c1">// before, after == InsertBefore, InsertAfter</span>
+</span><span class='line'>      <span class="c1">// prepend, append</span>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">li</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;li&gt;&#39;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="s1">&#39;just added&#39;</span><span class="p">);</span> <span class="c1">// あたらしいli要素</span>
+</span><span class='line'>      <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;ul &gt; li:eq(1)&#39;</span><span class="p">).</span><span class="nx">before</span><span class="p">(</span><span class="nx">li</span><span class="p">);</span> <span class="c1">// あたらしいli要素を追加する場所の指定</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>  <span class="nt">&lt;/script&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>要素を追加するときは、不等号記号で囲ってやる必要がありけり。→ <code>&lt;li&gt;</code>
+<img src="https://f.cloud.github.com/assets/1464221/2353692/7c39f716-a5a7-11e3-8996-be6fc1fdc398.png" alt="2014-03-07 12 20 45" /></li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>  var li2 = $(&#39;<span class="nt">&lt;li&gt;</span>&#39;).text(&#39;just added2&#39;);
+</span><span class='line'>  $(&#39;ul&#39;).append(li2);
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とすると、末尾にli2を追加してくれる。先頭に追加するには<code>prepend()</code>を使う。</p>
+
+<h3>12 エフェクトを使ってみよう</h3>
+
+<p><strong>アニメィション！</strong></p>
+
+<ul>
+<li>hide, show</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;script&gt;</span>
+</span><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>      <span class="c1">// hide, show</span>
+</span><span class='line'>      <span class="c1">// fadeIn, fadeOut</span>
+</span><span class='line'>      <span class="c1">// toggle</span>
+</span><span class='line'>      <span class="c1">// $(&#39;#box&#39;).fadeIn(1000);</span>
+</span><span class='line'>      <span class="c1">// $(&#39;#box&#39;).fadeOut(1000);</span>
+</span><span class='line'>      <span class="c1">// $(&#39;#box&#39;).toggle(1000);</span>
+</span><span class='line'>      <span class="c1">// $(&#39;#box&#39;).toggle(1000);</span>
+</span><span class='line'>      <span class="c1">// $(&#39;#box&#39;).fadeOut(200,function(){</span>
+</span><span class='line'>      <span class="c1">//   alert(&quot;gone!!!!!!!!!!!!!!!!!!&quot;);</span>
+</span><span class='line'>      <span class="c1">// });</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'><span class="nt">&lt;/script&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>13 イベントを使ってみよう</h3>
+
+<p>mouseイベントについて</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;script&gt;</span>
+</span><span class='line'>  $(function(){
+</span><span class='line'>      // clip event
+</span><span class='line'>      // mouseover, mousemove
+</span><span class='line'>      $(&#39;#box&#39;).click(function(){
+</span><span class='line'>        console.log(&quot;hogehoge&quot;);
+</span><span class='line'>      });
+</span><span class='line'>      $(&#39;#box&#39;)
+</span><span class='line'>        .mouseover(function(){
+</span><span class='line'>          $(this).css(&#39;background&#39;,&#39;blue&#39;);
+</span><span class='line'>      })
+</span><span class='line'>        .mousemove(function(e
+</span><span class='line'>             ){
+</span><span class='line'>          $(this).text(e.pageX);
+</span><span class='line'>      })
+</span><span class='line'>        .mouseout(function(){
+</span><span class='line'>          $(this).css(&#39;background&#39;,&#39;green&#39;);
+</span><span class='line'>      });
+</span><span class='line'>  });
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>14 focus､blur､changeを使おう</h3>
+
+<p>フォーカスされた時、フォーカスが外れた時、メニュー選択された時</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span><span class='line'><span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">&quot;ja&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;head&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&quot;UTF-8&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">&quot;discription&quot;</span> <span class="na">content=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;.css&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;title&gt;</span>jQueryの練習 <span class="nt">&lt;/title&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/head&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;body&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;p&gt;</span>Hello, jQuery<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">id=</span><span class="s">&quot;name&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;select</span> <span class="na">id=</span><span class="s">&quot;members&quot;</span> <span class="na">name=</span><span class="s">&quot;members&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;option&gt;</span>hoge<span class="nt">&lt;/option&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;option&gt;</span>fuga<span class="nt">&lt;/option&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;option&gt;</span>piyo<span class="nt">&lt;/option&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/select&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>  <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;http://code.jquery.com/jquery-1.11.0.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;script&gt;</span>
+</span><span class='line'>      <span class="c1">// focus フォーカスされた時</span>
+</span><span class='line'>      <span class="c1">// blur  フォーカスから外れた時</span>
+</span><span class='line'>      <span class="c1">// change ボトムダウンメニューから選択された時</span>
+</span><span class='line'>      <span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>          <span class="c1">// focusされた時の処理</span>
+</span><span class='line'>          <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#name&quot;</span><span class="p">).</span><span class="nx">focus</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>            <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">css</span><span class="p">(</span><span class="s1">&#39;background&#39;</span><span class="p">,</span><span class="s1">&#39;red&#39;</span><span class="p">);</span>
+</span><span class='line'>          <span class="p">});</span>
+</span><span class='line'>          <span class="c1">// blur</span>
+</span><span class='line'>          <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#name&quot;</span><span class="p">).</span><span class="nx">blur</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>            <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">css</span><span class="p">(</span><span class="s1">&#39;background&#39;</span><span class="p">,</span> <span class="s1">&#39;white&#39;</span><span class="p">);</span>
+</span><span class='line'>          <span class="p">});</span>
+</span><span class='line'>          <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#members&#39;</span><span class="p">).</span><span class="nx">change</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;input&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="s2">&quot;aho&quot;</span><span class="p">);</span>
+</span><span class='line'>          <span class="p">});</span>
+</span><span class='line'>      <span class="p">});</span>
+</span><span class='line'>    <span class="nt">&lt;/script&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/body&gt;</span>
+</span><span class='line'><span class="nt">&lt;/html&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>15 onメソッドを使ってみよう</h3>
+
+<h4>onメソッドは、jQueryで動的に生成された要素に対して操作するためのメソッド。</h4>
+
+<p><code>$(function())</code>では、htmlが読み込まれた段階での要素に対して操作を行うため、jQuery
+で生成された要素に対しては操作できない。そこで、<code>onメソッド</code>を使う。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span><span class='line'><span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">&quot;ja&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;head&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&quot;UTF-8&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">&quot;discription&quot;</span> <span class="na">content=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;.css&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;title&gt;</span>jQueryの練習 <span class="nt">&lt;/title&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/head&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;body&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;p&gt;</span>Hello, jQuery<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;button&gt;</span>add!<span class="nt">&lt;/button&gt;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;http://code.jquery.com/jquery-1.11.0.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;script&gt;</span>
+</span><span class='line'>      <span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>          <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;button&#39;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>            <span class="kd">var</span> <span class="nx">p</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;p&gt;&#39;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="s2">&quot;add!&quot;</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s2">&quot;vanish&quot;</span><span class="p">);</span>
+</span><span class='line'>            <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">before</span><span class="p">(</span><span class="nx">p</span><span class="p">);</span>
+</span><span class='line'>          <span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'>          <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="s1">&#39;.vanish&#39;</span><span class="p">,</span> <span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>              <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">remove</span><span class="p">();</span>
+</span><span class='line'>          <span class="p">}));</span>
+</span><span class='line'>      <span class="p">});</span>
+</span><span class='line'>    <span class="nt">&lt;/script&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/body&gt;</span>
+</span><span class='line'><span class="nt">&lt;/html&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="https://f.cloud.github.com/assets/1464221/2353964/33017fc6-a5af-11e3-9d34-1895500a6079.png" alt="2014-03-07 13 15 57" /></p>
+
+<p>addボタンを押すと&#8221;add!&ldquo;が追加される。で、&#8221;add!&#8221;をクリックすると消える。これはonメソッドのため。</p>
+
+<p>以上！</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Railsで、暗号化されたpasswordを使ってログイン機構を作ってみる。]]></title>
