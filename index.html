@@ -9,10 +9,7 @@
   <meta name="author" content="rice_american">
 
   
-  <meta name="description" content="やってみた。
-* jQuery入門 (全15回) &ndash; プログラミングならドットインストール 以降はメモ。 01 jQueryとはなにか jsを便利に使うためのライブラリです。 jQueryライブラリ読み込み 1
-2 &lt;body&gt;
-&lt;script src=&quot; &hellip;">
+  <meta name="description" content="こうなるまでの道のり 前に書いたherokuへdeployしたアプリケーションにwebfontを適用させる · Issue #24 · kanpe777/Mahjongを参考にし、導入した。しかし、localでは反映されたが、heroku上ではfontfileやらcss, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -68,6 +65,91 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/22/heroku-icon/">Fonticonをherokuに適応するまで</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-22T14:14:57+09:00" pubdate data-updated="true">Mar 22<span>nd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>こうなるまでの道のり
+<img src="https://f.cloud.github.com/assets/1464221/2489851/b68b3de6-b17b-11e3-8e4d-c30bd31adef2.png" alt="2014-03-22 13 37 24" /></p>
+
+<p>前に書いた<a href="https://github.com/kanpe777/Mahjong/issues/24">herokuへdeployしたアプリケーションにwebfontを適用させる · Issue #24 · kanpe777/Mahjong</a>を参考にし、導入した。しかし、localでは反映されたが、heroku上ではfontfileやらcss,jsがNotFoundとなってしまい、webfontが表示されなかった(´・ω・`)</p>
+
+<h2>対策</h2>
+
+<p>色々探してみると次のような記事があった。</p>
+
+<p><a href="http://shuzo-kino.hateblo.jp/entry/2014/03/21/221411">rails4でprecompileが必要なアプリをherokuにアップロードする &ndash; Bye Bye Moore</a></p>
+
+<p>追記</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="c1">#/config/environments/production.rb</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">config</span><span class="o">.</span><span class="n">cache_classes</span> <span class="o">=</span> <span class="kp">true</span>
+</span><span class='line'><span class="n">config</span><span class="o">.</span><span class="n">serve_static_assets</span> <span class="o">=</span> <span class="kp">true</span>
+</span><span class='line'><span class="n">config</span><span class="o">.</span><span class="n">assets</span><span class="o">.</span><span class="n">compile</span> <span class="o">=</span> <span class="kp">true</span>
+</span><span class='line'><span class="n">config</span><span class="o">.</span><span class="n">assets</span><span class="o">.</span><span class="n">digest</span> <span class="o">=</span> <span class="kp">true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で、assets.pathについてだが、これは<a href="http://d.hatena.ne.jp/senggonghaza/20130711/1373530360">Rails4でハマった件、 &ndash; Railsプロになろう！</a>を見て、<code>app/config/environments/production.rb</code>ではなく、<code>app/config/application.rb</code>に書いた。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="c1">#/config/application.rb</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">assets</span><span class="o">.</span><span class="n">paths</span> <span class="o">&lt;&lt;</span> <span class="no">Rails</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;app&quot;</span><span class="p">,</span> <span class="s2">&quot;assets&quot;</span><span class="p">,</span> <span class="s2">&quot;fonts&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">assets</span><span class="o">.</span><span class="n">precompile</span> <span class="o">+=</span> <span class="sx">%w( .svg .eot .woff .ttf )</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この後、vagrantの方で<code>rake assets:precompile</code>を実行し、生成されたファイルを<code>git add</code>して、<code>git push heroku master</code>をすると･･･</p>
+
+<p><img src="https://f.cloud.github.com/assets/1464221/2489916/c97f9492-b180-11e3-8d4c-d5b7dd8d38fc.png" alt="2014-03-22 14 11 25" />
+読み込まれたッ！</p>
+
+<p><img src="https://f.cloud.github.com/assets/1464221/2489851/b68b3de6-b17b-11e3-8e4d-c30bd31adef2.png" alt="2014-03-22 13 37 24" />
+表示もされていますね( ´∀｀)</p>
+
+<p>以上！</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -2289,152 +2371,6 @@ DATABASEには、<code>heroku config</code>で<code>HEROKU_POSTGRESQL_{COLOR}_UR
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/27/nginx-jenkins/">さくらVPSにjenkinsとNginxでJenkinsサーバを構築する。</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-27T16:36:06+09:00" pubdate data-updated="true">Jan 27<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>前回はHerokuにRoRアプリケーションをdeployできたので、次はJenkinsの方をば。</p>
-
-<p>参考: <a href="http://d.hatena.ne.jp/FGtatsuro/20120603/1338653541">さくらのVPSにJenkins/Nginxをインストールする &ndash; 愉快な神様とヘタレな下僕</a></p>
-
-<h2>Jenkinsさんのインストール</h2>
-
-<p>JenkinsさんはJavaがないと動いてくれないので入れておきます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo yum install -y java-1.6.0-openjdk java-1.6.0-openjdk-devel</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Jenkinsさんをお招きします</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
-</span><span class='line'>$ sudo rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
-</span><span class='line'>$ sudo yum install jenkins</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Jenkinsさんを動かします</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo service jenkins start</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ok.</p>
-
-<h2>nginxインストール</h2>
-
-<p>nginxは</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo yum install nginx</span></code></pre></td></tr></table></div></figure>
-
-
-<p>で入ります。</p>
-
-<h2>ネットワーク設定</h2>
-
-<p>続いて/etc/nginx/nginx.confを書き換えます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ vi /etc/nginx/nginx.conf
-</span><span class='line'>http {
-</span><span class='line'>
-</span><span class='line'>===
-</span><span class='line'>ry)
-</span><span class='line'>===
-</span><span class='line'>
-</span><span class='line'>  server {
-</span><span class='line'>    listen 80;
-</span><span class='line'>    server_name &lt;ホスト名&gt;;
-</span><span class='line'>    location {
-</span><span class='line'>      proxy_pass http://localhost:80; 
-</span><span class='line'>    }  
-</span><span class='line'>  }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ホスト名は、サーバのホスト名を入れます。</p>
-
-<p>jenkinsの設定は/etc/nginx/conf.d/jenkins.confを変更します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>server {
-</span><span class='line'>    location /jenkins {
-</span><span class='line'>         proxy_pass http://localhost:8080;
-</span><span class='line'>    }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>そしてnginxをrestart!</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>% sudo service nginx restart
-</span><span class='line'>nginx を停止中:                                            [  OK  ]
-</span><span class='line'>nginx を起動中:                                            [  OK  ]</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ok.</p>
-
-<p>で、<a href="http://">http://</a>[ホスト名]/jenkinsへアクセスすると･･･Jenkinsさんが表示されました！</p>
-
-<p>次はJenkinsさんの認証を何とかしますー。</p>
-
-<p><a href="http://www.yaunix.com/2013/02/04/%E3%81%95%E3%81%8F%E3%82%89vps%E3%81%A7jenkins%E3%82%92%E3%82%BB%E3%83%83%E3%83%88%E3%82%A2%E3%83%83%E3%83%97%E3%81%97%E3%80%81%E8%AA%8D%E8%A8%BC%E3%82%92%E8%A1%8C%E3%81%86%E3%81%BE%E3%81%A7/">さくらVPSでJenkinsをセットアップし、認証を行うまで | ひたすらメモするだけのブログ</a>を見ると見た感じGUIで設定できるっぽい･･･？</p>
-
-<p>[とりあえず今日はここまで]</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -2448,6 +2384,10 @@ DATABASEには、<code>heroku config</code>で<code>HEROKU_POSTGRESQL_{COLOR}_UR
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/03/22/heroku-icon/">Fonticonをherokuに適応するまで</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/03/08/jquery-lesson/">dotinstallでjQueryの勉強</a>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Fonticon | こめぶろぐ]]></title>
+  <link href="http://rice-american.github.io/blog/categories/fonticon/atom.xml" rel="self"/>
+  <link href="http://rice-american.github.io/"/>
+  <updated>2014-03-22T14:17:17+09:00</updated>
+  <id>http://rice-american.github.io/</id>
+  <author>
+    <name><![CDATA[rice_american]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Fonticonをherokuに適応するまで]]></title>
+    <link href="http://rice-american.github.io/blog/2014/03/22/heroku-icon/"/>
+    <updated>2014-03-22T14:14:57+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/03/22/heroku-icon</id>
+    <content type="html"><![CDATA[<p>こうなるまでの道のり
+<img src="https://f.cloud.github.com/assets/1464221/2489851/b68b3de6-b17b-11e3-8e4d-c30bd31adef2.png" alt="2014-03-22 13 37 24" /></p>
+
+<p>前に書いた<a href="https://github.com/kanpe777/Mahjong/issues/24">herokuへdeployしたアプリケーションにwebfontを適用させる · Issue #24 · kanpe777/Mahjong</a>を参考にし、導入した。しかし、localでは反映されたが、heroku上ではfontfileやらcss,jsがNotFoundとなってしまい、webfontが表示されなかった(´・ω・`)</p>
+
+<h2>対策</h2>
+
+<p>色々探してみると次のような記事があった。</p>
+
+<p><a href="http://shuzo-kino.hateblo.jp/entry/2014/03/21/221411">rails4でprecompileが必要なアプリをherokuにアップロードする &ndash; Bye Bye Moore</a></p>
+
+<p>追記
+```rb</p>
+
+<h1>/config/environments/production.rb</h1>
+
+<p>config.cache_classes = true
+config.serve_static_assets = true
+config.assets.compile = true
+config.assets.digest = true
+<code>``
+で、assets.pathについてだが、これは[Rails4でハマった件、 - Railsプロになろう！](http://d.hatena.ne.jp/senggonghaza/20130711/1373530360)を見て、</code>app/config/environments/production.rb<code>ではなく、</code>app/config/application.rb`に書いた。</p>
+
+<p>```rb</p>
+
+<h1>/config/application.rb</h1>
+
+<p>  config.assets.paths &lt;&lt; Rails.root.join(&ldquo;app&rdquo;, &ldquo;assets&rdquo;, &ldquo;fonts&rdquo;)
+  config.assets.precompile += %w( .svg .eot .woff .ttf )
+<code>``
+この後、vagrantの方で</code>rake assets:precompile<code>を実行し、生成されたファイルを</code>git add<code>して、</code>git push heroku master`をすると･･･</p>
+
+<p><img src="https://f.cloud.github.com/assets/1464221/2489916/c97f9492-b180-11e3-8d4c-d5b7dd8d38fc.png" alt="2014-03-22 14 11 25" />
+読み込まれたッ！</p>
+
+<p><img src="https://f.cloud.github.com/assets/1464221/2489851/b68b3de6-b17b-11e3-8e4d-c30bd31adef2.png" alt="2014-03-22 13 37 24" />
+表示もされていますね( ´∀｀)</p>
+
+<p>以上！</p>
+]]></content>
+  </entry>
+  
+</feed>

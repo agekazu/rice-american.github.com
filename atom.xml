@@ -4,7 +4,7 @@
   <title><![CDATA[こめぶろぐ]]></title>
   <link href="http://rice-american.github.io/atom.xml" rel="self"/>
   <link href="http://rice-american.github.io/"/>
-  <updated>2014-03-08T20:23:48+09:00</updated>
+  <updated>2014-03-22T14:17:17+09:00</updated>
   <id>http://rice-american.github.io/</id>
   <author>
     <name><![CDATA[rice_american]]></name>
@@ -12,6 +12,64 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Fonticonをherokuに適応するまで]]></title>
+    <link href="http://rice-american.github.io/blog/2014/03/22/heroku-icon/"/>
+    <updated>2014-03-22T14:14:57+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/03/22/heroku-icon</id>
+    <content type="html"><![CDATA[<p>こうなるまでの道のり
+<img src="https://f.cloud.github.com/assets/1464221/2489851/b68b3de6-b17b-11e3-8e4d-c30bd31adef2.png" alt="2014-03-22 13 37 24" /></p>
+
+<p>前に書いた<a href="https://github.com/kanpe777/Mahjong/issues/24">herokuへdeployしたアプリケーションにwebfontを適用させる · Issue #24 · kanpe777/Mahjong</a>を参考にし、導入した。しかし、localでは反映されたが、heroku上ではfontfileやらcss,jsがNotFoundとなってしまい、webfontが表示されなかった(´・ω・`)</p>
+
+<h2>対策</h2>
+
+<p>色々探してみると次のような記事があった。</p>
+
+<p><a href="http://shuzo-kino.hateblo.jp/entry/2014/03/21/221411">rails4でprecompileが必要なアプリをherokuにアップロードする &ndash; Bye Bye Moore</a></p>
+
+<p>追記</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="c1">#/config/environments/production.rb</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">config</span><span class="o">.</span><span class="n">cache_classes</span> <span class="o">=</span> <span class="kp">true</span>
+</span><span class='line'><span class="n">config</span><span class="o">.</span><span class="n">serve_static_assets</span> <span class="o">=</span> <span class="kp">true</span>
+</span><span class='line'><span class="n">config</span><span class="o">.</span><span class="n">assets</span><span class="o">.</span><span class="n">compile</span> <span class="o">=</span> <span class="kp">true</span>
+</span><span class='line'><span class="n">config</span><span class="o">.</span><span class="n">assets</span><span class="o">.</span><span class="n">digest</span> <span class="o">=</span> <span class="kp">true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で、assets.pathについてだが、これは<a href="http://d.hatena.ne.jp/senggonghaza/20130711/1373530360">Rails4でハマった件、 &ndash; Railsプロになろう！</a>を見て、<code>app/config/environments/production.rb</code>ではなく、<code>app/config/application.rb</code>に書いた。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="c1">#/config/application.rb</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">assets</span><span class="o">.</span><span class="n">paths</span> <span class="o">&lt;&lt;</span> <span class="no">Rails</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;app&quot;</span><span class="p">,</span> <span class="s2">&quot;assets&quot;</span><span class="p">,</span> <span class="s2">&quot;fonts&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">assets</span><span class="o">.</span><span class="n">precompile</span> <span class="o">+=</span> <span class="sx">%w( .svg .eot .woff .ttf )</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この後、vagrantの方で<code>rake assets:precompile</code>を実行し、生成されたファイルを<code>git add</code>して、<code>git push heroku master</code>をすると･･･</p>
+
+<p><img src="https://f.cloud.github.com/assets/1464221/2489916/c97f9492-b180-11e3-8d4c-d5b7dd8d38fc.png" alt="2014-03-22 14 11 25" />
+読み込まれたッ！</p>
+
+<p><img src="https://f.cloud.github.com/assets/1464221/2489851/b68b3de6-b17b-11e3-8e4d-c30bd31adef2.png" alt="2014-03-22 13 37 24" />
+表示もされていますね( ´∀｀)</p>
+
+<p>以上！</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[dotinstallでjQueryの勉強]]></title>
