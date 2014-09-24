@@ -4,7 +4,7 @@
   <title><![CDATA[こめぶろぐ]]></title>
   <link href="http://rice-american.github.io/atom.xml" rel="self"/>
   <link href="http://rice-american.github.io/"/>
-  <updated>2014-03-22T14:17:17+09:00</updated>
+  <updated>2014-09-24T23:07:57+09:00</updated>
   <id>http://rice-american.github.io/</id>
   <author>
     <name><![CDATA[rice_american]]></name>
@@ -12,6 +12,36 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[DCコマンドで拡張子を指定して容量を表示する]]></title>
+    <link href="http://rice-american.github.io/blog/2014/09/24/dc/"/>
+    <updated>2014-09-24T22:55:27+09:00</updated>
+    <id>http://rice-american.github.io/blog/2014/09/24/dc</id>
+    <content type="html"><![CDATA[<p>とあるディレクトリ以下のHTMLのファイルの総容量が知りたくてあれこれやってたら出来たのでメモ。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>find $before_www -type f -name '*.html' -print0 | xargs -0 du -k &gt; $before_html_size_file_name
+</span><span class='line'>cat $before_html_size_file_name | awk '{ sum += $1 } END { print sum }' &gt;&gt; $before_html_size_file_name</span></code></pre></td></tr></table></div></figure>
+
+
+<p>長い･･･</p>
+
+<p>ちなみにキロバイトでなくバイト表記したい場合は<code>du -b</code>を指定すればいいらしいが、自分の環境のMBPでは<code>-b</code>が使えなかった。
+調べてみると</p>
+
+<p><a href="http://qiita.com/itochan/items/5042c178bd01e27b0c88">qiita &ndash; duコマンドのサイズをわかりやすく表示してサイズ順にソートする</a></p>
+
+<blockquote><p>どうやらBSDの du はバイト単位で表示する機能がないようです。よって、du もcoreutilsのものを使う必要があります。</p></blockquote>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ brew install coreutils</span></code></pre></td></tr></table></div></figure>
+
+
+<p>した後で、<code>gdu -b</code>と指定することMacでも使えるようになった。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Fonticonをherokuに適応するまで]]></title>
