@@ -4,7 +4,7 @@
   <title><![CDATA[こめぶろぐ]]></title>
   <link href="http://rice-american.github.io/feed" rel="self"/>
   <link href="http://rice-american.github.io/"/>
-  <updated>2014-09-24T23:07:57+09:00</updated>
+  <updated>2014-09-24T23:22:32+09:00</updated>
   <id>http://rice-american.github.io/</id>
   <author>
     <name><![CDATA[rice_american]]></name>
@@ -22,8 +22,8 @@
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>find $before_www -type f -name '*.html' -print0 | xargs -0 du -k &gt; $before_html_size_file_name
-</span><span class='line'>cat $before_html_size_file_name | awk '{ sum += $1 } END { print sum }' &gt;&gt; $before_html_size_file_name</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>find $before_www -type f -name '*.html' -print0 | xargs -0 du -k &gt; $before_html_size_file
+</span><span class='line'>cat $before_html_size_file_name | awk '{ sum += $1 } END { print sum }' &gt;&gt; $before_html_size_file</span></code></pre></td></tr></table></div></figure>
 
 
 <p>長い･･･</p>

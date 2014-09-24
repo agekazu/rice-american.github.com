@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Shellscript | こめぶろぐ]]></title>
   <link href="http://rice-american.github.io/blog/categories/shellscript/atom.xml" rel="self"/>
   <link href="http://rice-american.github.io/"/>
-  <updated>2014-09-24T23:22:06+09:00</updated>
+  <updated>2014-09-24T23:22:32+09:00</updated>
   <id>http://rice-american.github.io/</id>
   <author>
     <name><![CDATA[rice_american]]></name>
@@ -20,7 +20,7 @@
     <id>http://rice-american.github.io/blog/2014/09/24/dc</id>
     <content type="html"><![CDATA[<p>とあるディレクトリ以下のHTMLのファイルの総容量が知りたくてあれこれやってたら出来たのでメモ。</p>
 
-<p><code>shellscript
+<p><code>
 find $before_www -type f -name '*.html' -print0 | xargs -0 du -k &gt; $before_html_size_file
 cat $before_html_size_file_name | awk '{ sum += $1 } END { print sum }' &gt;&gt; $before_html_size_file
 </code>
